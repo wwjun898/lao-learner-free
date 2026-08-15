@@ -1,185 +1,29 @@
-import { useState } from 'react';
-import { useSpeech } from '../hooks/useSpeech';
-import { useFavorites } from '../hooks/useFavorites';
+import { useEffect, useMemo, useState } from 'react';
+import { Heart, Mic, Volume2 } from '../components/IconGlyphs';
 import SpeechPractice from '../components/SpeechPractice';
+import { topicPractices } from '../data/topicPractice';
+import { useFavorites } from '../hooks/useFavorites';
+import { useScenarioPhrases } from '../hooks/useScenarioPhrases';
+import { useSpeech } from '../hooks/useSpeech';
+import { useStats } from '../hooks/useStats';
 
-interface Props {
-  goBack: () => void;
-}
-
-interface Phrase {
-  lao: string;
-  chinese: string;
-  pinyin: string;
-}
-
-interface Scenario {
-  icon: string;
-  title: string;
-  phrases: Phrase[];
-}
-
-const scenarios: Scenario[] = [
-  {
-    icon: '🛃',
-    title: '海关入境',
-    phrases: [
-      { lao: 'ຂ້ອຍ ແມ່ນ ຄົນຈີນ', chinese: '我是中国人', pinyin: 'khoi maen khon jin' },
-      { lao: 'ຂ້ອຍ ມາ ທ່ຽວ', chinese: '我来旅游', pinyin: 'khoi ma thiao' },
-      { lao: 'ຂ້ອຍ ມາ ເຮັດວຽກ', chinese: '我来工作', pinyin: 'khoi ma het wiak' },
-      { lao: 'ນີ້ ແມ່ນ ຫນັງສືຜ່ານຂອບຂອຍ', chinese: '这是我的护照', pinyin: 'ni maen nangsue pha khoi' },
-      { lao: 'ຂ້ອຍ ຈະ ຢູ່ ສິບ ມື້', chinese: '我会待10天', pinyin: 'kha ja yu sip meu' },
-    ],
-  },
-  {
-    icon: '🏥',
-    title: '医院看病',
-    phrases: [
-      { lao: 'ຂ້ອຍ ເຈັບ', chinese: '我生病了', pinyin: 'khoi jep' },
-      { lao: 'ຂ້ອຍ ເຈັບຫົວ', chinese: '我头痛', pinyin: 'khoi jep hua' },
-      { lao: 'ຂ້ອຍ ເຈັບທ້ອງ', chinese: '我肚子痛', pinyin: 'khoi jep thong' },
-      { lao: 'ຂ້ອຍ ເປັນໄຂ້', chinese: '我发烧', pinyin: 'khoi pen khai' },
-      { lao: 'ຢູ່ ໃສ ມີ ໂຮງຫມໍ?', chinese: '哪里有医院？', pinyin: 'yu sai mii hongmo?' },
-      { lao: 'ຂ້ອຍ ຕ້ອງການ ເຫັນ ໝໍ', chinese: '我要看医生', pinyin: 'khoi tongkan hen mo' },
-    ],
-  },
-  {
-    icon: '🏦',
-    title: '银行换钱',
-    phrases: [
-      { lao: 'ຂ້ອຍ ຢາກ ແລກເງິນ', chinese: '我想换钱', pinyin: 'khoi yak laek ngoen' },
-      { lao: 'ອັດຕາ ການ ແລກປ່ຽນ ເທົ່າໃດ?', chinese: '汇率多少？', pinyin: 'ata kan laek pian thao dai?' },
-      { lao: 'ຂ້ອຍ ຢາກ ແລກ ຢວນ ເປັນ ກີບ', chinese: '我想把人民币换成基普', pinyin: 'khoi yak laek yuan pen kip' },
-      { lao: 'ບັດ ATM ຢູ່ ໃສ?', chinese: 'ATM在哪？', pinyin: 'bat ATM yu sai?' },
-    ],
-  },
-  {
-    icon: '📞',
-    title: '打电话',
-    phrases: [
-      { lao: 'ເບີ ໂທລະສັບ ຂອງທ່ານ ແມ່ນ ຫຍັງ?', chinese: '你的电话号码是多少？', pinyin: 'bo tholasap khong than maen yang?' },
-      { lao: 'ຂ້ອຍ ຢາກໂທ ຫາ ຈີນ', chinese: '我想打电话到中国', pinyin: 'khoi yak tho ha jin' },
-      { lao: 'ຊ່ວຍ ໂທ ໃຫ້ ແດ່', chinese: '帮我打一下', pinyin: 'suai tho hai dae' },
-      { lao: 'ບໍ່ ໄດ້ ຍິນ', chinese: '听不见', pinyin: 'bo dai nyin' },
-    ],
-  },
-  {
-    icon: '🏠',
-    title: '租房',
-    phrases: [
-      { lao: 'ຂ້ອຍ ຢາກ ເຊົ່າ ຫ້ອງ', chinese: '我想租房', pinyin: 'khoi yak sao hong' },
-      { lao: 'ຄ່າເຊົ່າ ເດືອນລະ ເທົ່າໃດ?', chinese: '月租多少？', pinyin: 'kha sao duean la thao dai?' },
-      { lao: 'ມີ ນ້ຳ ມີ ໄຟ ບໍ່?', chinese: '有水电吗？', pinyin: 'mii nam mii fai bo?' },
-      { lao: 'ຂ້ອຍ ຢາກ ເບິ່ງ ຫ້ອງກ່ອນ', chinese: '我想先看看房', pinyin: 'khoi yak boeng hong kon' },
-      { lao: 'ສັນຍາ ເຊົ່າ ກີ່ ເດືອນ?', chinese: '租约几个月？', pinyin: 'sanya sao ki duean?' },
-    ],
-  },
-  {
-    icon: '🚨',
-    title: '报警求助',
-    phrases: [
-      { lao: 'ຊ່ວຍແດ່! ຊ່ວຍແດ່!', chinese: '救命！救命！', pinyin: 'suai dae! suai dae!' },
-      { lao: 'ໂທ ໄປ ຕຳຫຼວດ', chinese: '打电话给警察', pinyin: 'tho pai tamruat' },
-      { lao: 'ຂ້ອຍ ຖືກ ລັກ', chinese: '我被偷了', pinyin: 'khoi thuek lak' },
-      { lao: 'ຂ້ອຍ ຫຼົງທາງ', chinese: '我迷路了', pinyin: 'khoi long thang' },
-      { lao: 'ຊ່ວຍ ແປ ໃຫ້ ແດ່', chinese: '帮我翻译一下', pinyin: 'suai pae hai dae' },
-    ],
-  },
-];
+interface Props { goBack: () => void }
+interface Phrase { lao: string; chinese: string; pinyin: string; custom?: boolean }
+interface Scenario { category: string; icon: string; title: string; phrases: Phrase[] }
 
 export default function ScenarioPage({ goBack }: Props) {
-  const [selectedScenario, setSelectedScenario] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [practicePhrase, setPracticePhrase] = useState<Phrase | null>(null);
+  const [speakingPhrase, setSpeakingPhrase] = useState<string | null>(null);
   const { speakLao, isSpeaking } = useSpeech();
   const { toggleFavorite, isFavorite } = useFavorites();
-
-  if (selectedScenario !== null) {
-    const scenario = scenarios[selectedScenario];
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center gap-3 sticky top-0 z-10">
-          <button onClick={() => setSelectedScenario(null)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-            <svg className="w-5 h-5 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <h1 className="text-lg font-semibold dark:text-white">{scenario.icon} {scenario.title}</h1>
-        </div>
-
-        <div className="px-4 py-4 space-y-2">
-          {scenario.phrases.map((phrase, i) => (
-            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="lao-text text-xl font-semibold text-gray-800 dark:text-white">{phrase.lao}</div>
-                  <div className="text-gray-600 dark:text-gray-300 mt-1">{phrase.chinese}</div>
-                  <div className="text-sm text-amber-600 dark:text-amber-400 mt-1 font-mono">{phrase.pinyin}</div>
-                </div>
-                <div className="flex gap-1.5">
-                  <button
-                    onClick={() => speakLao(phrase.lao)}
-                    disabled={isSpeaking}
-                    className="w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-sm"
-                  >
-                    🔊
-                  </button>
-                  <button
-                    onClick={() => setPracticePhrase(phrase)}
-                    className="w-8 h-8 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 rounded-full flex items-center justify-center text-sm"
-                  >
-                    🎤
-                  </button>
-                  <button
-                    onClick={() => toggleFavorite(phrase.lao)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                      isFavorite(phrase.lao) ? 'bg-red-100 text-red-500' : 'bg-gray-100 dark:bg-gray-700 text-gray-400'
-                    }`}
-                  >
-                    {isFavorite(phrase.lao) ? '❤️' : '🤍'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {practicePhrase && (
-          <SpeechPractice
-            targetText={practicePhrase.lao}
-            chineseText={practicePhrase.chinese}
-            pinyin={practicePhrase.pinyin}
-            onClose={() => setPracticePhrase(null)}
-          />
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center gap-3 sticky top-0 z-10">
-        <button onClick={goBack} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-          <svg className="w-5 h-5 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 className="text-lg font-semibold dark:text-white">场景短语</h1>
-      </div>
-
-      <div className="px-4 py-4 grid grid-cols-2 gap-3">
-        {scenarios.map((s, i) => (
-          <button
-            key={i}
-            onClick={() => setSelectedScenario(i)}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700
-                       hover:shadow-md hover:border-blue-200 transition-all text-center"
-          >
-            <div className="text-4xl mb-3">{s.icon}</div>
-            <h3 className="font-semibold text-gray-800 dark:text-white">{s.title}</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{s.phrases.length} 句常用</p>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+  const { customPhrases } = useScenarioPhrases();
+  const { recordPractice } = useStats();
+  useEffect(() => { if (!isSpeaking) setSpeakingPhrase(null); }, [isSpeaking]);
+  const scenarios = useMemo<Scenario[]>(() => [...topicPractices.map(topic => ({ category: topic.category, icon: topic.icon, title: topic.title, phrases: [...topic.lines.map(({ lao, chinese, pinyin }) => ({ lao, chinese, pinyin })), ...customPhrases.filter(p => p.category === topic.category).map(p => ({ ...p, custom: true }))] })), { category: '自身行业短语', icon: '🧰', title: '自身行业短语', phrases: customPhrases.filter(p => p.category === '自身行业短语').map(p => ({ ...p, custom: true })) }], [customPhrases]);
+  const filtered = categoryFilter === 'all' ? scenarios : scenarios.filter(item => item.category === categoryFilter);
+  const selected = scenarios.find(item => item.category === selectedCategory);
+  if (selected) return <div className="min-h-screen bg-gray-50 dark:bg-gray-900"><header className="sticky top-0 z-10 flex items-center gap-3 border-b bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800"><button onClick={() => setSelectedCategory(null)} className="text-3xl" aria-label="返回">‹</button><div><h1 className="text-lg font-semibold dark:text-white">{selected.icon} {selected.title}</h1><p className="text-xs text-gray-400">{selected.category} · {selected.phrases.length} 条练习</p></div></header><div className="space-y-2 px-4 py-4">{selected.phrases.map((phrase, index) => { const key = `${selected.category}-${index}`; const active = isSpeaking && speakingPhrase === key; return <div key={`${phrase.lao}-${index}`} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"><div className="flex items-start gap-3"><div className="min-w-0 flex-1"><div className="lao-text break-words text-xl font-semibold dark:text-white">{phrase.lao}</div>{phrase.custom && <span className="text-xs text-emerald-600">我的短语</span>}<div className="mt-1 text-gray-600 dark:text-gray-300">{phrase.chinese}</div><div className="mt-1 font-mono text-sm text-amber-600">{phrase.pinyin}</div></div><div className="flex shrink-0 gap-1.5"><button onClick={() => { setSpeakingPhrase(key); speakLao(phrase.lao); }} aria-label="播放" className={`inline-flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sky-700 ${active ? 'ring-2 ring-sky-300' : ''}`}><Volume2 size={18} /></button><button onClick={() => { recordPractice(1); setPracticePhrase(phrase); }} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-green-100 text-green-700" aria-label="跟读"><Mic size={18} /></button><button onClick={() => toggleFavorite(phrase.lao)} className="inline-flex h-9 w-9 items-center justify-center rounded-full leading-none" aria-label="收藏"><Heart size={18} fill={isFavorite(phrase.lao) ? 'currentColor' : 'none'} className={isFavorite(phrase.lao) ? 'text-red-500' : 'text-gray-400'} /></button></div></div>{active && <div className="mt-2 text-right text-xs text-sky-600">播放中</div>}</div>; })}</div>{practicePhrase && <SpeechPractice targetText={practicePhrase.lao} chineseText={practicePhrase.chinese} pinyin={practicePhrase.pinyin} onClose={() => setPracticePhrase(null)} />}</div>;
+  return <div className="min-h-screen bg-gray-50 dark:bg-gray-900"><header className="sticky top-0 z-10 border-b bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800"><div className="flex items-center gap-3"><button onClick={goBack} className="text-3xl" aria-label="返回">‹</button><div><h1 className="text-lg font-semibold dark:text-white">场景练习</h1><p className="text-xs text-gray-400">{scenarios.length} 个主题 · 可持续添加行业短语</p></div></div><select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)} className="mt-3 h-10 w-full rounded-lg border bg-gray-50 px-3 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"><option value="all">全部主题</option>{scenarios.map(item => <option key={item.category} value={item.category}>{item.category}</option>)}</select></header><div className="grid grid-cols-2 gap-3 px-4 py-4">{filtered.map(item => <button key={item.category} onClick={() => setSelectedCategory(item.category)} className="min-h-36 rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800"><div className="mb-2 text-3xl">{item.icon}</div><h3 className="font-semibold dark:text-white">{item.title}</h3><p className="mt-1 text-xs text-emerald-700">{item.category}</p><p className="mt-1 text-xs text-gray-400">{item.phrases.length} 条练习</p></button>)}</div></div>;
 }

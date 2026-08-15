@@ -225,9 +225,9 @@ const UNITS: Item[] = [
 ];
 
 // ======== 通用列表组件 ========
-function WordList({ items, color, speakLao, speakSlow, isSpeaking }: {
+function WordList({ items, color, speakLao, isSpeaking }: {
   items: Item[]; color: string;
-  speakLao: (t: string, r?: number) => void; speakSlow: (t: string) => void; isSpeaking: boolean;
+  speakLao: (t: string, r?: number) => void; isSpeaking: boolean;
 }) {
   return (
     <div className="space-y-1">
@@ -239,10 +239,8 @@ function WordList({ items, color, speakLao, speakSlow, isSpeaking }: {
             <span className="text-[9px] text-gray-400 ml-1">{p.pinyin}</span>
           </div>
           <div className="flex gap-1 ml-1 flex-shrink-0">
-            <button onClick={() => speakLao(p.lao, 1.3)} disabled={isSpeaking}
+            <button onClick={() => speakLao(p.lao, 1)} disabled={isSpeaking}
               className="p-1 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400 text-xs active:scale-90">🔊</button>
-            <button onClick={() => speakSlow(p.lao)} disabled={isSpeaking}
-              className="p-1 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400 text-xs active:scale-90">🐢</button>
           </div>
         </div>
       ))}
@@ -257,7 +255,7 @@ function GridWords({ items, bgColor, speakLao, isSpeaking }: {
   return (
     <div className="grid grid-cols-3 gap-1.5">
       {items.map((c, i) => (
-        <button key={i} onClick={() => speakLao(c.lao, 1.3)} disabled={isSpeaking}
+        <button key={i} onClick={() => speakLao(c.lao, 1)} disabled={isSpeaking}
           className={`flex flex-col items-center py-2 ${bgColor} rounded-xl hover:brightness-95 transition-all active:scale-95`}>
           <span className="text-sm font-bold text-gray-800 dark:text-white">{c.cn}</span>
           <span className="lao-text text-[10px] text-gray-600 dark:text-gray-300 font-medium">{c.lao}</span>
@@ -284,7 +282,7 @@ export default function NumberCalculatorPage({ goBack }: Props) {
   const [fromCurrency, setFromCurrency] = useState<Currency>('kip');
   const [showConverter, setShowConverter] = useState(false);
   const [showLaoPanel, setShowLaoPanel] = useState(false);
-  const { speakLao, speakSlow, isSpeaking } = useSpeech();
+  const { speakLao, isSpeaking } = useSpeech();
 
   const formatNumber = useCallback((num: number): string => {
     if (Number.isInteger(num) && Math.abs(num) < 1e15) return num.toLocaleString('en-US');
@@ -321,7 +319,7 @@ export default function NumberCalculatorPage({ goBack }: Props) {
   useEffect(() => {
     if (timer.current) clearTimeout(timer.current);
     if (laoText && currentNumber && currentNumber > 0) {
-      timer.current = setTimeout(() => speakLao(laoText, 1.3), 800);
+      timer.current = setTimeout(() => speakLao(laoText, 1), 800);
     }
     return () => { if (timer.current) clearTimeout(timer.current); };
   }, [laoText, currentNumber, speakLao]);
@@ -334,7 +332,7 @@ export default function NumberCalculatorPage({ goBack }: Props) {
   }, [expression, result, fromCurrency]);
 
   const handleButton = useCallback((key: string) => {
-    if (laoOperators[key]) speakLao(laoOperators[key], 1.3);
+    if (laoOperators[key]) speakLao(laoOperators[key], 1);
     if (key === 'AC') { setExpression(''); setResult(null); return; }
     if (key === '⌫') { if (result !== null) { setResult(null); setExpression(''); } else setExpression(p => p.slice(0, -1)); return; }
     if (key === '%') { if (result !== null) setResult(result / 100); else { const n = parseFloat(expression); if (!isNaN(n)) { setResult(n / 100); setExpression(''); } } return; }
@@ -425,29 +423,26 @@ export default function NumberCalculatorPage({ goBack }: Props) {
             {/* Lao Bar */}
             {laoText && currentNumber && currentNumber > 0 && (
               <div className="mx-4 mb-2">
-                <button onClick={() => setShowLaoPanel(!showLaoPanel)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-2xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
-                  <div className="flex items-center gap-2 min-w-0">
+                <div className="w-full flex items-center justify-between px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-2xl transition-colors">
+                  <button onClick={() => setShowLaoPanel(v => !v)} className="flex min-w-0 items-center gap-2 text-left">
                     <span className="text-blue-500 text-lg">🇱🇦</span>
                     <span className="lao-text text-blue-700 dark:text-blue-300 text-sm font-medium truncate">{laoText}</span>
-                  </div>
+                  </button>
                   <div className="flex items-center gap-1.5 flex-shrink-0">
-                    <button onClick={e => { e.stopPropagation(); speakLao(laoText, 1.3); }} disabled={isSpeaking}
+                    <button onClick={e => { e.stopPropagation(); speakLao(laoText, 1); }} disabled={isSpeaking}
                       className="p-1.5 bg-blue-200 dark:bg-blue-800 rounded-lg text-blue-700 dark:text-blue-300 text-xs">🔊</button>
-                    <button onClick={e => { e.stopPropagation(); speakSlow(laoText); }} disabled={isSpeaking}
-                      className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400 text-xs">🐢</button>
                     <span className="text-gray-400 text-xs ml-1">{showLaoPanel ? '▲' : '▼'}</span>
                   </div>
-                </button>
+                </div>
                 {showLaoPanel && (
                   <div className="mt-2 p-4 bg-white dark:bg-gray-700 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-600 text-center">
                     <div className="lao-text text-3xl font-bold text-gray-800 dark:text-white mb-2">{laoText}</div>
                     <div className="text-xs text-gray-400 mb-3">老挝语读法</div>
                     <div className="flex gap-2 justify-center">
-                      <button onClick={() => speakLao(laoText, 1.3)} disabled={isSpeaking}
+                      <button onClick={() => speakLao(laoText, 1)} disabled={isSpeaking}
                         className="px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-medium active:scale-95">🔊 正常</button>
-                      <button onClick={() => speakSlow(laoText)} disabled={isSpeaking}
-                        className="px-4 py-2 bg-purple-500 text-white rounded-xl text-sm font-medium active:scale-95">🐢 慢速</button>
+                      <button onClick={() => speakLao(laoText, 1)} disabled={isSpeaking}
+                        className="px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-medium active:scale-95">🔊 正常</button>
                     </div>
                   </div>
                 )}
@@ -528,15 +523,15 @@ export default function NumberCalculatorPage({ goBack }: Props) {
           </div>
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">🚜 农活</h3>
-            <WordList items={FARM_SENTENCES} color="text-green-600 dark:text-green-400" speakLao={speakLao} speakSlow={speakSlow} isSpeaking={isSpeaking} />
+            <WordList items={FARM_SENTENCES} color="text-green-600 dark:text-green-400" speakLao={speakLao} isSpeaking={isSpeaking} />
           </div>
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">🏭 红薯粉加工</h3>
-            <WordList items={PROCESSING} color="text-orange-600 dark:text-orange-400" speakLao={speakLao} speakSlow={speakSlow} isSpeaking={isSpeaking} />
+            <WordList items={PROCESSING} color="text-orange-600 dark:text-orange-400" speakLao={speakLao} isSpeaking={isSpeaking} />
           </div>
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">👷 管理工人</h3>
-            <WordList items={WORKER} color="text-blue-600 dark:text-blue-400" speakLao={speakLao} speakSlow={speakSlow} isSpeaking={isSpeaking} />
+            <WordList items={WORKER} color="text-blue-600 dark:text-blue-400" speakLao={speakLao} isSpeaking={isSpeaking} />
           </div>
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">📦 量词</h3>
@@ -562,7 +557,7 @@ export default function NumberCalculatorPage({ goBack }: Props) {
           </div>
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">😋 口味 & 用餐</h3>
-            <WordList items={COOKING.slice(22)} color="text-orange-600 dark:text-orange-400" speakLao={speakLao} speakSlow={speakSlow} isSpeaking={isSpeaking} />
+            <WordList items={COOKING.slice(22)} color="text-orange-600 dark:text-orange-400" speakLao={speakLao} isSpeaking={isSpeaking} />
           </div>
         </div>
       )}
@@ -572,17 +567,17 @@ export default function NumberCalculatorPage({ goBack }: Props) {
         <div className="flex-1 px-4 py-3 space-y-3 overflow-auto">
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">💰 卖货</h3>
-            <WordList items={SELLING} color="text-amber-600 dark:text-amber-400" speakLao={speakLao} speakSlow={speakSlow} isSpeaking={isSpeaking} />
+            <WordList items={SELLING} color="text-amber-600 dark:text-amber-400" speakLao={speakLao} isSpeaking={isSpeaking} />
           </div>
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">🗣️ 砍价</h3>
-            <WordList items={PHRASES} color="text-blue-600 dark:text-blue-400" speakLao={speakLao} speakSlow={speakSlow} isSpeaking={isSpeaking} />
+            <WordList items={PHRASES} color="text-blue-600 dark:text-blue-400" speakLao={speakLao} isSpeaking={isSpeaking} />
           </div>
           <div className="bg-white dark:bg-[#1A1A1A] rounded-3xl p-4 shadow-sm">
             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">🔢 数字发音</h3>
             <div className="grid grid-cols-5 gap-1.5">
               {Object.entries(laoDigits).map(([num, lao]) => (
-                <button key={num} onClick={() => speakLao(lao, 1.3)} disabled={isSpeaking}
+                <button key={num} onClick={() => speakLao(lao, 1)} disabled={isSpeaking}
                   className="flex flex-col items-center py-2 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors active:scale-95">
                   <span className="text-lg font-bold text-gray-800 dark:text-white">{num}</span>
                   <span className="lao-text text-[10px] text-blue-600 dark:text-blue-400 font-medium">{lao}</span>
@@ -610,7 +605,7 @@ export default function NumberCalculatorPage({ goBack }: Props) {
                 const bg = colorMap[c.cn] || '#94a3b8';
                 const isLight = ['白色', '黄色', '银色', '浅色', '金色'].includes(c.cn);
                 return (
-                  <button key={i} onClick={() => speakLao(c.lao, 1.3)} disabled={isSpeaking}
+                  <button key={i} onClick={() => speakLao(c.lao, 1)} disabled={isSpeaking}
                     className="flex flex-col items-center py-3 rounded-xl border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all active:scale-95"
                     style={{ backgroundColor: bg }}>
                     <span className={`text-sm font-bold ${isLight ? 'text-gray-800' : 'text-white'}`}>{c.cn}</span>

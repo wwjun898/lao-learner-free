@@ -1,205 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSpeech } from '../hooks/useSpeech';
 
-interface Props {
-  targetText: string;
-  chineseText: string;
-  pinyin?: string;
-  onClose: () => void;
-}
+interface Props { targetText: string; chineseText: string; pinyin?: string; onClose: () => void }
 
 export default function SpeechPractice({ targetText, chineseText, pinyin, onClose }: Props) {
-  const { 
-    isListening, transcript, isSpeaking, ready,
-    speakLao, speakSlow, speakChinese, speakThai,
-    startListening, stopListening, compareText, stopSpeaking
-  } = useSpeech();
-  
+  const { isListening, transcript, isSpeaking, listeningError, recognitionStatus, inputLevel, recordedAudioUrl, speakLao, speakSlow, speakChinese, startListening, stopListening, compareText, stopSpeaking } = useSpeech();
+  const [activePlayback, setActivePlayback] = useState<'lao' | 'slow' | 'chinese' | null>(null);
   const [score, setScore] = useState<number | null>(null);
-  const [attempts, setAttempts] = useState<number[]>([]);
-  const [showResult, setShowResult] = useState(false);
-  const [debugLog, setDebugLog] = useState<string[]>([]);
-  const [showDebug, setShowDebug] = useState(false);
-
-  const log = (msg: string) => {
-    setDebugLog(prev => [...prev.slice(-10), `${new Date().toLocaleTimeString()}: ${msg}`]);
-  };
-
-  useEffect(() => {
-    log(`语音引擎${ready ? '就绪 ✅' : '加载中...'}`);
-  }, [ready]);
-
-  const handleListen = () => {
-    if (isListening) {
-      stopListening();
-    } else {
-      setScore(null);
-      setShowResult(false);
-      const ok = startListening();
-      log(ok ? '🎤 开始录音...' : '❌ 录音启动失败');
-    }
-  };
-
-  useEffect(() => {
-    if (!isListening && transcript) {
-      const s = compareText(targetText, transcript);
-      setScore(s);
-      setShowResult(true);
-      setAttempts(prev => [...prev, s]);
-      log(`识别结果: "${transcript}" → ${s}分`);
-    }
-  }, [isListening, transcript, targetText, compareText]);
-
-  const avgScore = attempts.length > 0 
-    ? Math.round(attempts.reduce((a, b) => a + b, 0) / attempts.length) 
-    : 0;
-
-  const getScoreEmoji = (s: number) => s >= 90 ? '🎉' : s >= 70 ? '👍' : s >= 50 ? '💪' : '😅';
-  const getScoreColor = (s: number) => {
-    if (s >= 90) return 'text-green-600 bg-green-50 border-green-200';
-    if (s >= 70) return 'text-blue-600 bg-blue-50 border-blue-200';
-    if (s >= 50) return 'text-amber-600 bg-amber-50 border-amber-200';
-    return 'text-red-600 bg-red-50 border-red-200';
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center">
-      <div className="bg-white dark:bg-gray-800 rounded-t-3xl w-full max-w-[480px] max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 px-6 py-4 rounded-t-3xl">
-          <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-3" />
-          <h2 className="text-lg font-semibold text-center dark:text-white">🎤 语音跟读</h2>
-        </div>
-
-        <div className="px-6 py-4 space-y-4">
-          {/* Target Text */}
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-5 text-center">
-            <div className="text-xs text-blue-400 mb-2">跟读目标</div>
-            <div className="lao-text text-4xl font-bold text-gray-800 dark:text-white mb-2">{targetText}</div>
-            <div className="text-lg text-gray-600 dark:text-gray-300">{chineseText}</div>
-            {pinyin && <div className="text-sm text-amber-600 dark:text-amber-400 mt-1 font-mono">{pinyin}</div>}
-          </div>
-
-          {/* Listen Buttons */}
-          <div className="space-y-2">
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">🔊 点击听发音：</div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => { speakLao(targetText); log('🔊 老挝语发音'); }}
-                disabled={isSpeaking}
-                className="py-3 bg-blue-600 text-white rounded-xl font-semibold 
-                           hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
-              >
-                {isSpeaking ? '🔊 播放中' : '🇱🇦 老挝语'}
-              </button>
-              <button
-                onClick={() => { speakSlow(targetText); log('🔊 慢速发音'); }}
-                disabled={isSpeaking}
-                className="py-3 bg-purple-600 text-white rounded-xl font-semibold 
-                           hover:bg-purple-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
-              >
-                {isSpeaking ? '🔊 播放中' : '🐢 慢速'}
-              </button>
-              <button
-                onClick={() => { speakThai(targetText); log('🔊 泰语近似'); }}
-                disabled={isSpeaking}
-                className="py-3 bg-green-600 text-white rounded-xl font-semibold 
-                           hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
-              >
-                {isSpeaking ? '🔊 播放中' : '🇹🇭 泰语'}
-              </button>
-              <button
-                onClick={() => { speakChinese(chineseText); log('🔊 中文意思'); }}
-                disabled={isSpeaking}
-                className="py-3 bg-amber-600 text-white rounded-xl font-semibold 
-                           hover:bg-amber-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
-              >
-                {isSpeaking ? '🔊 播放中' : '🇨🇳 中文'}
-              </button>
-            </div>
-          </div>
-
-          {/* Record Button */}
-          <button
-            onClick={handleListen}
-            className={`w-full py-4 rounded-2xl font-bold text-lg transition-all duration-200 ${
-              isListening 
-                ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-200' 
-                : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:shadow-lg'
-            }`}
-          >
-            {isListening ? '⏹️ 停止录音' : '🎙️ 开始跟读'}
-          </button>
-
-          {/* Transcript */}
-          {transcript && (
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
-              <div className="text-xs text-gray-400 mb-1">识别结果</div>
-              <div className="lao-text text-xl text-gray-800 dark:text-white">{transcript}</div>
-            </div>
-          )}
-
-          {/* Score */}
-          {showResult && score !== null && (
-            <div className={`rounded-2xl p-5 text-center border-2 ${getScoreColor(score)}`}>
-              <div className="text-4xl mb-2">{getScoreEmoji(score)}</div>
-              <div className="text-3xl font-bold mb-1">{score}分</div>
-              <div className="text-sm opacity-75">
-                {score >= 90 ? '太棒了！' : score >= 70 ? '不错！' : score >= 50 ? '加油！' : '再试一次！'}
-              </div>
-            </div>
-          )}
-
-          {/* Attempts */}
-          {attempts.length > 0 && (
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-400">练习记录</span>
-                <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">平均 {avgScore} 分</span>
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                {attempts.map((a, i) => (
-                  <span key={i} className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(a)}`}>{a}分</span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Debug Panel */}
-          <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
-            <button 
-              onClick={() => setShowDebug(!showDebug)}
-              className="w-full px-4 py-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 flex items-center justify-between"
-            >
-              <span>🔧 调试信息</span>
-              <span>{showDebug ? '收起' : '展开'}</span>
-            </button>
-            {showDebug && (
-              <div className="p-3 bg-gray-900 text-green-400 text-xs font-mono max-h-32 overflow-y-auto">
-                {debugLog.length === 0 ? '暂无日志' : debugLog.map((l, i) => <div key={i}>{l}</div>)}
-              </div>
-            )}
-          </div>
-
-          {/* Tips */}
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-3">
-            <p className="text-xs text-blue-700 dark:text-blue-300">
-              <span className="font-semibold">💡 使用说明：</span>
-              <br/>• 老挝语/泰语按钮：听老挝语发音（浏览器会用泰语语音模拟）
-              <br/>• 如果听不到声音：点击「🔧 调试信息」查看日志，截图给我排查
-              <br/>• 推荐使用 <b>Chrome</b> 浏览器
-            </p>
-          </div>
-
-          {/* Close */}
-          <button
-            onClick={() => { stopSpeaking(); onClose(); }}
-            className="w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-          >
-            关闭
-          </button>
-        </div>
-      </div>
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  useEffect(() => { if (!isSpeaking) setActivePlayback(null); }, [isSpeaking]);
+  useEffect(() => { if (!isListening) return; setRecordingSeconds(0); const timer = window.setInterval(() => setRecordingSeconds(n => n + 1), 1000); return () => window.clearInterval(timer); }, [isListening]);
+  useEffect(() => () => stopListening(), [stopListening]);
+  useEffect(() => { if (!isListening && transcript) setScore(compareText(targetText, transcript)); }, [isListening, transcript, targetText, compareText]);
+  const play = (kind: 'lao' | 'slow' | 'chinese') => { setActivePlayback(kind); if (kind === 'lao') speakLao(targetText); if (kind === 'slow') speakSlow(targetText); if (kind === 'chinese') speakChinese(chineseText); };
+  const close = () => { stopListening(); stopSpeaking(); onClose(); };
+  return <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50"><div className="flex h-[min(90dvh,760px)] w-full max-w-[480px] flex-col overflow-hidden rounded-t-3xl bg-white dark:bg-gray-800">
+    <header className="shrink-0 border-b border-gray-100 px-6 py-4 dark:border-gray-700"><div className="mx-auto mb-3 h-1 w-12 rounded-full bg-gray-300" /><h2 className="text-center text-lg font-semibold dark:text-white">🎤 语音跟读</h2></header>
+    <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-4">
+      <div className="rounded-2xl bg-blue-50 p-5 text-center dark:bg-blue-900/30"><div className="mb-2 text-xs text-blue-400">跟读目标</div><div className="lao-text mb-2 text-4xl font-bold text-gray-800 dark:text-white">{targetText}</div><div className="text-lg text-gray-600 dark:text-gray-300">{chineseText}</div>{pinyin && <div className="mt-1 font-mono text-sm text-amber-600">{pinyin}</div>}</div>
+      <div><div className="mb-2 text-xs text-gray-500">🔊 点击听发音：</div><div className="grid grid-cols-3 gap-2">
+        {([['lao', '🔊 老挝语', 'bg-emerald-700'], ['slow', '🐢 慢速', 'bg-amber-500'], ['chinese', '中文', 'bg-sky-600']] as const).map(([kind, label, color]) => <button key={kind} onClick={() => play(kind)} aria-disabled={isSpeaking} className={`h-12 rounded-xl ${color} text-sm font-semibold text-white ${activePlayback === kind ? 'ring-4 ring-white/60' : ''}`}>{activePlayback === kind ? '播放中' : label}</button>)}
+      </div></div>
+      <button onClick={() => isListening ? stopListening() : startListening()} className={`w-full rounded-2xl py-4 text-lg font-bold text-white ${isListening ? 'bg-red-500' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}>{isListening ? '⏹️ 停止录音' : '🎙️ 开始跟读'}</button>
+      {isListening && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"><div className="flex justify-between"><span>正在录音，请朗读上方老挝语</span><span>{recordingSeconds} 秒</span></div><div className="mt-3 flex h-8 items-center justify-center gap-1">{[.55,.8,1,.7,.9,.6,.75].map((factor, i) => <span key={i} className="w-1.5 rounded-full bg-red-500" style={{ height: `${Math.max(5, inputLevel * 28 * factor)}px` }} />)}</div><p className="mt-1 text-center text-xs">最长录音 10 秒，也可以手动停止</p></div>}
+      {listeningError && <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">{listeningError}</div>}
+      {recognitionStatus && <div className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800">{recognitionStatus}</div>}
+      {recordedAudioUrl && !isListening && <div className="rounded-xl bg-gray-50 p-4"><div className="mb-2 text-xs text-gray-500">回听本次录音</div><audio className="h-10 w-full" src={recordedAudioUrl} controls /></div>}
+      {transcript && <div className="rounded-xl bg-gray-50 p-4"><div className="text-xs text-gray-400">识别结果</div><div className="lao-text text-xl text-gray-800">{transcript}</div>{score !== null && <div className="mt-2 text-lg font-bold text-emerald-600">匹配度 {score} 分</div>}</div>}
+      <button onClick={close} className="w-full rounded-xl bg-gray-100 py-3 font-semibold text-gray-600">关闭</button>
     </div>
-  );
+  </div></div>;
 }

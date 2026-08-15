@@ -1,161 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Mic, Volume2 } from '../components/IconGlyphs';
+import SpeechPractice from '../components/SpeechPractice';
 import { dialogues } from '../data/dialogues';
 import { useSpeech } from '../hooks/useSpeech';
-import SpeechPractice from '../components/SpeechPractice';
+import { useStats } from '../hooks/useStats';
 
-interface Props {
-  goBack: () => void;
-}
+interface Props { goBack: () => void }
 
 export default function DialoguePage({ goBack }: Props) {
-  const [selectedDialogue, setSelectedDialogue] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [category, setCategory] = useState('all');
   const [showPinyin, setShowPinyin] = useState(true);
-  const [practiceLine, setPracticeLine] = useState<{lao: string; chinese: string; pinyin: string} | null>(null);
+  const [practiceLine, setPracticeLine] = useState<{ lao: string; chinese: string; pinyin: string } | null>(null);
+  const [speakingLine, setSpeakingLine] = useState<string | null>(null);
   const { speakLao, isSpeaking } = useSpeech();
+  const { recordPractice } = useStats();
+  useEffect(() => { if (!isSpeaking) setSpeakingLine(null); }, [isSpeaking]);
+  const filtered = category === 'all' ? dialogues : dialogues.filter(item => item.category === category);
 
-  if (selectedDialogue !== null) {
-    const dialogue = dialogues[selectedDialogue];
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 sticky top-0 z-10">
-          <button onClick={() => setSelectedDialogue(null)} className="p-2 hover:bg-gray-100 rounded-lg">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <div className="flex-1">
-            <h1 className="text-lg font-semibold">{dialogue.title}</h1>
-            <p className="text-xs text-gray-500">{dialogue.scenario}</p>
-          </div>
-          <button
-            onClick={() => setShowPinyin(!showPinyin)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-              showPinyin ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
-            }`}
-          >
-            {showPinyin ? '隐藏拼音' : '显示拼音'}
-          </button>
-        </div>
-
-        {/* Dialogue */}
-        <div className="px-4 py-4 space-y-3">
-          {dialogue.lines.map((line, i) => (
-            <div key={i} className={`flex ${line.speaker === 'A' ? 'justify-start' : 'justify-end'}`}>
-              <div className={`max-w-[85%] rounded-2xl p-4 ${
-                line.speaker === 'A' 
-                  ? 'bg-white border border-gray-200' 
-                  : 'bg-blue-600 text-white'
-              }`}>
-                <div className={`text-xs mb-1 ${line.speaker === 'A' ? 'text-gray-400' : 'text-blue-200'}`}>
-                  {line.speaker === 'A' ? '你' : '老挝人'}
-                </div>
-                <div className={`lao-text text-xl font-semibold ${line.speaker === 'A' ? 'text-gray-800' : 'text-white'}`}>
-                  {line.lao}
-                </div>
-                <div className={`text-sm mt-1 ${line.speaker === 'A' ? 'text-gray-600' : 'text-blue-100'}`}>
-                  {line.chinese}
-                </div>
-                {showPinyin && (
-                  <div className={`text-xs mt-1 font-mono ${line.speaker === 'A' ? 'text-amber-600' : 'text-blue-200'}`}>
-                    {line.pinyin}
-                  </div>
-                )}
-                
-                {/* 语音按钮 */}
-                <div className="flex gap-2 mt-3">
-                  <button
-                    onClick={() => speakLao(line.lao)}
-                    disabled={isSpeaking}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors disabled:opacity-50 ${
-                      line.speaker === 'A'
-                        ? 'bg-blue-100 text-blue-600 hover:bg-blue-200'
-                        : 'bg-blue-500 text-white hover:bg-blue-400'
-                    }`}
-                  >
-                    🔊 听
-                  </button>
-                  <button
-                    onClick={() => setPracticeLine({lao: line.lao, chinese: line.chinese, pinyin: line.pinyin})}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                      line.speaker === 'A'
-                        ? 'bg-green-100 text-green-600 hover:bg-green-200'
-                        : 'bg-green-500 text-white hover:bg-green-400'
-                    }`}
-                  >
-                    🎤 读
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Practice All Button */}
-        <div className="px-4 pb-6">
-          <button
-            onClick={() => {
-              const fullLao = dialogue.lines.map(l => l.lao).join(' ');
-              const fullChinese = dialogue.lines.map(l => l.chinese).join(' ');
-              setPracticeLine({lao: fullLao, chinese: fullChinese, pinyin: ''});
-            }}
-            className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl font-bold text-lg 
-                       hover:shadow-lg transition-all"
-          >
-            🎤 整段跟读练习
-          </button>
-        </div>
-
-        {/* Speech Practice Modal */}
-        {practiceLine && (
-          <SpeechPractice
-            targetText={practiceLine.lao}
-            chineseText={practiceLine.chinese}
-            pinyin={practiceLine.pinyin}
-            onClose={() => setPracticeLine(null)}
-          />
-        )}
-      </div>
-    );
+  if (selected !== null) {
+    const dialogue = dialogues[selected];
+    return <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800"><button onClick={() => setSelected(null)} className="text-3xl" aria-label="返回">‹</button><div className="min-w-0 flex-1"><h1 className="truncate text-lg font-semibold dark:text-white">{dialogue.title}</h1><p className="truncate text-xs text-gray-500">{dialogue.category} · {dialogue.scenario}</p></div><button onClick={() => setShowPinyin(v => !v)} className="rounded-full bg-amber-100 px-3 py-1.5 text-xs text-amber-800">{showPinyin ? '隐藏拼音' : '显示拼音'}</button></header>
+      <div className="space-y-3 px-4 py-4">{dialogue.lines.map((line, lineIndex) => { const key = `${selected}-${lineIndex}`; const learner = line.speaker === 'A'; const active = isSpeaking && speakingLine === key; return <div key={lineIndex} className={`flex ${learner ? 'justify-start' : 'justify-end'}`}><div className={`max-w-[88%] rounded-2xl p-4 shadow-sm ${learner ? 'border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800' : 'bg-emerald-700 text-white'}`}><div className="mb-1 text-xs opacity-70">{learner ? '你' : '老挝人'}</div><div className="lao-text text-xl font-semibold">{line.lao}</div><div className="mt-1 text-sm">{line.chinese}</div>{showPinyin && <div className="mt-1 font-mono text-xs text-amber-600">{line.pinyin}</div>}<div className="mt-3 flex gap-2"><button onClick={() => { setSpeakingLine(key); speakLao(line.lao); }} aria-label="播放" className={`inline-flex items-center gap-1 rounded-full bg-sky-100 px-3 py-1.5 text-sm text-sky-700 ${active ? 'ring-2 ring-sky-300' : ''}`}><Volume2 size={15} />{active ? '播放中' : '听'}</button><button onClick={() => { recordPractice(1); setPracticeLine({ lao: line.lao, chinese: line.chinese, pinyin: line.pinyin }); }} className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1.5 text-sm text-emerald-700"><Mic size={15} />跟读</button></div></div></div>; })}</div>
+      {practiceLine && <SpeechPractice targetText={practiceLine.lao} chineseText={practiceLine.chinese} pinyin={practiceLine.pinyin} onClose={() => setPracticeLine(null)} />}
+    </div>;
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 sticky top-0 z-10">
-        <button onClick={goBack} className="p-2 hover:bg-gray-100 rounded-lg">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 className="text-lg font-semibold">常用对话</h1>
-      </div>
-
-      {/* Dialogue List */}
-      <div className="px-4 py-4 space-y-3">
-        {dialogues.map((d, i) => (
-          <button
-            key={i}
-            onClick={() => setSelectedDialogue(i)}
-            className="w-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 
-                       hover:shadow-md hover:border-blue-200 transition-all duration-200 text-left"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-2xl">
-                💬
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-800">{d.title}</h3>
-                <p className="text-sm text-gray-500">{d.scenario}</p>
-                <p className="text-xs text-gray-400 mt-1">{d.lines.length} 句对话 · 🎤 支持跟读</p>
-              </div>
-              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="min-h-screen bg-gray-50 dark:bg-gray-900"><header className="sticky top-0 z-10 border-b bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800"><div className="flex items-center gap-3"><button onClick={goBack} className="text-3xl" aria-label="返回">‹</button><div><h1 className="text-lg font-semibold dark:text-white">实用对话</h1><p className="text-xs text-gray-400">{dialogues.length} 个主题 · 每个主题 50 句</p></div></div><select value={category} onChange={e => setCategory(e.target.value)} className="mt-3 h-10 w-full rounded-lg border bg-gray-50 px-3 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"><option value="all">全部主题</option>{dialogues.map(item => <option key={item.category} value={item.category}>{item.category}</option>)}</select></header><div className="grid grid-cols-2 gap-3 px-4 py-4">{filtered.map(item => <button key={item.category} onClick={() => setSelected(dialogues.indexOf(item))} className="min-h-36 rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800"><div className="mb-2 text-3xl">{item.icon}</div><h3 className="font-semibold dark:text-white">{item.title}</h3><p className="mt-1 text-xs text-emerald-700">{item.category}</p><p className="mt-1 text-xs text-gray-400">{item.lines.length} 句对话</p></button>)}</div></div>;
 }

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-primary: #FF6900;
@@ -14,8 +15,6 @@
 }
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
@@ -43,7 +42,23 @@ body {
 .dark .bg-surface-2 { background: #111111; }
 
 .lao-text {
-  font-family: 'Noto Sans Lao', 'Phetsarath OT', 'Saysettha OT', sans-serif;
+  font-family: 'Phetsarath OT', 'Phetsarath', 'Saysettha OT', 'Leelawadee UI', 'Noto Sans Thai', sans-serif;
+}
+
+@font-face {
+  font-family: 'Phetsarath OT';
+  src: url('/lao-learner/fonts/phetsarath-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Phetsarath OT';
+  src: url('/lao-learner/fonts/phetsarath-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
 }
 
 /* MIUI-style scrollbar */

@@ -18,13 +18,14 @@ RATE_NORMAL = "+0%"
 RATE_SLOW = "-40%"
 
 def extract_lao_from_data_files():
-    """Extract Lao text from data files (alphabet, vocabulary, dialogues)."""
+    """Extract Lao text from vocabulary and practice data files."""
     lao_texts = set()
     
     data_files = [
         "src/data/alphabet.ts",
         "src/data/vocabulary.ts",
         "src/data/dialogues.ts",
+        "src/data/topicPractice.ts",
     ]
     
     for filepath in data_files:

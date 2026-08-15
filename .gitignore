@@ -8,6 +8,16 @@ node_modules/
 
 # Build
 dist/
+.tts-cache/
+_android-tools/
+*.apk
+
+# Local test captures and temporary diagnostics
+lao-learner-*.png
+lao-v12-home.png
+lao-learner-v151-ui.xml
+server*.log
+vite*.log
 
 # Editor
 .vscode/*
