@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Mic, Star, Volume2 } from '../components/IconGlyphs';
-import { categories } from '../data/vocabulary';
+import { useCategories } from '../hooks/useCategories';
 import { useSpeech } from '../hooks/useSpeech';
 import { useVocabulary } from '../hooks/useVocabulary';
 import { useStats } from '../hooks/useStats';
@@ -18,6 +18,8 @@ export default function VocabularyPage({ goBack }: Props) {
   const [speakingLao, setSpeakingLao] = useState<string | null>(null);
   const { speakLao, isSpeaking } = useSpeech();
   const { vocabulary, isPriority, togglePriority, moveToCategory } = useVocabulary();
+  const { vocabularyCategories } = useCategories();
+  const categories = [...new Set([...vocabularyCategories, ...vocabulary.map(item => item.category)])];
   const { recordWordLearned, recordPractice } = useStats();
 
   const normalizedQuery = query.trim().toLowerCase();

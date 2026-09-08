@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { categories } from '../data/vocabulary';
+import { useCategories } from '../hooks/useCategories';
 import { useAnalysisLibrary } from '../hooks/useAnalysisLibrary';
 import { useSpeech } from '../hooks/useSpeech';
 
@@ -13,6 +13,8 @@ export default function AnalysisLibraryPage({ goBack }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [speakingLao, setSpeakingLao] = useState<string | null>(null);
   const { entries, updateCategory, removeEntry } = useAnalysisLibrary();
+  const { vocabularyCategories, practiceCategories } = useCategories();
+  const categories = [...new Set([...vocabularyCategories, ...practiceCategories, ...entries.map(item => item.category)])];
   const { speakLao, isSpeaking } = useSpeech();
 
   const filteredEntries = useMemo(() => {

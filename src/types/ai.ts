@@ -1,5 +1,5 @@
-export type AiProvider = 'gemini' | 'zhipu';
-export type AiMode = 'google' | 'zhipu';
+export type AiProvider = 'gemini';
+export type AiMode = 'google';
 
 export interface AnalysisExample {
   lao: string;

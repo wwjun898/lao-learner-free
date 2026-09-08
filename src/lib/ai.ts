@@ -1,4 +1,4 @@
-import { Capacitor, CapacitorHttp, type HttpOptions } from '@capacitor/core';
+import { Capacitor, CapacitorHttp, registerPlugin, type HttpOptions } from '@capacitor/core';
 import type { AiConfigStatus, AiMode, AnalysisResponse, LaoAnalysis } from '../types/ai';
 
 interface SaveAiConfigInput {
@@ -9,14 +9,11 @@ interface SaveAiConfigInput {
 interface StoredAiConfig {
   mode: AiMode;
   googleApiKey: string;
-  zhipuApiKey: string;
 }
 
 const STORAGE_KEY = 'lao-learner-ai-config';
 const DEFAULT_GEMINI_API_BASE = 'https://generativelanguage.googleapis.com';
-const ZHIPU_API_BASE = 'https://open.bigmodel.cn/api/paas/v4';
 const GOOGLE_GEMINI_MODEL = 'gemini-3.5-flash';
-const ZHIPU_MODEL = 'glm-4-flash-250414';
 const categories = [
   '数字', '货币', '时间', '日期', '大小', '重量', '长度', '形状', '颜色', '状态',
   '方位', '风景', '家庭', '职业', '身体部位', '看病健康', '人际关系', '社交礼貌',
@@ -61,14 +58,7 @@ function isNativeApp() {
 }
 
 function emptyConfig(): StoredAiConfig {
-  return { mode: 'google', googleApiKey: '', zhipuApiKey: '' };
-}
-
-function parseMode(value: unknown): AiMode {
-  return value === 'zhipu' || value === 'proxy302' || value === '302'
-    || value === 'doubao' || value === 'deepseek'
-    ? 'zhipu'
-    : 'google';
+  return { mode: 'google', googleApiKey: '' };
 }
 
 function geminiGenerateContentUrl(model: string, apiBase = DEFAULT_GEMINI_API_BASE): string {
@@ -76,7 +66,7 @@ function geminiGenerateContentUrl(model: string, apiBase = DEFAULT_GEMINI_API_BA
 }
 
 function activeApiKey(config: StoredAiConfig) {
-  return config.mode === 'zhipu' ? config.zhipuApiKey : config.googleApiKey;
+  return config.googleApiKey;
 }
 
 function geminiHeaders(apiKey: string): Record<string, string> {
@@ -89,11 +79,10 @@ function readNativeConfig(): StoredAiConfig {
       geminiApiKey?: string;
     };
     return {
-      mode: parseMode(value.mode),
+      mode: 'google',
       googleApiKey: typeof value.googleApiKey === 'string'
         ? value.googleApiKey
         : (typeof value.geminiApiKey === 'string' ? value.geminiApiKey : ''),
-      zhipuApiKey: typeof value.zhipuApiKey === 'string' ? value.zhipuApiKey : '',
     };
   } catch {
     return emptyConfig();
@@ -104,7 +93,7 @@ function configStatus(config: StoredAiConfig): AiConfigStatus {
   return {
     mode: config.mode,
     configured: Boolean(activeApiKey(config)),
-    apiBase: config.mode === 'zhipu' ? ZHIPU_API_BASE : DEFAULT_GEMINI_API_BASE,
+    apiBase: DEFAULT_GEMINI_API_BASE,
   };
 }
 
@@ -258,50 +247,19 @@ async function analyzeWithGemini(text: string, config: StoredAiConfig): Promise<
   throw new Error(`${providerName}解析内容不完整：${issues.join('、')}，请重试`);
 }
 
-async function analyzeWithZhipu(text: string, config: StoredAiConfig): Promise<AnalysisResponse> {
-  const providerName = '智谱 GLM 免费模型';
-  let issues: string[] = [];
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const payload = await nativeHttp({
-      url: `${ZHIPU_API_BASE}/chat/completions`,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${config.zhipuApiKey}`,
-      },
-      data: {
-        model: ZHIPU_MODEL,
-        messages: [{ role: 'user', content: createPrompt(text, issues) }],
-        response_format: { type: 'json_object' },
-        temperature: 0.2,
-      },
-    }, providerName);
-    const choices = Array.isArray(payload.choices) ? payload.choices : [];
-    const output = (choices[0] as { message?: { content?: string } } | undefined)?.message?.content || '';
-    const analysis = normalizeAnalysis(parseModelJson(output), text);
-    issues = analysisQualityIssues(analysis);
-    if (issues.length === 0) return { analysis, provider: 'zhipu', model: ZHIPU_MODEL };
-  }
-  throw new Error(`${providerName}解析内容不完整：${issues.join('、')}，请重试`);
-}
-
 export async function getAiConfig(): Promise<AiConfigStatus> {
   return isNativeApp() ? configStatus(readNativeConfig()) : requestJson<AiConfigStatus>('/api/ai/config');
 }
 
 export async function saveAiConfig(input: SaveAiConfigInput): Promise<AiConfigStatus> {
+  if (input.mode !== 'google') throw new Error('仅支持 Google Gemini，请刷新后重新设置');
   if (!isNativeApp()) {
     return requestJson<AiConfigStatus>('/api/ai/config', { method: 'POST', body: JSON.stringify(input) });
   }
   const current = readNativeConfig();
   const next: StoredAiConfig = {
-    mode: parseMode(input.mode),
-    googleApiKey: input.mode === 'google'
-      ? (input.apiKey?.trim() || current.googleApiKey)
-      : current.googleApiKey,
-    zhipuApiKey: input.mode === 'zhipu'
-      ? (input.apiKey?.trim() || current.zhipuApiKey)
-      : current.zhipuApiKey,
+    mode: 'google',
+    googleApiKey: input.apiKey?.trim() || current.googleApiKey,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   return configStatus(next);
@@ -320,8 +278,8 @@ export async function analyzeLao(text: string): Promise<AnalysisResponse> {
     });
   }
   const config = readNativeConfig();
-  if (!activeApiKey(config)) throw new Error('请先配置当前模式的 API Key');
-  return config.mode === 'zhipu' ? analyzeWithZhipu(text, config) : analyzeWithGemini(text, config);
+  if (!activeApiKey(config)) throw new Error('请先配置 Google Gemini API Key');
+  return analyzeWithGemini(text, config);
 }
 
 export function hasNativeGeminiConfig() {
@@ -346,30 +304,6 @@ function base64ToBytes(value: string) {
   return bytes;
 }
 
-function pcmToWav(pcm: Uint8Array, sampleRate = 24000) {
-  const header = new ArrayBuffer(44);
-  const view = new DataView(header);
-  const write = (offset: number, value: string) => {
-    for (let index = 0; index < value.length; index++) view.setUint8(offset + index, value.charCodeAt(index));
-  };
-  write(0, 'RIFF');
-  view.setUint32(4, 36 + pcm.byteLength, true);
-  write(8, 'WAVE');
-  write(12, 'fmt ');
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, 1, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * 2, true);
-  view.setUint16(32, 2, true);
-  view.setUint16(34, 16, true);
-  write(36, 'data');
-  view.setUint32(40, pcm.byteLength, true);
-  const wav = new Uint8Array(44 + pcm.byteLength);
-  wav.set(new Uint8Array(header), 0);
-  wav.set(pcm, 44);
-  return wav;
-}
 
 function openSpeechCache(): Promise<IDBDatabase> {
   return new Promise<IDBDatabase>((resolve, reject) => {
@@ -399,63 +333,43 @@ async function writeSpeechCache(key: string, audio: ArrayBuffer) {
   }).finally(() => database.close());
 }
 
+const MicrosoftSpeech = registerPlugin<{ synthesize(options: { text: string; slow: boolean }): Promise<{ audioBase64: string }> }>('MicrosoftSpeech');
+const pendingSpeech = new Map<string, Promise<Blob>>();
+
 export async function synthesizeLaoAudio(text: string, slow = false): Promise<Blob> {
-  if (!isNativeApp()) throw new Error('动态语音仅用于安卓应用');
   const normalizedText = text.normalize('NFC').trim();
   if (!normalizedText) throw new Error('没有可朗读的文字');
-  const config = readNativeConfig();
-  const apiKey = config.googleApiKey;
-  const cacheKey = `gemini-wav-v4:${slow ? 'slow' : 'normal'}:${normalizedText}`;
+  const cacheKey = `microsoft-mp3-v1:Chanthavong:${slow ? 'slow' : 'normal'}:${normalizedText}`;
   const cached = await readSpeechCache(cacheKey).catch(() => null);
-  if (cached) return new Blob([cached], { type: 'audio/wav' });
-
-  if (!apiKey) {
-    throw new Error('新增词在线发音目前需要 Google Gemini API Key；智谱免费模型只用于文字解析');
-  }
-
-  const ttsModel = 'gemini-3.1-flash-tts-preview';
-  const ttsUrl = geminiGenerateContentUrl(ttsModel);
-  const providerName = 'Google Gemini 老挝语发音';
-
-  const payload = await nativeHttp({
-    url: ttsUrl,
-    method: 'POST',
-    headers: geminiHeaders(apiKey),
-    data: {
-      contents: [{
-        parts: [{
-          text: `Synthesize clear speech with a native Lao (Laos) accent. ${slow ? 'Speak slowly for a language learner. ' : ''}Read only the transcript.\nTranscript:\n${normalizedText}`,
-        }],
-      }],
-      generationConfig: {
-        responseModalities: ['AUDIO'],
-        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
-      },
-    },
-  }, providerName);
-
-  const candidates = Array.isArray(payload.candidates) ? payload.candidates : [];
-  type AudioPart = { inlineData?: { data?: string; mimeType?: string }; inline_data?: { data?: string; mime_type?: string } };
-  const parts = (candidates[0] as { content?: { parts?: AudioPart[] } } | undefined)?.content?.parts ?? [];
-  const audioPart = parts.find(part => part.inlineData?.data || part.inline_data?.data);
-  const inlineData = audioPart?.inlineData ?? (audioPart?.inline_data && {
-    data: audioPart.inline_data.data,
-    mimeType: audioPart.inline_data.mime_type,
-  });
-  if (!inlineData?.data) throw new Error(`${providerName}没有返回音频，请稍后重试`);
-  const pcm = base64ToBytes(inlineData.data);
-  if (pcm.byteLength < 512) throw new Error('Gemini老挝语发音返回的音频无效，请稍后重试');
-  const sampleRate = Number(inlineData.mimeType?.match(/rate=(\d+)/)?.[1] || 24000);
-  const wav = pcmToWav(pcm, sampleRate);
-  await writeSpeechCache(cacheKey, wav.buffer).catch(() => undefined);
-  return new Blob([wav], { type: 'audio/wav' });
+  if (cached) return new Blob([cached], { type: 'audio/mpeg' });
+  const pending = pendingSpeech.get(cacheKey);
+  if (pending) return pending;
+  const task = (async () => {
+    let audio: Blob;
+    if (isNativeApp()) {
+      const result = await MicrosoftSpeech.synthesize({ text: normalizedText, slow });
+      const bytes = base64ToBytes(result.audioBase64);
+      audio = new Blob([bytes], { type: 'audio/mpeg' });
+    } else {
+      const response = await fetch(`/api/tts?text=${encodeURIComponent(normalizedText)}&mode=${slow ? 'slow' : 'normal'}`, { signal: AbortSignal.timeout(40000) });
+      if (!response.ok || !response.headers.get('content-type')?.startsWith('audio/')) {
+        throw new Error('微软语音服务暂时不可用，请检查网络和本地服务');
+      }
+      audio = await response.blob();
+    }
+    if (audio.size < 512) throw new Error('微软语音未返回有效音频');
+    await writeSpeechCache(cacheKey, await audio.arrayBuffer()).catch(() => undefined);
+    return audio;
+  })();
+  pendingSpeech.set(cacheKey, task);
+  try { return await task; } finally { pendingSpeech.delete(cacheKey); }
 }
 
 export async function transcribeLaoAudio(audio: Blob): Promise<string> {
   if (!isNativeApp()) throw new Error('音频转写仅用于安卓应用');
   const config = readNativeConfig();
   const apiKey = config.googleApiKey;
-  if (!apiKey) throw new Error('在线语音识别需要 Google Gemini API Key；智谱免费模型不支持音频识别');
+  if (!apiKey) throw new Error('在线语音识别需要 Google Gemini API Key');
   if (audio.size === 0) throw new Error('没有录到有效声音，请重新跟读');
   if (audio.size > 18 * 1024 * 1024) throw new Error('录音文件过大，请缩短跟读时间');
 

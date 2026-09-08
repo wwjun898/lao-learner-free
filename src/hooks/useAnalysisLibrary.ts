@@ -18,7 +18,7 @@ const LEGACY_VOCABULARY_KEY = 'lao-learner-custom-vocabulary';
 function normalizeEntry(entry: AnalysisLibraryEntry): AnalysisLibraryEntry {
   return {
     ...entry,
-    category: normalizeVocabularyCategory(entry.category, entry.analysis.chineseMeaning),
+    category: entry.category?.trim() || normalizeVocabularyCategory('', entry.analysis.chineseMeaning),
     analysis: normalizeAnalysisRomanization(entry.analysis),
   };
 }
@@ -72,7 +72,7 @@ export function useAnalysisLibrary() {
     const entry: AnalysisLibraryEntry = {
       id: analysis.normalizedLao,
       analysis,
-      category: normalizeVocabularyCategory(category, analysis.chineseMeaning),
+      category: category.trim() || normalizeVocabularyCategory('', analysis.chineseMeaning),
       provider: response.provider,
       model: response.model,
       savedAt: new Date().toISOString(),
@@ -87,7 +87,7 @@ export function useAnalysisLibrary() {
   const updateCategory = useCallback((id: string, category: string) => {
     setEntries(previous => {
       const next = previous.map(item => item.id === id
-        ? { ...item, category: normalizeVocabularyCategory(category, item.analysis.chineseMeaning) }
+        ? { ...item, category: category.trim() || item.category }
         : item);
       persist(next);
       return next;

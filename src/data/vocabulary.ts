@@ -1,3 +1,5 @@
+import vocabularyDocument from './vocabularyDocument.json' with { type: 'json' };
+
 // 实用词汇 - 做生意/工作场景
 export interface VocabItem {
   lao: string;
@@ -301,12 +303,13 @@ const themedVocabulary: Record<string, readonly VocabSeed[]> = {
   ],
 };
 
-export const categories = [
-  '数字', '货币', '时间', '日期', '大小', '重量', '长度', '形状', '颜色', '状态',
-  '方位', '风景', '家庭', '职业', '身体部位', '看病健康', '人际关系', '社交礼貌',
-  '喜怒哀乐', '同意反对', '担心满意', '动物植物', '地名属地', '常用名词',
-  '常用动词', '常用副词', '常用形容词', '常用介词连词',
-] as const;
+export const categories = vocabularyDocument.map(section => section.category);
+
+const documentCategoryAliases: Record<string, string> = {
+  大小: '大小与度量', 长度: '长度与距离', 状态: '状态与性质', 方位: '方位与方向',
+  风景: '风景与自然', 家庭: '家庭与亲属', 职业: '职业与身份', 看病健康: '看病与健康',
+  同意反对: '同意与反对', 担心满意: '担心与满意', 常用介词连词: '常用介词与连词',
+};
 
 const supplementalVocabulary: Record<string, readonly VocabSeed[]> = {
   大小: [
@@ -380,11 +383,15 @@ const fixedCategoryByLegacy: Record<string, string> = {
 
 export function normalizeVocabularyCategory(category: string, chinese = ''): string {
   if ((categories as readonly string[]).includes(category)) return category;
+  if (documentCategoryAliases[category]) return documentCategoryAliases[category];
+  if (category === '动物植物') return /树|花|草|植物|蔬菜/.test(chinese) ? '植物' : '动物';
+  if (category === '地名属地') return /国|省|县/.test(chinese) ? '国家与属地' : '地名与建筑';
   if (/买|卖|付款|转账|订购|吃|去|来|租|唱|跳|听|联系|讨论|介绍|总结|投资/.test(chinese)) return '常用动词';
   if (/便宜|贵|远|近|辣|甜|咸|热|冷|重要|必要/.test(chinese)) return '常用形容词';
   if (/朋友|同事|客户|伙伴|上司|客人|名字|人/.test(chinese)) return '人际关系';
   if (/谢谢|对不起|你好|请|不客气|帮助/.test(chinese)) return '社交礼貌';
-  return fixedCategoryByLegacy[category] ?? '常用名词';
+  const mapped = fixedCategoryByLegacy[category] ?? '常用名词';
+  return documentCategoryAliases[mapped] ?? mapped;
 }
 
 const originalVocabulary: VocabItem[] = [
@@ -398,7 +405,17 @@ const additions = Object.entries(supplementalVocabulary).flatMap(([category, ite
   items.map(([lao, chinese, pinyin, level]) => ({ lao, chinese, pinyin, category, level })),
 );
 
-export const vocabulary: VocabItem[] = [...originalVocabulary, ...additions]
+const legacyVocabulary: VocabItem[] = [...originalVocabulary, ...additions]
   .map(item => ({ ...item, category: normalizeVocabularyCategory(item.category, item.chinese) }))
-  .filter((item, index, all) => all.findIndex(candidate => candidate.lao === item.lao) === index)
-  .sort((left, right) => categories.indexOf(left.category as typeof categories[number]) - categories.indexOf(right.category as typeof categories[number]));
+  .filter((item, index, all) => all.findIndex(candidate => candidate.lao === item.lao) === index);
+
+const documentWords: VocabItem[] = vocabularyDocument.flatMap(({ category, items }) =>
+  items.map(([lao, chinese, pinyin]) => ({ lao, chinese, pinyin, category, level: 1 })),
+);
+const documentLao = new Set(documentWords.map(item => item.lao));
+
+// Keep every category occurrence from the document; retain older, additional words too.
+export const vocabulary: VocabItem[] = [
+  ...documentWords,
+  ...legacyVocabulary.filter(item => !documentLao.has(item.lao)),
+].sort((left, right) => categories.indexOf(left.category) - categories.indexOf(right.category));

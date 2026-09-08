@@ -42,6 +42,6 @@ export default function HomePage({ navigate }: Props) {
       </button>)}
     </div></section>
     <section className="mx-5 mt-6 mb-4 rounded-3xl border border-amber-100 bg-gradient-to-r from-amber-50 to-orange-50 p-5 dark:border-amber-900/20 dark:from-amber-900/10 dark:to-orange-900/10"><div className="flex items-start gap-3"><div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-lg">💡</div><div className="text-xs leading-relaxed text-amber-700 dark:text-amber-300"><div className="mb-1 text-sm font-semibold text-amber-800 dark:text-amber-200">用法提示</div><ol className="list-decimal space-y-1 pl-4"><li>主题词汇是基础词汇，每天请认真学习。记不住的词或者认为是重点的词，把它归到翻卡复习里面反复学习。</li><li>反复多听多练实用对话或场景练习并在实际生活中多开口说，善用AI解析。</li><li>AI 解析调用免费 API，会有解析及发音延迟甚至中断的情况，希望大家理解。</li></ol></div></div></section>
-    <footer className="pb-7 text-center text-[11px] text-gray-400">V1.6.0 · 开发者 wuzongsheng</footer>
+    <footer className="pb-7 text-center text-[11px] text-gray-400">V1.7.0 · 开发者 wuzongsheng</footer>
   </div>;
 }

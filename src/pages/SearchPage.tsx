@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { categories } from '../data/vocabulary';
+import { useCategories, type SaveDestination } from '../hooks/useCategories';
 import { useFavorites } from '../hooks/useFavorites';
 import { useSpeech } from '../hooks/useSpeech';
 import { useVocabulary } from '../hooks/useVocabulary';
@@ -8,8 +8,7 @@ import { useStats } from '../hooks/useStats';
 import { useAnalysisLibrary } from '../hooks/useAnalysisLibrary';
 import { analyzeLao, clearAiConfig, getAiConfig, saveAiConfig } from '../lib/ai';
 import { normalizeAnalysisRomanization } from '../lib/romanization';
-import { scenarioCategories, scenarioCategoryForVocabulary } from '../data/topicPractice';
-import type { AiConfigStatus, AiMode, AnalysisResponse } from '../types/ai';
+import type { AiConfigStatus, AnalysisResponse } from '../types/ai';
 
 interface Props {
   goBack: () => void;
@@ -31,6 +30,11 @@ export default function SearchPage({ goBack }: Props) {
   const [analysisBusy, setAnalysisBusy] = useState(false);
   const [analysisError, setAnalysisError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('社交礼貌');
+  const [destination, setDestination] = useState<SaveDestination>('vocabulary');
+  const [newCategory, setNewCategory] = useState('');
+  const [addingCategory, setAddingCategory] = useState(false);
+  const [categoryError, setCategoryError] = useState('');
+  const { vocabularyCategories, practiceCategories, addCategory } = useCategories();
   const [priority, setPriority] = useState(false);
   const [savedMessage, setSavedMessage] = useState('');
   const [speakingLao, setSpeakingLao] = useState<string | null>(null);
@@ -39,7 +43,28 @@ export default function SearchPage({ goBack }: Props) {
   const { vocabulary, customWords, saveCustomWord } = useVocabulary();
   const { customPhrases, saveCustomPhrase } = useScenarioPhrases();
   const { recordWordLearned } = useStats();
-  const { saveEntry: saveLibraryEntry, updateCategory: updateLibraryCategory } = useAnalysisLibrary();
+  const { saveEntry: saveLibraryEntry } = useAnalysisLibrary();
+  const availableCategories = [...new Set(destination === 'vocabulary'
+    ? [...vocabularyCategories, ...vocabulary.map(item => item.category)]
+    : [...practiceCategories, ...customPhrases.map(item => item.category)])];
+
+  function changeDestination(next: SaveDestination) {
+    setDestination(next);
+    setSelectedCategory(next === 'vocabulary' ? vocabularyCategories[0] : practiceCategories[0]);
+    setSavedMessage('');
+    setAddingCategory(false);
+    setCategoryError('');
+  }
+
+  function createCategory() {
+    try {
+      setSelectedCategory(addCategory(destination, newCategory));
+      setNewCategory('');
+      setAddingCategory(false);
+      setCategoryError('');
+      setSavedMessage('');
+    } catch (error) { setCategoryError(error instanceof Error ? error.message : '分类保存失败'); }
+  }
 
   useEffect(() => {
     getAiConfig()
@@ -79,11 +104,9 @@ export default function SearchPage({ goBack }: Props) {
       const response = await analyzeLao(query.trim());
       const normalizedResponse = { ...response, analysis: normalizeAnalysisRomanization(response.analysis) };
       setAnalysisResult(normalizedResponse);
-      setSelectedCategory(normalizedResponse.analysis.contentType === 'phrase'
-        ? scenarioCategoryForVocabulary(normalizedResponse.analysis.suggestedCategory)
-        : normalizedResponse.analysis.suggestedCategory);
+      // Keep the user's destination and category across analyses.
       saveLibraryEntry(normalizedResponse);
-      const saved = normalizedResponse.analysis.contentType === 'phrase'
+      const saved = destination === 'scenario'
         ? customPhrases.find(item => item.lao === normalizedResponse.analysis.normalizedLao)
         : customWords.find(item => item.lao === normalizedResponse.analysis.normalizedLao);
       setPriority(saved?.priority ?? false);
@@ -127,7 +150,7 @@ export default function SearchPage({ goBack }: Props) {
   function saveAnalysis() {
     if (!analysisResult) return;
     const analysis = analysisResult.analysis;
-    saveLibraryEntry(analysisResult, analysis.suggestedCategory);
+    saveLibraryEntry(analysisResult, selectedCategory);
     const shared = {
       lao: analysis.normalizedLao,
       chinese: analysis.chineseMeaning,
@@ -136,7 +159,7 @@ export default function SearchPage({ goBack }: Props) {
       priority,
       createdAt: new Date().toISOString(),
     };
-    if (analysis.contentType === 'phrase') {
+    if (destination === 'scenario') {
       saveCustomPhrase(shared);
       setSavedMessage(priority ? '已保存到场景练习，并加入重点复习' : '已保存到场景练习');
       return;
@@ -157,7 +180,7 @@ export default function SearchPage({ goBack }: Props) {
           </button>
           <div className="flex-1">
             <h1 className="text-base font-semibold dark:text-white">搜索与 AI 解析</h1>
-            <p className="text-[11px] text-gray-400">本地词库 · Google / 国内智谱免费</p>
+            <p className="text-[11px] text-gray-400">本地词库 · Google Gemini</p>
           </div>
           <button
             onClick={() => setShowSettings(true)}
@@ -246,12 +269,10 @@ export default function SearchPage({ goBack }: Props) {
                   {analysisResult.analysis.partOfSpeech}
                 </span>
                 <span className="rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 text-emerald-700 dark:text-emerald-300">
-                  {analysisResult.analysis.contentType === 'phrase' ? '将收录到场景练习' : '将收录到主题词汇'}
+                  {destination === 'scenario' ? '将收录到场景练习' : '将收录到主题词汇'}
                 </span>
                 <span className="rounded-full bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-blue-600 dark:text-blue-300">
-                  {analysisResult.provider === 'zhipu'
-                    ? '智谱 · GLM-4-Flash 免费'
-                    : 'Google · Gemini 3.5 Flash'}
+                  Google · Gemini 3.5 Flash
                 </span>
                 <span className="rounded-full bg-amber-50 dark:bg-amber-900/30 px-2 py-1 text-amber-700 dark:text-amber-300">
                   已保存到解析库
@@ -296,6 +317,16 @@ export default function SearchPage({ goBack }: Props) {
             </div>
 
             <div className="bg-gray-50 dark:bg-gray-900/40 px-4 py-4 space-y-3">
+              <fieldset>
+                <legend className="mb-2 text-sm text-gray-700 dark:text-gray-200">保存位置</legend>
+                <div className="grid grid-cols-2 gap-3">
+                  {([['vocabulary', '主题词汇'], ['scenario', '场景练习']] as const).map(([value, label]) => (
+                    <label key={value} className="flex items-center gap-2 text-sm dark:text-white">
+                      <input type="radio" name="save-destination" checked={destination === value} onChange={() => changeDestination(value)} />{label}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
               <label className="block">
                 <span className="block text-xs text-gray-500 mb-1.5">保存到分类</span>
                 <select
@@ -303,16 +334,20 @@ export default function SearchPage({ goBack }: Props) {
                   onChange={event => {
                     const category = event.target.value;
                     setSelectedCategory(category);
-                    if (analysisResult.analysis.contentType === 'word') {
-                      updateLibraryCategory(analysisResult.analysis.normalizedLao, category);
-                    }
+                    setSavedMessage('');
                   }}
                   className="w-full h-10 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 text-sm dark:text-white"
                 >
-                  {(analysisResult.analysis.contentType === 'phrase' ? scenarioCategories : categories)
+                  {availableCategories
                     .map(category => <option key={category}>{category}</option>)}
                 </select>
               </label>
+              <button type="button" onClick={() => { setAddingCategory(value => !value); setCategoryError(''); }} className="text-sm text-blue-700 dark:text-blue-300">新增分类</button>
+              {addingCategory && <div className="flex flex-wrap gap-2">
+                <input aria-label="新分类名称" value={newCategory} maxLength={40} onChange={event => setNewCategory(event.target.value)} onKeyDown={event => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) createCategory(); }} className="min-w-0 flex-1 rounded-lg border bg-white px-3 py-2 text-gray-900" />
+                <button type="button" onClick={createCategory} className="rounded-lg bg-blue-600 px-3 py-2 text-sm text-white">添加</button>
+              </div>}
+              {categoryError && <p role="alert" className="text-sm text-red-600">{categoryError}</p>}
               <label className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-200">
                 <input
                   type="checkbox"
@@ -323,7 +358,7 @@ export default function SearchPage({ goBack }: Props) {
                 加入重点反复记忆
               </label>
               <button onClick={saveAnalysis} className="w-full h-11 rounded-lg bg-green-600 text-white font-semibold">
-                {analysisResult.analysis.contentType === 'phrase' ? '保存到场景练习' : '保存到主题词汇'}
+                {destination === 'scenario' ? '保存到场景练习' : '保存到主题词汇'}
               </button>
               {savedMessage && <p className="text-center text-sm text-green-600">{savedMessage}</p>}
             </div>
@@ -389,30 +424,10 @@ export default function SearchPage({ goBack }: Props) {
               <button onClick={() => setShowSettings(false)} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700" aria-label="关闭">×</button>
             </div>
 
-            <div className="grid grid-cols-2 gap-1 rounded-lg bg-gray-100 dark:bg-gray-700 p-1 mb-5">
-              {([
-                ['google', 'Google 官方'],
-                ['zhipu', '国内智谱免费'],
-              ] as const).map(([value, label]) => (
-                <button
-                  key={value}
-                  onClick={() => setConfig(previous => ({
-                    ...previous,
-                    mode: value as AiMode,
-                    configured: false,
-                    apiBase: value === 'zhipu' ? 'https://open.bigmodel.cn/api/paas/v4' : 'https://generativelanguage.googleapis.com',
-                  }))}
-                  className={`h-9 rounded-md text-sm ${config.mode === value ? 'bg-white dark:bg-gray-600 shadow-sm font-semibold' : 'text-gray-500 dark:text-gray-300'}`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
             <div className="space-y-5">
               <fieldset className="space-y-2">
                 <legend className="text-sm font-semibold dark:text-white">
-                  {config.mode === 'zhipu' ? '智谱 BigModel API Key' : 'Google Gemini API Key'}
+                  Google Gemini API Key
                 </legend>
                 <input
                   type="password"
@@ -428,21 +443,19 @@ export default function SearchPage({ goBack }: Props) {
                   API 地址：{config.apiBase}
                 </div>
                 <a
-                  href={config.mode === 'zhipu' ? 'https://open.bigmodel.cn/usercenter/apikeys' : 'https://aistudio.google.com/app/apikey'}
+                  href="https://aistudio.google.com/app/apikey"
                   target="_blank"
                   rel="noreferrer"
                   className="text-xs text-blue-600"
                 >
-                  {config.mode === 'zhipu' ? '打开智谱控制台，一键创建 API Key' : '获取 Google Gemini API Key'}
+                  获取 Google Gemini API Key
                 </a>
               </fieldset>
 
               <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 px-3 py-2 text-xs leading-5 text-amber-700 dark:text-amber-300">
-                两种模式使用相同的解析格式。密钥只保存在本机，不会写入 APK。
+                使用 Google Gemini 解析。密钥只保存在本机，不会写入 APK。
                 <div className="mt-1">
-                  {config.mode === 'zhipu'
-                    ? '国内模式：手机号注册智谱开放平台，进入 API Keys 页面点击“添加新的 API Key”后粘贴到这里。GLM-4-Flash 当前为免费文本模型；免费服务可能限流。此 Key 只负责文字解析，语音仍使用应用内已有音频或 Google。'
-                    : 'Google：请在 AI Studio 的 API Keys 页面创建 Gemini API Key，不要粘贴项目编号或 OAuth 密钥。'}
+                  请在 AI Studio 的 API Keys 页面创建 Gemini API Key，不要粘贴项目编号或 OAuth 密钥。
                 </div>
               </div>
 

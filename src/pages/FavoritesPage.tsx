@@ -13,7 +13,8 @@ export default function FavoritesPage({ goBack }: Props) {
   const { vocabulary, priorityWords, isPriority, togglePriority } = useVocabulary();
   const { recordWordLearned } = useStats();
 
-  const favoriteWords = vocabulary.filter(v => favorites.words.includes(v.lao));
+  const favoriteWords = vocabulary.filter((v, index, all) => favorites.words.includes(v.lao)
+    && all.findIndex(other => other.lao === v.lao) === index);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

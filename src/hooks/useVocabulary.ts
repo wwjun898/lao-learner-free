@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { categories, normalizeVocabularyCategory, vocabulary as builtInVocabulary, type VocabItem } from '../data/vocabulary';
+import { normalizeVocabularyCategory, vocabulary as builtInVocabulary, type VocabItem } from '../data/vocabulary';
 import type { LaoAnalysis } from '../types/ai';
 import { normalizeAnalysisRomanization, toPlainRomanization } from '../lib/romanization';
 
@@ -12,7 +12,6 @@ export interface CustomVocabItem extends VocabItem {
 const STORAGE_KEY = 'lao-learner-custom-vocabulary';
 const PRIORITY_STORAGE_KEY = 'lao-learner-priority-vocabulary';
 const CATEGORY_OVERRIDES_STORAGE_KEY = 'lao-learner-vocabulary-category-overrides';
-const categorySet = new Set<string>(categories);
 
 function loadCategoryOverrides(): Record<string, string> {
   try {
@@ -23,8 +22,7 @@ function loadCategoryOverrides(): Record<string, string> {
     const overrides: Record<string, string> = {};
     for (const [lao, category] of Object.entries(parsed)) {
       if (typeof category !== 'string') continue;
-      const normalized = normalizeVocabularyCategory(category);
-      if (categorySet.has(normalized)) overrides[lao] = normalized;
+      if (category.trim()) overrides[lao] = category.trim();
     }
     return overrides;
   } catch {
@@ -43,7 +41,7 @@ function loadCustomVocabulary(): CustomVocabItem[] {
     const parsed = JSON.parse(data);
     return Array.isArray(parsed) ? parsed.map(item => ({
       ...item,
-      category: normalizeVocabularyCategory(item.category ?? '', item.chinese ?? ''),
+      category: item.category?.trim() || normalizeVocabularyCategory('', item.chinese ?? ''),
       pinyin: toPlainRomanization(item.pinyin ?? ''),
       analysis: item.analysis ? normalizeAnalysisRomanization(item.analysis) : item.analysis,
     })) : [];
@@ -81,13 +79,18 @@ export function useVocabulary() {
   const saveCustomWord = useCallback((word: CustomVocabItem) => {
     const normalizedWord = {
       ...word,
-      category: normalizeVocabularyCategory(word.category, word.chinese),
+      category: word.category.trim() || normalizeVocabularyCategory('', word.chinese),
       pinyin: toPlainRomanization(word.pinyin),
       analysis: normalizeAnalysisRomanization(word.analysis),
     };
     setCustomWords(previous => {
       const next = [...previous.filter(item => item.lao !== normalizedWord.lao), normalizedWord];
       persistCustomVocabulary(next);
+      return next;
+    });
+    setCategoryOverrides(previous => {
+      const next = { ...previous, [normalizedWord.lao]: normalizedWord.category };
+      persistCategoryOverrides(next);
       return next;
     });
     if (normalizedWord.priority) {
@@ -145,7 +148,7 @@ export function useVocabulary() {
   }, []);
 
   const moveToCategory = useCallback((lao: string, category: string) => {
-    if (!categorySet.has(category)) return;
+    if (!category.trim()) return;
     setCategoryOverrides(previous => {
       const next = { ...previous, [lao]: category };
       persistCategoryOverrides(next);
@@ -159,14 +162,22 @@ export function useVocabulary() {
       ...builtInVocabulary.filter(item => !customKeys.has(item.lao)),
       ...customWords,
     ];
+    const seen = new Set<string>();
     return words.map(item => ({
       ...item,
       category: categoryOverrides[item.lao] ?? item.category,
-    }));
+    })).filter(item => {
+      // Moving a word shared by several topics must not create duplicate cards.
+      const key = JSON.stringify([item.category, item.lao]);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }, [categoryOverrides, customWords]);
 
   const priorityWords = useMemo(
-    () => vocabulary.filter(item => priorityKeys.includes(item.lao)),
+    () => vocabulary.filter((item, index, all) => priorityKeys.includes(item.lao)
+      && all.findIndex(other => other.lao === item.lao) === index),
     [priorityKeys, vocabulary],
   );
 

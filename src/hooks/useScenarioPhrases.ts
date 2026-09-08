@@ -20,7 +20,7 @@ function loadPhrases(): CustomScenarioPhrase[] {
     const parsed = JSON.parse(value);
     return Array.isArray(parsed) ? parsed.map(item => ({
       ...item,
-      category: normalizeScenarioCategory(item.category ?? ''),
+      category: item.category?.trim() || normalizeScenarioCategory(''),
       pinyin: toPlainRomanization(item.pinyin ?? ''),
     })) : [];
   } catch {
@@ -34,7 +34,7 @@ export function useScenarioPhrases() {
   const saveCustomPhrase = useCallback((phrase: CustomScenarioPhrase) => {
     const normalizedPhrase = {
       ...phrase,
-      category: normalizeScenarioCategory(phrase.category),
+      category: phrase.category.trim() || normalizeScenarioCategory(''),
       pinyin: toPlainRomanization(phrase.pinyin),
     };
     setCustomPhrases(previous => {

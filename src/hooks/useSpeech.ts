@@ -54,6 +54,7 @@ export function useSpeech() {
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dynamicAudioUrlRef = useRef('');
+  const playbackRequest = useRef(0);
   const microphoneStreamRef = useRef<MediaStream | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -154,43 +155,10 @@ export function useSpeech() {
     return true;
   }, []);
 
-  // 顺序播放多个音频片段
-  const playAudioSequence = useCallback((srcs: string[], rate: number = 1) => {
-    const audio = audioRef.current;
-    if (!audio || srcs.length === 0) return false;
-
-    audio.pause();
-    audio.currentTime = 0;
-    synthRef.current?.cancel();
-
-    let index = 0;
-    const playNext = () => {
-      if (index >= srcs.length) {
-        setIsSpeaking(false);
-        return;
-      }
-      const fullSrc = base + srcs[index].replace(/^\//, '');
-      audio.src = fullSrc;
-      audio.playbackRate = rate;
-      audio.play().catch(() => {
-        // 跳过失败的片段，继续下一个
-        index++;
-        playNext();
-      });
-    };
-
-    audio.onended = () => {
-      index++;
-      playNext();
-    };
-
-    setIsSpeaking(true);
-    playNext();
-    return true;
-  }, []);
 
   // 停止播放
   const stopAll = useCallback(() => {
+    playbackRequest.current++;
     const audio = audioRef.current;
     if (audio) {
       audio.pause();
@@ -204,6 +172,8 @@ export function useSpeech() {
 
   // 非老挝语的 Web Speech API 朗读
   const speakText = useCallback((text: string, lang: string, rate = 0.9) => {
+    playbackRequest.current++;
+    audioRef.current?.pause();
     if (Capacitor.isNativePlatform()) {
       setIsSpeaking(true);
       void TextToSpeech.speak({
@@ -255,70 +225,41 @@ export function useSpeech() {
     synth.speak(utterance);
   }, [findBestVoice]);
 
-  // 未收录的老挝语由在线 TTS 动态合成，成功后会缓存在本机。
+  // Cache complete Microsoft utterances; never substitute Thai for Lao.
   const playDynamicLao = useCallback((text: string, rate: number, slow = false) => {
-    if (Capacitor.isNativePlatform()) {
-      const audio = audioRef.current;
-      if (!audio) return;
-      audio.pause();
-      setIsSpeaking(true);
-      void synthesizeLaoAudio(text, slow).then(blob => {
-        if (dynamicAudioUrlRef.current) URL.revokeObjectURL(dynamicAudioUrlRef.current);
-        dynamicAudioUrlRef.current = URL.createObjectURL(blob);
-        audio.src = dynamicAudioUrlRef.current;
-        audio.playbackRate = rate;
-        audio.onended = () => setIsSpeaking(false);
-        audio.onerror = () => setIsSpeaking(false);
-        return audio.play();
-      }).catch(error => {
-        console.error('动态老挝语音频生成失败:', error);
-        setIsSpeaking(false);
-        alert(error instanceof Error ? error.message : '新增词在线发音失败，请检查网络和 Google API Key');
-      });
-      return;
-    }
+    const request = ++playbackRequest.current;
     const audio = audioRef.current;
-    if (!audio) {
-      speakText(text, 'lo', slow ? 0.65 : Math.min(rate, 1));
-      return;
-    }
-
+    if (!audio) return;
     audio.pause();
-    audio.currentTime = 0;
     synthRef.current?.cancel();
-
-    let fallbackStarted = false;
-    const fallback = () => {
-      if (fallbackStarted) return;
-      fallbackStarted = true;
-      setIsSpeaking(false);
-      speakText(text, 'lo', slow ? 0.65 : Math.min(rate, 1));
-    };
-
-    audio.src = `/api/tts?text=${encodeURIComponent(text)}&mode=${slow ? 'slow' : 'normal'}`;
-    audio.playbackRate = rate;
-    audio.onended = () => setIsSpeaking(false);
-    audio.onerror = fallback;
     setIsSpeaking(true);
-    audio.play().catch(fallback);
-  }, [speakText]);
+    void synthesizeLaoAudio(text, slow).then(blob => {
+      if (request !== playbackRequest.current) return;
+      if (dynamicAudioUrlRef.current) URL.revokeObjectURL(dynamicAudioUrlRef.current);
+      dynamicAudioUrlRef.current = URL.createObjectURL(blob);
+      audio.src = dynamicAudioUrlRef.current;
+      audio.playbackRate = rate;
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      return audio.play();
+    }).catch(error => {
+      if (request !== playbackRequest.current) return;
+      setIsSpeaking(false);
+      alert(error instanceof Error ? error.message : '微软老挝语发音失败，请检查网络');
+    });
+  }, []);
+  useEffect(() => () => { playbackRequest.current++; audioRef.current?.pause(); }, []);
 
   // 老挝语（使用预生成音频）
   const speakLao = useCallback((text: string, rate: number = 1) => {
+    playbackRequest.current++;
     const entry = laoAudioMap[text];
     if (entry?.normal) {
       playAudioFile(entry.normal, rate);
     } else {
-      // 尝试按空格拆分为多个词顺序播放
-      const words = text.split(/\s+/).filter(Boolean);
-      const srcs = words.map(w => laoAudioMap[w]?.normal).filter(Boolean) as string[];
-      if (srcs.length === words.length && srcs.length > 0) {
-        playAudioSequence(srcs, rate);
-      } else {
-        playDynamicLao(text, rate);
-      }
+      playDynamicLao(text, rate);
     }
-  }, [playAudioFile, playAudioSequence, playDynamicLao]);
+  }, [playAudioFile, playDynamicLao]);
 
   // 中文（Web Speech API）
   const speakChinese = useCallback((text: string) => {
@@ -327,19 +268,14 @@ export function useSpeech() {
 
   // 慢速老挝语（使用预生成音频）
   const speakSlow = useCallback((text: string, rate: number = 1) => {
+    playbackRequest.current++;
     const entry = laoAudioMap[text];
     if (entry?.slow) {
       playAudioFile(entry.slow, rate);
     } else {
-      const words = text.split(/\s+/).filter(Boolean);
-      const srcs = words.map(w => laoAudioMap[w]?.slow).filter(Boolean) as string[];
-      if (srcs.length === words.length && srcs.length > 0) {
-        playAudioSequence(srcs, rate);
-      } else {
-        playDynamicLao(text, rate, true);
-      }
+      playDynamicLao(text, rate, true);
     }
-  }, [playAudioFile, playAudioSequence, playDynamicLao]);
+  }, [playAudioFile, playDynamicLao]);
 
   // 通用
   const speak = useCallback((text: string, lang: string) => {

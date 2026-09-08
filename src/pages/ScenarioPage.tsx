@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useCategories } from '../hooks/useCategories';
 import { Heart, Mic, Volume2 } from '../components/IconGlyphs';
 import SpeechPractice from '../components/SpeechPractice';
 import { topicPractices } from '../data/topicPractice';
@@ -21,7 +22,13 @@ export default function ScenarioPage({ goBack }: Props) {
   const { customPhrases } = useScenarioPhrases();
   const { recordPractice } = useStats();
   useEffect(() => { if (!isSpeaking) setSpeakingPhrase(null); }, [isSpeaking]);
-  const scenarios = useMemo<Scenario[]>(() => [...topicPractices.map(topic => ({ category: topic.category, icon: topic.icon, title: topic.title, phrases: [...topic.lines.map(({ lao, chinese, pinyin }) => ({ lao, chinese, pinyin })), ...customPhrases.filter(p => p.category === topic.category).map(p => ({ ...p, custom: true }))] })), { category: '自身行业短语', icon: '🧰', title: '自身行业短语', phrases: customPhrases.filter(p => p.category === '自身行业短语').map(p => ({ ...p, custom: true })) }], [customPhrases]);
+  const { practiceCategories } = useCategories();
+  const scenarios: Scenario[] = [...new Set([...practiceCategories, ...customPhrases.map(item => item.category)])].map(category => {
+    const topic = topicPractices.find(item => item.category === category);
+    return { category, icon: topic?.icon ?? '🧰', title: topic?.title ?? category,
+      phrases: [...(topic?.lines ?? []).map(({ lao, chinese, pinyin }) => ({ lao, chinese, pinyin })),
+        ...customPhrases.filter(item => item.category === category).map(item => ({ ...item, custom: true }))] };
+  });
   const filtered = categoryFilter === 'all' ? scenarios : scenarios.filter(item => item.category === categoryFilter);
   const selected = scenarios.find(item => item.category === selectedCategory);
   if (selected) return <div className="min-h-screen bg-gray-50 dark:bg-gray-900"><header className="sticky top-0 z-10 flex items-center gap-3 border-b bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800"><button onClick={() => setSelectedCategory(null)} className="text-3xl" aria-label="返回">‹</button><div><h1 className="text-lg font-semibold dark:text-white">{selected.icon} {selected.title}</h1><p className="text-xs text-gray-400">{selected.category} · {selected.phrases.length} 条练习</p></div></header><div className="space-y-2 px-4 py-4">{selected.phrases.map((phrase, index) => { const key = `${selected.category}-${index}`; const active = isSpeaking && speakingPhrase === key; return <div key={`${phrase.lao}-${index}`} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"><div className="flex items-start gap-3"><div className="min-w-0 flex-1"><div className="lao-text break-words text-xl font-semibold dark:text-white">{phrase.lao}</div>{phrase.custom && <span className="text-xs text-emerald-600">我的短语</span>}<div className="mt-1 text-gray-600 dark:text-gray-300">{phrase.chinese}</div><div className="mt-1 font-mono text-sm text-amber-600">{phrase.pinyin}</div></div><div className="flex shrink-0 gap-1.5"><button onClick={() => { setSpeakingPhrase(key); speakLao(phrase.lao); }} aria-label="播放" className={`inline-flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sky-700 ${active ? 'ring-2 ring-sky-300' : ''}`}><Volume2 size={18} /></button><button onClick={() => { recordPractice(1); setPracticePhrase(phrase); }} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-green-100 text-green-700" aria-label="跟读"><Mic size={18} /></button><button onClick={() => toggleFavorite(phrase.lao)} className="inline-flex h-9 w-9 items-center justify-center rounded-full leading-none" aria-label="收藏"><Heart size={18} fill={isFavorite(phrase.lao) ? 'currentColor' : 'none'} className={isFavorite(phrase.lao) ? 'text-red-500' : 'text-gray-400'} /></button></div></div>{active && <div className="mt-2 text-right text-xs text-sky-600">播放中</div>}</div>; })}</div>{practicePhrase && <SpeechPractice targetText={practicePhrase.lao} chineseText={practicePhrase.chinese} pinyin={practicePhrase.pinyin} onClose={() => setPracticePhrase(null)} />}</div>;

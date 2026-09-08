@@ -7,18 +7,15 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-type AiMode = 'google' | 'zhipu'
+type AiMode = 'google'
 
 interface AiConfig {
   mode: AiMode
   googleApiKey: string
-  zhipuApiKey: string
 }
 
 const defaultGeminiApiBase = 'https://generativelanguage.googleapis.com'
-const zhipuApiBase = 'https://open.bigmodel.cn/api/paas/v4'
 const googleGeminiModel = 'gemini-3.5-flash'
-const zhipuModel = 'glm-4-flash-250414'
 
 const categories = [
   '数字', '货币', '时间', '日期', '大小', '重量', '长度', '形状', '颜色', '状态',
@@ -88,13 +85,6 @@ JSON必须只包含这些字段：sourceText、normalizedLao、pinyin、partOfSp
 <lao_input>${text}</lao_input>`
 }
 
-function parseMode(value: unknown): AiMode {
-  return value === 'zhipu' || value === 'proxy302' || value === '302'
-    || value === 'doubao' || value === 'deepseek'
-    ? 'zhipu'
-    : 'google'
-}
-
 function cleanSecret(value: unknown) {
   return typeof value === 'string' ? value.trim().replace(/[\r\n]/g, '') : ''
 }
@@ -106,16 +96,15 @@ function geminiGenerateContentUrl(model: string, apiBase = defaultGeminiApiBase)
 function loadConfig(mode: string): AiConfig {
   const env = loadEnv(mode, process.cwd(), '')
   return {
-    mode: parseMode(env.AI_MODE || env.GEMINI_MODE),
+    mode: 'google',
     googleApiKey: (env.GOOGLE_GEMINI_API_KEY || env.GEMINI_API_KEY)?.trim() ?? '',
-    zhipuApiKey: env.ZHIPU_API_KEY?.trim() ?? '',
   }
 }
 
 function saveConfig(config: AiConfig) {
   const configPath = resolve(process.cwd(), '.env.local')
   const managedKeys = new Set([
-    'AI_PROVIDER', 'AI_MODE', 'GOOGLE_GEMINI_API_KEY', 'ZHIPU_API_KEY', 'PROXY302_API_KEY', 'DOUBAO_API_KEY', 'DOUBAO_MODEL', 'DEEPSEEK_API_KEY',
+    'AI_PROVIDER', 'AI_MODE', 'GOOGLE_GEMINI_API_KEY', 'PROXY302_API_KEY', 'DOUBAO_API_KEY', 'DOUBAO_MODEL', 'DEEPSEEK_API_KEY',
     'GEMINI_MODE', 'GEMINI_API_KEY', 'GEMINI_API_BASE', 'DASHSCOPE_API_KEY', 'DASHSCOPE_WORKSPACE_ID',
   ])
   const existingLines = existsSync(configPath)
@@ -128,7 +117,6 @@ function saveConfig(config: AiConfig) {
   const managedLines = [
     `AI_MODE=${config.mode}`,
     config.googleApiKey && `GOOGLE_GEMINI_API_KEY=${config.googleApiKey}`,
-    config.zhipuApiKey && `ZHIPU_API_KEY=${config.zhipuApiKey}`,
   ].filter(Boolean)
   writeFileSync(configPath, [...preservedLines, ...managedLines, ''].join('\n'), 'utf8')
 }
@@ -162,7 +150,7 @@ async function synthesizeLaoSpeech(text: string, slow: boolean) {
     // The bundled pnpm workspace can omit the root symlink; use the installed package directly.
     ({ EdgeTTS } = await import(/* @vite-ignore */ pathToFileURL(resolve(process.cwd(), 'node_modules/.pnpm/edge-tts-universal@1.4.0_debug@4.4.3/node_modules/edge-tts-universal/dist/index.js')).href))
   }
-  const cacheKey = createHash('sha256').update(`${slow ? 'slow' : 'normal'}:${text}`).digest('hex')
+  const cacheKey = createHash('sha256').update(`microsoft-v1:Chanthavong:${slow ? 'slow' : 'normal'}:${text}`).digest('hex')
   const cachePath = resolve(ttsCacheDir, `${cacheKey}.mp3`)
   if (existsSync(cachePath)) return readFileSync(cachePath)
 
@@ -170,7 +158,7 @@ async function synthesizeLaoSpeech(text: string, slow: boolean) {
   if (existingTask) return existingTask
 
   const task = (async () => {
-    const voice = slow ? 'lo-LA-KeomanyNeural' : 'lo-LA-ChanthavongNeural'
+    const voice = 'lo-LA-ChanthavongNeural'
     const tts = new EdgeTTS(text, voice, {
       rate: slow ? '-35%' : '+0%',
       volume: '+0%',
@@ -344,48 +332,15 @@ async function analyzeWithGemini(text: string, config: AiConfig) {
   throw new Error(`${providerName}解析内容不完整：${issues.join('、')}，请重试`)
 }
 
-async function analyzeWithZhipu(text: string, config: AiConfig) {
-  if (!config.zhipuApiKey) throw new Error('尚未配置智谱 API Key')
-  const providerName = '智谱 GLM 免费模型'
-  let issues: string[] = []
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const payload = await providerFetch(
-      `${zhipuApiBase}/chat/completions`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${config.zhipuApiKey}`,
-        },
-        body: JSON.stringify({
-          model: zhipuModel,
-          messages: [{ role: 'user', content: createPrompt(text, issues) }],
-          response_format: { type: 'json_object' },
-          temperature: 0.2,
-        }),
-      },
-      providerName,
-    )
-    const choices = Array.isArray(payload.choices) ? payload.choices : []
-    const choice = choices[0] as Record<string, unknown> | undefined
-    const message = choice?.message as Record<string, unknown> | undefined
-    const output = typeof message?.content === 'string' ? message.content : ''
-    const analysis = normalizeAnalysis(parseModelJson(output), text)
-    issues = analysisQualityIssues(analysis)
-    if (issues.length === 0) return { analysis, provider: 'zhipu' as const, model: zhipuModel }
-  }
-  throw new Error(`${providerName}解析内容不完整：${issues.join('、')}，请重试`)
-}
-
 function activeApiKey(config: AiConfig) {
-  return config.mode === 'zhipu' ? config.zhipuApiKey : config.googleApiKey
+  return config.googleApiKey
 }
 
 function configStatus(config: AiConfig) {
   return {
     mode: config.mode,
     configured: Boolean(activeApiKey(config)),
-    apiBase: config.mode === 'zhipu' ? zhipuApiBase : defaultGeminiApiBase,
+    apiBase: defaultGeminiApiBase,
   }
 }
 
@@ -425,12 +380,13 @@ function localApiPlugin(mode: string): Plugin {
 
           if (path === '/api/ai/config' && request.method === 'POST') {
             const body = await readJsonBody(request)
-            const nextMode = parseMode(body.mode)
+            if (body.mode !== undefined && body.mode !== 'google') {
+              return sendJson(response, 400, { error: '仅支持 Google Gemini，请刷新后重新设置' })
+            }
             const apiKey = body.apiKey ? cleanSecret(body.apiKey) : ''
             config = {
-              mode: nextMode,
-              googleApiKey: nextMode === 'google' && apiKey ? apiKey : config.googleApiKey,
-              zhipuApiKey: nextMode === 'zhipu' && apiKey ? apiKey : config.zhipuApiKey,
+              mode: 'google',
+              googleApiKey: apiKey || config.googleApiKey,
             }
             saveConfig(config)
             return sendJson(response, 200, configStatus(config))
@@ -440,7 +396,6 @@ function localApiPlugin(mode: string): Plugin {
             config = {
               mode: 'google',
               googleApiKey: '',
-              zhipuApiKey: '',
             }
             saveConfig(config)
             return sendJson(response, 200, configStatus(config))
@@ -452,10 +407,8 @@ function localApiPlugin(mode: string): Plugin {
             if (!text) return sendJson(response, 400, { error: '请输入要解析的老挝语' })
             if (text.length > 500) return sendJson(response, 400, { error: '单次解析请控制在500个字符以内' })
 
-            if (!activeApiKey(config)) return sendJson(response, 400, { error: '请先配置当前模式的 API Key' })
-            const result = config.mode === 'zhipu'
-              ? await analyzeWithZhipu(text, config)
-              : await analyzeWithGemini(text, config)
+            if (!activeApiKey(config)) return sendJson(response, 400, { error: '请先配置 Google Gemini API Key' })
+            const result = await analyzeWithGemini(text, config)
             return sendJson(response, 200, result)
           }
 
