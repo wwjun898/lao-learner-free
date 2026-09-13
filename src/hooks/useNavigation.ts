@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 export type Page = 'home' | 'vocabulary' | 'dialogue' | 'flashcard'
-  | 'search' | 'analysis-library' | 'favorites' | 'stats' | 'calculator' | 'scenario' | 'word-formation';
+  | 'search' | 'analysis-library' | 'favorites' | 'stats' | 'calculator' | 'scenario' | 'word-formation' | 'generate-scene';
 
 export function useNavigation() {
   const [page, setPage] = useState<Page>('home');

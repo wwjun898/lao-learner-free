@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { VocabItem } from '../data/vocabulary';
+import { useReview, type ReviewCard, type ReviewSource } from '../hooks/useReview';
+import { useCategories } from '../hooks/useCategories';
+import { dialogues } from '../data/dialogues';
 import { useSpeech } from '../hooks/useSpeech';
-import { useVocabulary } from '../hooks/useVocabulary';
-import { useScenarioPhrases } from '../hooks/useScenarioPhrases';
 import { useStats } from '../hooks/useStats';
 
 interface Props {
@@ -15,28 +15,48 @@ function shuffled<T>(items: T[]) {
   return [...items].sort(() => Math.random() - 0.5);
 }
 
-function createDeck(priorityWords: VocabItem[]) {
+function createDeck(priorityWords: ReviewCard[]) {
   // 翻卡复习只使用用户主动加入重点复习的内容，不再预置词汇。
   return shuffled(priorityWords).slice(0, 20);
 }
 
 export default function FlashcardPage({ goBack }: Props) {
-  const { priorityWords, removePriority: removeVocabularyPriority } = useVocabulary();
-  const { customPhrases, removePriority: removeScenarioPriority } = useScenarioPhrases();
-  const scenarioCards = customPhrases.map(phrase => ({ ...phrase, level: 1 as const }));
-  const priorityScenarioCards = scenarioCards.filter(phrase => phrase.priority);
-  const allPriorityCards = [...priorityWords, ...priorityScenarioCards];
+  const { cards: allPriorityCards, remove } = useReview();
+  const { vocabularyCategories, practiceCategories } = useCategories();
+  const [categoryKey, setCategoryKey] = useState('all');
+  const groups: { source: ReviewSource; label: string; categories: string[] }[] = [
+    { source: 'vocabulary', label: '主题词汇', categories: vocabularyCategories },
+    { source: 'dialogue', label: '实用对话', categories: dialogues.map(item => item.category) },
+    { source: 'analysis', label: 'AI 解析库', categories: [] },
+    { source: 'scenario', label: '场景练习', categories: practiceCategories },
+  ];
+  const filteredCards = (filter: string) => allPriorityCards.filter(card =>
+    filter === 'all' || JSON.stringify([card.source, card.category]) === filter);
+  const categoryControl = <label className="block bg-white px-4 pb-3 text-sm dark:bg-gray-800 dark:text-white">
+    <span className="mb-1 block text-gray-500">复习分类</span>
+    <select aria-label="复习分类" value={categoryKey} onChange={event => {
+      setCategoryKey(event.target.value); resetDeck(event.target.value);
+    }} className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 dark:border-gray-600 dark:bg-gray-700">
+      <option value="all">全部分类 ({allPriorityCards.length})</option>
+      {groups.map(group => <optgroup key={group.source} label={group.label}>
+        {[...new Set([...group.categories, ...allPriorityCards.filter(card => card.source === group.source).map(card => card.category)])].map(category => {
+          const value = JSON.stringify([group.source, category]);
+          return <option key={value} value={value}>{category} ({filteredCards(value).length})</option>;
+        })}
+      </optgroup>)}
+    </select>
+  </label>;
   const { speakLao, isSpeaking } = useSpeech();
   const { recordFlashcard, recordPractice, recordWordLearned } = useStats();
   const [mode, setMode] = useState<ReviewMode>('all');
-  const [cards, setCards] = useState<VocabItem[]>(() => createDeck(allPriorityCards));
+  const [cards, setCards] = useState<ReviewCard[]>(() => createDeck(allPriorityCards));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [known, setKnown] = useState<boolean[]>(() => new Array(Math.min(20, allPriorityCards.length)).fill(false));
   const [showResult, setShowResult] = useState(false);
 
-  function resetDeck() {
-    const nextCards = createDeck(allPriorityCards);
+  function resetDeck(filter = categoryKey) {
+    const nextCards = createDeck(filteredCards(filter));
     setCards(nextCards);
     setKnown(new Array(nextCards.length).fill(false));
     setCurrentIndex(0);
@@ -68,8 +88,7 @@ export default function FlashcardPage({ goBack }: Props) {
     const currentCard = cards[currentIndex];
     if (!currentCard) return;
 
-    removeVocabularyPriority(currentCard.lao);
-    removeScenarioPriority(currentCard.lao);
+    remove(currentCard);
 
     const nextCards = cards.filter((_, index) => index !== currentIndex);
     const nextKnown = known.filter((_, index) => index !== currentIndex);
@@ -81,9 +100,13 @@ export default function FlashcardPage({ goBack }: Props) {
 
   if (cards.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 text-center">
-        <p className="text-gray-500 mb-4">重点词库还是空的，请先在 AI 解析结果中加入重点复习。</p>
-        <button onClick={goBack} className="px-5 py-2.5 rounded-lg bg-blue-600 text-white">返回主界面</button>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Header goBack={goBack} title="翻卡复习" />
+        {categoryControl}
+        <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+          <p className="text-gray-500 mb-4">此分类暂无重点词句</p>
+          <button onClick={goBack} className="px-5 py-2.5 rounded-lg bg-blue-600 text-white">返回主界面</button>
+        </div>
       </div>
     );
   }
@@ -98,7 +121,7 @@ export default function FlashcardPage({ goBack }: Props) {
           <h2 className="text-2xl font-bold mb-2">本轮完成</h2>
           <p className="text-gray-600 mb-6">掌握 {knownCount}/{cards.length} 个词汇</p>
           <div className="w-full max-w-sm space-y-3">
-            <button onClick={resetDeck} className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold">再来一轮</button>
+            <button onClick={() => resetDeck()} className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold">再来一轮</button>
             <button onClick={goBack} className="w-full py-3 bg-gray-100 text-gray-600 rounded-xl font-semibold">返回首页</button>
           </div>
         </div>
@@ -113,6 +136,7 @@ export default function FlashcardPage({ goBack }: Props) {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header goBack={goBack} title="翻卡复习" subtitle={`${currentIndex + 1} / ${cards.length}`} />
 
+      {categoryControl}
       {allPriorityCards.length > 0 && (
         <div className="bg-white px-4 pb-3">
           <div className="grid grid-cols-2 gap-1 rounded-lg bg-gray-100 p-1">
@@ -131,12 +155,12 @@ export default function FlashcardPage({ goBack }: Props) {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
         <button
           onClick={() => setIsFlipped(value => !value)}
-          className="w-full max-w-sm aspect-[3/2] bg-white rounded-2xl shadow-lg border-2 border-gray-100 flex flex-col items-center justify-center p-6 active:scale-[0.98]"
+          className="w-full max-w-sm min-h-64 bg-white rounded-2xl shadow-lg border-2 border-gray-100 flex flex-col items-center justify-center p-6 active:scale-[0.98]"
         >
           {!isFlipped ? (
             <>
               <div className="text-sm text-gray-400 mb-4">点击翻转</div>
-              <div className="lao-text text-5xl font-bold text-gray-800 mb-2 break-words">{current.lao}</div>
+              <div className="lao-text text-3xl font-bold text-gray-800 mb-2 break-words">{current.lao}</div>
               <div className="text-sm text-amber-600 font-mono">{current.pinyin}</div>
             </>
           ) : (

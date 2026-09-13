@@ -11,6 +11,7 @@ import NumberCalculatorPage from './pages/NumberCalculatorPage';
 import ScenarioPage from './pages/ScenarioPage';
 import AnalysisLibraryPage from './pages/AnalysisLibraryPage';
 import WordFormationPage from './pages/WordFormationPage';
+import GenerateScenePage from './pages/GenerateScenePage';
 
 function App() {
   const { page, navigate, goBack } = useNavigation();
@@ -38,6 +39,8 @@ function App() {
       return <NumberCalculatorPage goBack={goBack} />;
     case 'scenario':
       return <ScenarioPage goBack={goBack} />;
+    case 'generate-scene':
+      return <GenerateScenePage goBack={goBack} openScenarios={() => navigate('scenario')} />;
     case 'word-formation':
       return <WordFormationPage goBack={goBack} />;
     default:

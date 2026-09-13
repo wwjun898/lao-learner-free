@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { sceneRequest, sceneFromGemini, validateSceneInput } from './src/lib/sceneGeneration.ts'
 
 type AiMode = 'google'
 
@@ -265,10 +266,10 @@ function analysisQualityIssues(analysis: ReturnType<typeof normalizeAnalysis>) {
   return issues
 }
 
-async function providerFetch(url: string, init: RequestInit, providerName: string) {
+async function providerFetch(url: string, init: RequestInit, providerName: string, timeoutMs = 15_000) {
   for (let attempt = 0; attempt < 3; attempt++) {
     const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 15_000)
+    const timeout = setTimeout(() => controller.abort(), timeoutMs)
     try {
       const response = await fetch(url, { ...init, signal: controller.signal })
       const payload = await response.json().catch(() => ({})) as Record<string, unknown>
@@ -399,6 +400,19 @@ function localApiPlugin(mode: string): Plugin {
             }
             saveConfig(config)
             return sendJson(response, 200, configStatus(config))
+          }
+
+          if (path === '/api/ai/generate-scene' && request.method === 'POST') {
+            const body = await readJsonBody(request)
+            let input: ReturnType<typeof validateSceneInput>
+            try { input = validateSceneInput(body.words, body.categories) }
+            catch (error) { return sendJson(response, 400, { error: error instanceof Error ? error.message : '输入格式错误' }) }
+            if (!activeApiKey(config)) return sendJson(response, 400, { error: '请先配置 Google Gemini API Key' })
+            const payload = await providerFetch(geminiGenerateContentUrl(googleGeminiModel), {
+              method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': config.googleApiKey },
+              body: JSON.stringify(sceneRequest(input.words, input.categories)),
+            }, 'Google Gemini', 60_000)
+            return sendJson(response, 200, sceneFromGemini(payload, input.categories))
           }
 
           if (path === '/api/ai/analyze' && request.method === 'POST') {

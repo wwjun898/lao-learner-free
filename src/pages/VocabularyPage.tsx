@@ -4,6 +4,8 @@ import { useCategories } from '../hooks/useCategories';
 import { useSpeech } from '../hooks/useSpeech';
 import { useVocabulary } from '../hooks/useVocabulary';
 import { useStats } from '../hooks/useStats';
+import ExplainButton from '../components/ExplainButton';
+import { useReview } from '../hooks/useReview';
 import SpeechPractice from '../components/SpeechPractice';
 
 interface Props {
@@ -17,7 +19,8 @@ export default function VocabularyPage({ goBack }: Props) {
   const [practiceIndex, setPracticeIndex] = useState<number | null>(null);
   const [speakingLao, setSpeakingLao] = useState<string | null>(null);
   const { speakLao, isSpeaking } = useSpeech();
-  const { vocabulary, isPriority, togglePriority, moveToCategory } = useVocabulary();
+  const { vocabulary, moveToCategory } = useVocabulary();
+  const review = useReview();
   const { vocabularyCategories } = useCategories();
   const categories = [...new Set([...vocabularyCategories, ...vocabulary.map(item => item.category)])];
   const { recordWordLearned, recordPractice } = useStats();
@@ -84,11 +87,15 @@ export default function VocabularyPage({ goBack }: Props) {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex items-baseline gap-2">
                 <span className="lao-text text-2xl font-semibold text-gray-800 dark:text-white break-words">{item.lao}</span>
-                {isPriority(item.lao) && <span className="shrink-0 text-xs text-amber-600">重点</span>}
+                {review.has({ ...item, source: 'vocabulary' }) && <span className="shrink-0 text-xs text-amber-600">重点</span>}
               </div>
               <select
                 value={item.category}
-                onChange={event => moveToCategory(item.lao, event.target.value)}
+                onChange={event => {
+                  const card = { ...item, source: 'vocabulary' as const };
+                  if (review.has(card)) { review.remove(card); review.add({ ...card, category: event.target.value }); }
+                  moveToCategory(item.lao, event.target.value);
+                }}
                 onClick={event => event.stopPropagation()}
                 aria-label={`调整 ${item.lao} 分类`}
                 title="移动到指定分类"
@@ -101,6 +108,7 @@ export default function VocabularyPage({ goBack }: Props) {
             {showPinyin && <div className="mt-1 text-sm font-mono text-amber-600">{item.pinyin}</div>}
 
             <div className="mt-3 flex items-center justify-end gap-2 border-t border-gray-100 pt-3 dark:border-gray-700">
+                <ExplainButton text={item.lao} category={item.category} />
                 {/* 听发音按钮 */}
                 <button
                   onClick={() => {
@@ -130,16 +138,16 @@ export default function VocabularyPage({ goBack }: Props) {
                   <Mic size={20} strokeWidth={2.2} />
                 </button>
                 <button
-                  onClick={() => togglePriority(item.lao)}
+                  onClick={() => review.toggle({ ...item, source: 'vocabulary' })}
                   className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                    isPriority(item.lao)
+                    review.has({ ...item, source: 'vocabulary' })
                       ? 'bg-amber-100 text-amber-600 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-300'
                       : 'bg-gray-100 text-gray-400 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
                   }`}
-                  title={isPriority(item.lao) ? '移出重点闪卡' : '加入重点闪卡'}
-                  aria-label={isPriority(item.lao) ? '移出重点闪卡' : '加入重点闪卡'}
+                  title={review.has({ ...item, source: 'vocabulary' }) ? '移出翻卡复习' : '加入翻卡复习'}
+                  aria-label={review.has({ ...item, source: 'vocabulary' }) ? '移出翻卡复习' : '加入翻卡复习'}
                 >
-                  <Star size={20} strokeWidth={2.2} fill={isPriority(item.lao) ? 'currentColor' : 'none'} />
+                  <Star size={20} strokeWidth={2.2} fill={review.has({ ...item, source: 'vocabulary' }) ? 'currentColor' : 'none'} />
                 </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { documentDialogues, type DocumentDialogueLine } from './documentDialogues';
+import { industrySentenceCategory } from './industryCategory';
 
 export type TopicPracticeLine = DocumentDialogueLine;
 
@@ -13,7 +14,7 @@ export interface TopicPractice {
 
 export const scenarioCategories = [
   ...documentDialogues.map(item => item.category),
-  '自身行业短语',
+  industrySentenceCategory,
 ] as const;
 
 export const topicPractices: TopicPractice[] = documentDialogues;

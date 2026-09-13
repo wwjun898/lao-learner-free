@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { useCategories, type SaveDestination } from '../hooks/useCategories';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCategories } from '../hooks/useCategories';
+import { useReview } from '../hooks/useReview';
 import { useFavorites } from '../hooks/useFavorites';
 import { useSpeech } from '../hooks/useSpeech';
 import { useVocabulary } from '../hooks/useVocabulary';
@@ -12,6 +13,9 @@ import type { AiConfigStatus, AnalysisResponse } from '../types/ai';
 
 interface Props {
   goBack: () => void;
+  initialText?: string;
+  initialCategory?: string;
+  settingsInitiallyOpen?: boolean;
 }
 
 const emptyConfig: AiConfigStatus = {
@@ -20,17 +24,16 @@ const emptyConfig: AiConfigStatus = {
   apiBase: 'https://generativelanguage.googleapis.com',
 };
 
-export default function SearchPage({ goBack }: Props) {
-  const [query, setQuery] = useState('');
+export default function SearchPage({ goBack, initialText = '', initialCategory = '社交礼貌', settingsInitiallyOpen = false }: Props) {
+  const [query, setQuery] = useState(initialText);
   const [config, setConfig] = useState<AiConfigStatus>(emptyConfig);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showSettings, setShowSettings] = useState(settingsInitiallyOpen);
   const [apiKey, setApiKey] = useState('');
   const [settingsBusy, setSettingsBusy] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
   const [analysisBusy, setAnalysisBusy] = useState(false);
   const [analysisError, setAnalysisError] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('社交礼貌');
-  const [destination, setDestination] = useState<SaveDestination>('vocabulary');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [newCategory, setNewCategory] = useState('');
   const [addingCategory, setAddingCategory] = useState(false);
   const [categoryError, setCategoryError] = useState('');
@@ -40,39 +43,24 @@ export default function SearchPage({ goBack }: Props) {
   const [speakingLao, setSpeakingLao] = useState<string | null>(null);
   const { speakLao, isSpeaking } = useSpeech();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const { vocabulary, customWords, saveCustomWord } = useVocabulary();
-  const { customPhrases, saveCustomPhrase } = useScenarioPhrases();
+  const { vocabulary } = useVocabulary();
+  const { customPhrases } = useScenarioPhrases();
+  const review = useReview();
   const { recordWordLearned } = useStats();
-  const { saveEntry: saveLibraryEntry } = useAnalysisLibrary();
-  const availableCategories = [...new Set(destination === 'vocabulary'
-    ? [...vocabularyCategories, ...vocabulary.map(item => item.category)]
-    : [...practiceCategories, ...customPhrases.map(item => item.category)])];
-
-  function changeDestination(next: SaveDestination) {
-    setDestination(next);
-    setSelectedCategory(next === 'vocabulary' ? vocabularyCategories[0] : practiceCategories[0]);
-    setSavedMessage('');
-    setAddingCategory(false);
-    setCategoryError('');
-  }
+  const { entries, saveEntry: saveLibraryEntry } = useAnalysisLibrary();
+  const availableCategories = [...new Set([...vocabularyCategories, ...practiceCategories,
+    ...vocabulary.map(item => item.category), ...customPhrases.map(item => item.category),
+    ...entries.map(item => item.category), selectedCategory])];
 
   function createCategory() {
     try {
-      setSelectedCategory(addCategory(destination, newCategory));
+      setSelectedCategory(addCategory('vocabulary', newCategory));
       setNewCategory('');
       setAddingCategory(false);
       setCategoryError('');
       setSavedMessage('');
     } catch (error) { setCategoryError(error instanceof Error ? error.message : '分类保存失败'); }
   }
-
-  useEffect(() => {
-    getAiConfig()
-      .then(status => {
-        setConfig(status);
-      })
-      .catch(() => setAnalysisError('本地 AI 服务未启动，请使用 start-local.bat 启动应用'));
-  }, []);
 
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -97,25 +85,45 @@ export default function SearchPage({ goBack }: Props) {
       setShowSettings(true);
       return;
     }
+    await runAnalysis(query.trim());
+  }
+
+  const initialRequest = useRef(false);
+  const runAnalysis = useCallback(async (text: string) => {
     setAnalysisBusy(true);
     setAnalysisError('');
     setSavedMessage('');
+    setAnalysisResult(null);
     try {
-      const response = await analyzeLao(query.trim());
+      const response = await analyzeLao(text);
       const normalizedResponse = { ...response, analysis: normalizeAnalysisRomanization(response.analysis) };
       setAnalysisResult(normalizedResponse);
-      // Keep the user's destination and category across analyses.
-      saveLibraryEntry(normalizedResponse);
-      const saved = destination === 'scenario'
-        ? customPhrases.find(item => item.lao === normalizedResponse.analysis.normalizedLao)
-        : customWords.find(item => item.lao === normalizedResponse.analysis.normalizedLao);
-      setPriority(saved?.priority ?? false);
+      // Analyses stay in their own library, using the user's chosen category.
+      saveLibraryEntry(normalizedResponse, selectedCategory);
+      setPriority(false);
     } catch (error) {
       setAnalysisError(error instanceof Error ? error.message : '解析失败，请稍后重试');
     } finally {
       setAnalysisBusy(false);
     }
-  }
+  }, [saveLibraryEntry, selectedCategory]);
+
+  useEffect(() => {
+    if (initialRequest.current) return;
+    let active = true;
+    getAiConfig()
+      .then(status => {
+        if (!active) return;
+        setConfig(status);
+        initialRequest.current = true;
+        if (initialText) {
+          if (status.configured) void runAnalysis(initialText);
+          else setShowSettings(true);
+        }
+      })
+      .catch(() => setAnalysisError('本地 AI 服务未启动，请使用 start-local.bat 启动应用'));
+    return () => { active = false; };
+  }, [initialText, runAnalysis]);
 
   async function handleSaveSettings() {
     setSettingsBusy(true);
@@ -151,22 +159,15 @@ export default function SearchPage({ goBack }: Props) {
     if (!analysisResult) return;
     const analysis = analysisResult.analysis;
     saveLibraryEntry(analysisResult, selectedCategory);
-    const shared = {
+    if (priority) review.add({
       lao: analysis.normalizedLao,
       chinese: analysis.chineseMeaning,
       pinyin: analysis.pinyin,
       category: selectedCategory,
-      priority,
-      createdAt: new Date().toISOString(),
-    };
-    if (destination === 'scenario') {
-      saveCustomPhrase(shared);
-      setSavedMessage(priority ? '已保存到场景练习，并加入重点复习' : '已保存到场景练习');
-      return;
-    }
-    saveCustomWord({ ...shared, level: 1, analysis });
+      source: 'analysis',
+    });
     recordWordLearned(analysis.normalizedLao);
-    setSavedMessage(priority ? '已保存到主题词汇和重点复习' : '已保存到主题词汇');
+    setSavedMessage(priority ? '已保存到 AI 解析库，并加入翻卡复习' : '已保存到 AI 解析库');
   }
 
   return (
@@ -269,7 +270,7 @@ export default function SearchPage({ goBack }: Props) {
                   {analysisResult.analysis.partOfSpeech}
                 </span>
                 <span className="rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 text-emerald-700 dark:text-emerald-300">
-                  {destination === 'scenario' ? '将收录到场景练习' : '将收录到主题词汇'}
+                  AI 解析库
                 </span>
                 <span className="rounded-full bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-blue-600 dark:text-blue-300">
                   Google · Gemini 3.5 Flash
@@ -317,16 +318,7 @@ export default function SearchPage({ goBack }: Props) {
             </div>
 
             <div className="bg-gray-50 dark:bg-gray-900/40 px-4 py-4 space-y-3">
-              <fieldset>
-                <legend className="mb-2 text-sm text-gray-700 dark:text-gray-200">保存位置</legend>
-                <div className="grid grid-cols-2 gap-3">
-                  {([['vocabulary', '主题词汇'], ['scenario', '场景练习']] as const).map(([value, label]) => (
-                    <label key={value} className="flex items-center gap-2 text-sm dark:text-white">
-                      <input type="radio" name="save-destination" checked={destination === value} onChange={() => changeDestination(value)} />{label}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
+              <p className="text-sm text-gray-700 dark:text-gray-200">保存位置：AI 解析库</p>
               <label className="block">
                 <span className="block text-xs text-gray-500 mb-1.5">保存到分类</span>
                 <select
@@ -358,7 +350,7 @@ export default function SearchPage({ goBack }: Props) {
                 加入重点反复记忆
               </label>
               <button onClick={saveAnalysis} className="w-full h-11 rounded-lg bg-green-600 text-white font-semibold">
-                {destination === 'scenario' ? '保存到场景练习' : '保存到主题词汇'}
+                保存到 AI 解析库
               </button>
               {savedMessage && <p className="text-center text-sm text-green-600">{savedMessage}</p>}
             </div>

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { toPlainRomanization } from '../lib/romanization';
 import { normalizeScenarioCategory } from '../data/topicPractice';
+import { renameIndustryCategory } from '../data/industryCategory';
 
 export interface CustomScenarioPhrase {
   lao: string;
@@ -20,7 +21,7 @@ function loadPhrases(): CustomScenarioPhrase[] {
     const parsed = JSON.parse(value);
     return Array.isArray(parsed) ? parsed.map(item => ({
       ...item,
-      category: item.category?.trim() || normalizeScenarioCategory(''),
+      category: renameIndustryCategory(item.category?.trim() || normalizeScenarioCategory('')),
       pinyin: toPlainRomanization(item.pinyin ?? ''),
     })) : [];
   } catch {
@@ -34,7 +35,7 @@ export function useScenarioPhrases() {
   const saveCustomPhrase = useCallback((phrase: CustomScenarioPhrase) => {
     const normalizedPhrase = {
       ...phrase,
-      category: phrase.category.trim() || normalizeScenarioCategory(''),
+      category: renameIndustryCategory(phrase.category.trim() || normalizeScenarioCategory('')),
       pinyin: toPlainRomanization(phrase.pinyin),
     };
     setCustomPhrases(previous => {

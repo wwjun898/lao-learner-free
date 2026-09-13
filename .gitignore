@@ -11,6 +11,10 @@ dist/
 .tts-cache/
 _android-tools/
 *.apk
+*.apk.idsig
+_release-signing/
+*.jks
+*.keystore
 
 # Local test captures and temporary diagnostics
 lao-learner-*.png

@@ -1002,7 +1002,7 @@ export const documentDialogues: DocumentDialogue[] = [
     { lao: 'ມື້ນີ້ອາກາດໜາວ/ເຢັນຫຼາຍ', chinese: '今天天气很冷/凉爽', pinyin: 'mue ni akat nao / yen lai', speaker: 'A' },
     { lao: 'ຢູ່ເທິງພູອາກາດຈະເຢັນກວ່າ', chinese: '在山顶上天气会更冷', pinyin: 'yu theung phu akat cha yen kua', speaker: 'B' },
     { lao: 'ຝົນຕົກໜັກຫຼາຍ', chinese: '雨下得很大', pinyin: 'fon tok nak lai', speaker: 'A' },
-    { lao: 'ແມ່ນແລ້ວ, ລໍຖ້າໃຫ້ຝົນເອື້ອນກ່ອນค่อยໄປ', chinese: '是的，等雨停了再走吧', pinyin: 'maen laeo, lo tha hai fon uean kon khoi pai', speaker: 'B' },
+    { lao: 'ແມ່ນແລ້ວ，ລໍຖ້າໃຫ້ຝົນເຮືອນກ່ອນໄປ', chinese: '是的，等雨停了再走吧', pinyin: 'maen laeo, lo tha hai fon huean kon pai', speaker: 'B' },
     { lao: 'ຝົນຈະຕົກດົນປານໃດ?', chinese: '雨会下多久？', pinyin: 'fon cha tok don pan dai?', speaker: 'A' },
     { lao: 'ປະມານໜຶ່ງຊົ່ວໂມງກໍຈະເອື້ອນ', chinese: '大约一个小时就会停', pinyin: 'paman nueng thua mong ko cha uean', speaker: 'B' },
     { lao: 'ຕອນນີ້ມີຝົນຕົກຮິນ/ຕົກຝອຍໆ', chinese: '现在在下小雨/细雨', pinyin: 'ton ni mi fon tok hin / tok phoy phoy', speaker: 'A' },

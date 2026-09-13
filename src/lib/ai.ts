@@ -1,5 +1,6 @@
 import { Capacitor, CapacitorHttp, registerPlugin, type HttpOptions } from '@capacitor/core';
 import type { AiConfigStatus, AiMode, AnalysisResponse, LaoAnalysis } from '../types/ai';
+import { sceneRequest, sceneFromGemini, validateScene, validateSceneInput, type GeneratedScene } from './sceneGeneration';
 
 interface SaveAiConfigInput {
   mode: AiMode;
@@ -198,7 +199,7 @@ function analysisQualityIssues(analysis: LaoAnalysis): string[] {
 
 async function nativeHttp(options: HttpOptions, providerName: string) {
   for (let attempt = 0; attempt < 3; attempt++) {
-    const response = await CapacitorHttp.request({ ...options, connectTimeout: 15000, readTimeout: 30000 });
+    const response = await CapacitorHttp.request({ connectTimeout: 15000, readTimeout: 30000, ...options });
     if (response.status >= 200 && response.status < 300) {
       return response.data as Record<string, unknown>;
     }
@@ -285,6 +286,23 @@ export async function analyzeLao(text: string): Promise<AnalysisResponse> {
 export function hasNativeGeminiConfig() {
   const config = readNativeConfig();
   return isNativeApp() && Boolean(config.googleApiKey);
+}
+
+export async function generateScene(words: string[], categories: string[]): Promise<GeneratedScene> {
+  const input = validateSceneInput(words, categories);
+  if (!isNativeApp()) {
+    const result = await requestJson<GeneratedScene>('/api/ai/generate-scene', {
+      method: 'POST', body: JSON.stringify(input),
+    });
+    return validateScene(result, input.categories);
+  }
+  const config = readNativeConfig();
+  if (!config.googleApiKey) throw new Error('请先配置 Google Gemini API Key');
+  const payload = await nativeHttp({
+    url: geminiGenerateContentUrl(GOOGLE_GEMINI_MODEL), method: 'POST',
+    headers: geminiHeaders(config.googleApiKey), data: sceneRequest(input.words, input.categories), readTimeout: 60000,
+  }, 'Google Gemini');
+  return sceneFromGemini(payload, input.categories);
 }
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {

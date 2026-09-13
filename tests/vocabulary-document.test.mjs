@@ -26,11 +26,11 @@ for (const section of document) {
 assert.equal(normalizeVocabularyCategory('大小'), '大小与度量');
 assert.equal(normalizeVocabularyCategory('看病健康'), '看病与健康');
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
-assert.equal(pkg.version, '1.7.0');
+assert.equal(pkg.version, '1.8.0');
 const home = readFileSync(new URL('../src/pages/HomePage.tsx', import.meta.url), 'utf8');
-assert.ok(home.includes('V1.7.0'));
+assert.ok(home.includes('V1.8.0'));
 const android = readFileSync(new URL('../android/app/build.gradle', import.meta.url), 'utf8');
-assert.match(android, /versionCode 17\b/);
-assert.match(android, /versionName "1\.7\.0"/);
-console.log('PASS: 31 categories, all 1550 source entries preserved, no duplicate category cards, V1.7.0 synchronized.');
+assert.match(android, /versionCode 18\b/);
+assert.match(android, /versionName "1\.8\.0"/);
+console.log('PASS: 31 categories, all 1550 source entries preserved, no duplicate category cards, V1.8.0 synchronized.');
 console.table(categories.map(category => ({ category, count: vocabulary.filter(item => item.category === category).length })));
