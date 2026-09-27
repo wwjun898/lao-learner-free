@@ -1,0 +1,7 @@
+export interface AnalysisExample { lao: string; pinyin: string; chinese: string }
+export interface LaoAnalysis {
+  sourceText: string; normalizedLao: string; pinyin: string; partOfSpeech: string;
+  chineseMeaning: string; detailedMeanings: string[]; wordFormation: string;
+  usageNotes: string[]; examples: AnalysisExample[]; suggestedCategory: string;
+  contentType: 'word' | 'phrase';
+}

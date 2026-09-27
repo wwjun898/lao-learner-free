@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 
 export default function ExplainButton({ text, category }: { text: string; category: string }) {
+  void text; void category;
   const [open, setOpen] = useState(false);
   return <>
     <button onClick={() => setOpen(true)} className="inline-flex h-10 shrink-0 items-center justify-center gap-1 rounded-lg bg-indigo-50 px-2 text-sm text-indigo-700" title="AI解释">

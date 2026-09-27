@@ -632,10 +632,6 @@ export function useSpeech() {
       void finishOfflineRecognition();
       return;
     }
-    if (Capacitor.isNativePlatform() && geminiRecordingActiveRef.current) {
-      stopMicrophoneCapture();
-      return;
-    }
     if (Capacitor.isNativePlatform() && nativeRecognitionActiveRef.current) {
       void NativeSpeechRecognition.forceStop({ timeout: 1200 });
       return;

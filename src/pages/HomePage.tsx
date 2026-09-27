@@ -12,9 +12,9 @@ const mainFeatures = [
 ];
 
 const tools = [
-  { page: 'word-formation' as Page, icon: '🔤', title: '构词法', subtitle: '常用构词法', accent: 'bg-violet-50 dark:bg-violet-900/20' },
-  { page: 'phrase-blocks' as Page, icon: '🧩', title: '常用语块', subtitle: '十二类语块', accent: 'bg-amber-50 dark:bg-amber-900/20' },
-  { page: 'calculator' as Page, icon: '🧮', title: '计算器', subtitle: '报价工具', accent: 'bg-orange-50 dark:bg-orange-900/20' },
+  { page: 'word-formation' as Page, icon: '🔤', title: '构词法', subtitle: '常用构词法', accent: 'bg-violet-50 dark:bg-violet-900/20', locked: false },
+  { page: 'phrase-blocks' as Page, icon: '🧩', title: '常用语块', subtitle: '十二类语块', accent: 'bg-amber-50 dark:bg-amber-900/20', locked: false },
+  { page: 'calculator' as Page, icon: '🧮', title: '计算器', subtitle: '报价工具', accent: 'bg-orange-50 dark:bg-orange-900/20', locked: false },
 ];
 
 export default function HomePage({ navigate }: Props) {
