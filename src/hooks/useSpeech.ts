@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { SpeechRecognition as NativeSpeechRecognition } from '@capgo/capacitor-speech-recognition';
-import { hasNativeGeminiConfig, synthesizeLaoAudio, transcribeLaoAudio } from '../lib/ai';
+import { synthesizeLaoAudio } from '../lib/tts';
 import { OfflineWhisper } from '../lib/offlineWhisper';
 import { laoTextSimilarity, normalizeRecognizedLao } from '../lib/laoSpeechNormalization';
 
@@ -57,7 +57,6 @@ export function useSpeech() {
   const recognitionErrorRef = useRef(false);
   const nativeRecognitionActiveRef = useRef(false);
   const nativeListenerRemoversRef = useRef<Array<() => Promise<void>>>([]);
-  const geminiRecordingActiveRef = useRef(false);
   const recordingCompleteRef = useRef<((audio: Blob) => void) | null>(null);
   const offlineRecordingActiveRef = useRef(false);
   const offlineProcessingRef = useRef(false);
@@ -521,44 +520,6 @@ export function useSpeech() {
     return true;
   }, [finishNativeRecognition, nativeRecognitionErrorMessage, removeNativeRecognitionListeners]);
 
-  const startGeminiRecognition = useCallback(async () => {
-    transcriptRef.current = '';
-    recognitionErrorRef.current = false;
-    setTranscript('');
-    setRecordedAudioUrl(previous => {
-      if (previous) URL.revokeObjectURL(previous);
-      return '';
-    });
-
-    const stream = await requestMicrophone();
-    setMicrophoneStatus('ready');
-    geminiRecordingActiveRef.current = true;
-    setIsListening(true);
-
-    const recordingCompleted = new Promise<Blob>(resolve => {
-      recordingCompleteRef.current = resolve;
-    });
-    startMicrophoneCapture(stream);
-    recognitionTimeoutRef.current = window.setTimeout(() => stopMicrophoneCapture(), 10_000);
-
-    void recordingCompleted.then(async recording => {
-      clearRecognitionTimeout();
-      geminiRecordingActiveRef.current = false;
-      setIsListening(false);
-      setListeningError('Gemini正在识别录音，请稍候...');
-      try {
-        const recognized = await transcribeLaoAudio(recording);
-        transcriptRef.current = recognized;
-        setTranscript(recognized);
-        setListeningError('');
-      } catch (error) {
-        recognitionErrorRef.current = true;
-        setListeningError(error instanceof Error ? error.message : 'Gemini语音识别失败，请稍后重试');
-      }
-    });
-    return true;
-  }, [clearRecognitionTimeout, startMicrophoneCapture, stopMicrophoneCapture]);
-
   // 语音识别
   const startListening = useCallback(async () => {
     setListeningError('');
@@ -572,7 +533,6 @@ export function useSpeech() {
         setIsListening(false);
         await removeNativeRecognitionListeners();
         try {
-          if (hasNativeGeminiConfig()) return await startGeminiRecognition();
           return await startNativeRecognition();
         } catch (fallbackError) {
           setListeningError(fallbackError instanceof Error ? fallbackError.message : '语音识别启动失败，请稍后重试。');
@@ -665,7 +625,7 @@ export function useSpeech() {
       stopMicrophoneCapture();
       return false;
     }
-  }, [removeNativeRecognitionListeners, startGeminiRecognition, startMicrophoneCapture, startNativeRecognition, startOfflineRecognition, stopMicrophoneCapture]);
+  }, [removeNativeRecognitionListeners, startMicrophoneCapture, startNativeRecognition, startOfflineRecognition, stopMicrophoneCapture]);
 
   const stopListening = useCallback(() => {
     if (Capacitor.isNativePlatform() && offlineRecordingActiveRef.current) {
