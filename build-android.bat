@@ -31,9 +31,9 @@ echo [3/3] Building APK...
 call android\gradlew.bat -p android assembleDebug
 if errorlevel 1 goto :failed
 
-copy /y "android\app\build\outputs\apk\debug\app-debug.apk" "lao-learner-v1.8.0.apk" >nul
+copy /y "android\app\build\outputs\apk\debug\app-debug.apk" "lao-learner-v1.9.3.apk" >nul
 echo.
-echo APK ready: %CD%\lao-learner-v1.8.0.apk
+echo APK ready: %CD%\lao-learner-v1.9.3.apk
 exit /b 0
 
 :failed

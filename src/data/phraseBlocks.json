@@ -1,0 +1,2822 @@
+[
+  {
+    "title": "意图、意愿与计划语块",
+    "items": [
+      {
+        "pinyin": "kam lang ja...",
+        "id": 1,
+        "chinese": "打算/准备去...",
+        "examples": [
+          {
+            "pinyin": "kam lang ja kin khao",
+            "chinese": "打算吃饭",
+            "lao": "ກຳລັງຈະກິນຂ້າວ"
+          },
+          {
+            "pinyin": "kam lang ja pai hong hian",
+            "chinese": "准备去学校",
+            "lao": "ກຳລັງຈະໄປໂຮງຮຽນ"
+          },
+          {
+            "pinyin": "kam lang ja non",
+            "chinese": "准备睡觉",
+            "lao": "ກຳລັງຈະນອນ"
+          }
+        ],
+        "lao": "ກຳລັງຈະ..."
+      },
+      {
+        "pinyin": "yak...",
+        "id": 2,
+        "chinese": "想/想要...",
+        "examples": [
+          {
+            "pinyin": "yak kin nam",
+            "chinese": "想喝水",
+            "lao": "ຢາກກິນນ້ຳ"
+          },
+          {
+            "pinyin": "yak pai han kha",
+            "chinese": "想去商店",
+            "lao": "ຢາກໄປຮ້ານຄ້າ"
+          },
+          {
+            "pinyin": "yak non lap",
+            "chinese": "想睡觉",
+            "lao": "ຢາກນອນຫຼັບ"
+          }
+        ],
+        "lao": "ຢາກ..."
+      },
+      {
+        "pinyin": "tong kan...",
+        "id": 3,
+        "chinese": "需要...",
+        "examples": [
+          {
+            "pinyin": "tong kan ngoen",
+            "chinese": "需要钱",
+            "lao": "ຕ້ອງການເງິນ"
+          },
+          {
+            "pinyin": "tong kan chuay luea",
+            "chinese": "需要帮助",
+            "lao": "ຕ້ອງການຊ່ວຍເຫຼືອ"
+          },
+          {
+            "pinyin": "tong kan ve la",
+            "chinese": "需要时间",
+            "lao": "ຕ້ອງການເວລາ"
+          }
+        ],
+        "lao": "ຕ້ອງການ..."
+      },
+      {
+        "pinyin": "kho...",
+        "id": 4,
+        "chinese": "请给我... / 申请...",
+        "examples": [
+          {
+            "pinyin": "kho nam dae",
+            "chinese": "请给我水",
+            "lao": "ຂໍນ້ຳແນ່"
+          },
+          {
+            "pinyin": "kho tho la sap",
+            "chinese": "请把手机给我",
+            "lao": "ຂໍໂທລະສັບ"
+          },
+          {
+            "pinyin": "kho khao dae",
+            "chinese": "请给我米饭",
+            "lao": "ຂໍເຂົ້າແນ່"
+          }
+        ],
+        "lao": "ຂໍ..."
+      },
+      {
+        "pinyin": "tang chai ja...",
+        "id": 5,
+        "chinese": "决定/下定决心要...",
+        "examples": [
+          {
+            "pinyin": "tang chai ja hian",
+            "chinese": "下定决心要学习",
+            "lao": "ຕັ້ງໃຈຈະຮຽນ"
+          },
+          {
+            "pinyin": "tang chai ja pai",
+            "chinese": "决定要去",
+            "lao": "ຕັ້ງໃຈຈະໄປ"
+          },
+          {
+            "pinyin": "tang chai ja het",
+            "chinese": "决定要做",
+            "lao": "ຕັ້ງໃຈຈະເຮັດ"
+          }
+        ],
+        "lao": "ຕັ້ງໃຈຈະ..."
+      },
+      {
+        "pinyin": "mi phnaen ja...",
+        "id": 6,
+        "chinese": "计划/打算...",
+        "examples": [
+          {
+            "pinyin": "mi phnaen ja pai thiao",
+            "chinese": "计划去旅游",
+            "lao": "ມີແຜນຈະໄປທ່ຽວ"
+          },
+          {
+            "pinyin": "mi phnaen ja sue huean",
+            "chinese": "计划买房子",
+            "lao": "ມີແຜນຈະຊື້ເຮືອນ"
+          },
+          {
+            "pinyin": "mi phnaen ja kin khao",
+            "chinese": "打算去吃饭",
+            "lao": "ມີແຜນຈະກິນຂ້າວ"
+          }
+        ],
+        "lao": "ມີແຜນຈະ..."
+      },
+      {
+        "pinyin": "khit ja...",
+        "id": 7,
+        "chinese": "盘算着/想...",
+        "examples": [
+          {
+            "pinyin": "khit ja pai sai?",
+            "chinese": "你想去哪里？",
+            "lao": "ຄິດຈະໄປໃສ?"
+          },
+          {
+            "pinyin": "khit ja sue hyang?",
+            "chinese": "你想买什么？",
+            "lao": "ຄິດຈະຊື້ຫຍັງ?"
+          },
+          {
+            "pinyin": "khit ja het hyang?",
+            "chinese": "你想做什么？",
+            "lao": "ຄິດຈະເຮັດຫຍັງ?"
+          }
+        ],
+        "lao": "ຄິດຈະ..."
+      },
+      {
+        "pinyin": "wang va ja...",
+        "id": 8,
+        "chinese": "希望能够...",
+        "examples": [
+          {
+            "pinyin": "wang va ja di",
+            "chinese": "希望能够好起来",
+            "lao": "ຫວັງວ່າຈະດີ"
+          },
+          {
+            "pinyin": "wang va ja phop kan",
+            "chinese": "希望能够见面",
+            "lao": "ຫວັງວ່າຈະພົບກັນ"
+          },
+          {
+            "pinyin": "wang va ja dai pai",
+            "chinese": "希望能够去成",
+            "lao": "ຫວັງວ່າຈະໄດ້ໄປ"
+          }
+        ],
+        "lao": "ຫວັງວ່າຈະ..."
+      },
+      {
+        "pinyin": "pha ya yam ja...",
+        "id": 9,
+        "chinese": "尝试/努力去...",
+        "examples": [
+          {
+            "pinyin": "pha ya yam ja hian",
+            "chinese": "努力去学习",
+            "lao": "ພະຍາຍາມຈະຮຽນ"
+          },
+          {
+            "pinyin": "pha ya yam ja het",
+            "chinese": "努力去做",
+            "lao": "ພະຍາຍາມຈະເຮັດ"
+          },
+          {
+            "pinyin": "pha ya yam ja pai",
+            "chinese": "争取过去",
+            "lao": "ພະຍາຍາມຈະໄປ"
+          }
+        ],
+        "lao": "ພະຍາຍາມຈະ..."
+      },
+      {
+        "pinyin": "tat sin chai...",
+        "id": 10,
+        "chinese": "决定...",
+        "examples": [
+          {
+            "pinyin": "tat sin chai pai",
+            "chinese": "决定去了",
+            "lao": "ຕັດສິນໃຈໄປ"
+          },
+          {
+            "pinyin": "tat sin chai sue",
+            "chinese": "决定买了",
+            "lao": "ຕັດສິນໃຈຊື້"
+          },
+          {
+            "pinyin": "tat sin chai het",
+            "chinese": "决定做了",
+            "lao": "ຕັດສິນໃຈເຮັດ"
+          }
+        ],
+        "lao": "ຕັດສິນໃຈ..."
+      }
+    ]
+  },
+  {
+    "title": "疑问与信息索取语块",
+    "items": [
+      {
+        "pinyin": "...yu sai?",
+        "id": 11,
+        "chinese": "...在哪里？",
+        "examples": [
+          {
+            "pinyin": "hong hian yu sai?",
+            "chinese": "学校在哪里？",
+            "lao": "ໂຮງຮຽນຢູ່ໃສ?"
+          },
+          {
+            "pinyin": "han kha yu sai?",
+            "chinese": "商店在哪里？",
+            "lao": "ຮ້ານຄ້າຢູ່ໃສ?"
+          },
+          {
+            "pinyin": "tho la sap yu sai?",
+            "chinese": "手机在哪里？",
+            "lao": "ໂທລະສັບຢູ່ໃສ?"
+          }
+        ],
+        "lao": "...ຢູ່ໃສ?"
+      },
+      {
+        "pinyin": "...naew dai?",
+        "id": 12,
+        "chinese": "怎样/怎么...？",
+        "examples": [
+          {
+            "pinyin": "het naew dai?",
+            "chinese": "怎么做？",
+            "lao": "ເຮັດແນວໃດ?"
+          },
+          {
+            "pinyin": "pai naew dai?",
+            "chinese": "怎么去？",
+            "lao": "ໄປແນວໃດ?"
+          },
+          {
+            "pinyin": "vaow naew dai?",
+            "chinese": "怎么说？",
+            "lao": "ເວົ້າແນວໃດ?"
+          }
+        ],
+        "lao": "...ແນວໃດ?"
+      },
+      {
+        "pinyin": "...dai bo?",
+        "id": 13,
+        "chinese": "可以...吗？",
+        "examples": [
+          {
+            "pinyin": "pai dai bo?",
+            "chinese": "可以去吗？",
+            "lao": "ໄປໄດ້ບໍ່?"
+          },
+          {
+            "pinyin": "kin dai bo?",
+            "chinese": "可以吃吗？",
+            "lao": "ກິນໄດ້ບໍ່?"
+          },
+          {
+            "pinyin": "chuay dai bo?",
+            "chinese": "可以帮忙吗？",
+            "lao": "ຊ່ວຍໄດ້ບໍ່?"
+          }
+        ],
+        "lao": "...ໄດ້ບໍ່?"
+      },
+      {
+        "pinyin": "mi... bo?",
+        "id": 14,
+        "chinese": "有...吗？",
+        "examples": [
+          {
+            "pinyin": "mi nam bo?",
+            "chinese": "有水吗？",
+            "lao": "ມີນ້ຳບໍ່?"
+          },
+          {
+            "pinyin": "mi ngoen bo?",
+            "chinese": "有钱吗？",
+            "lao": "ມີເງິນບໍ່?"
+          },
+          {
+            "pinyin": "mi ve la bo?",
+            "chinese": "有时间吗？",
+            "lao": "ມີເວລາບໍ່?"
+          }
+        ],
+        "lao": "ມີ...ບໍ່?"
+      },
+      {
+        "pinyin": "maen bo...",
+        "id": 15,
+        "chinese": "是...吗？",
+        "examples": [
+          {
+            "pinyin": "maen bo khon lao?",
+            "chinese": "是老挝人吗？",
+            "lao": "ແມ່ນບໍ່ຄົນລາວ?"
+          },
+          {
+            "pinyin": "maen bo han ni?",
+            "chinese": "是这家店吗？",
+            "lao": "ແມ່ນບໍ່ຮ້ານນີ້?"
+          },
+          {
+            "pinyin": "maen bo khu?",
+            "chinese": "是老师吗？",
+            "lao": "ແມ່ນບໍ່ຄູ?"
+          }
+        ],
+        "lao": "ແມ່ນບໍ່..."
+      },
+      {
+        "pinyin": "pen hyang khu...",
+        "id": 16,
+        "chinese": "为什么会...？",
+        "examples": [
+          {
+            "pinyin": "pen hyang khu bo pai?",
+            "chinese": "为什么不去？",
+            "lao": "ເປັນຫຍັງຄືບໍ່ໄປ?"
+          },
+          {
+            "pinyin": "pen hyang khu bo kin?",
+            "chinese": "为什么不吃？",
+            "lao": "ເປັນຫຍັງຄືບໍ່ກິນ?"
+          },
+          {
+            "pinyin": "pen hyang khu bo vaow?",
+            "chinese": "为什么不说？",
+            "lao": "ເປັນຫຍັງຄືບໍ່ເວົ້າ?"
+          }
+        ],
+        "lao": "ເປັນຫຍັງຄື..."
+      },
+      {
+        "pinyin": "thaow dai...",
+        "id": 17,
+        "chinese": "多少（钱/数量）...？",
+        "examples": [
+          {
+            "pinyin": "an ni thaow dai?",
+            "chinese": "这个多少钱？",
+            "lao": "ອັນນີ້ເທົ່າໃດ?"
+          },
+          {
+            "pinyin": "mi thaow dai?",
+            "chinese": "有多少个？",
+            "lao": "ມີເທົ່າໃດ?"
+          },
+          {
+            "pinyin": "a yu thaow dai?",
+            "chinese": "多少岁？",
+            "lao": "ອາຍຸເທົ່າໃດ?"
+          }
+        ],
+        "lao": "ເທົ່າໃດ..."
+      },
+      {
+        "pinyin": "mua dai...",
+        "id": 18,
+        "chinese": "什么时候...？",
+        "examples": [
+          {
+            "pinyin": "ja pai mua dai?",
+            "chinese": "什么时候去？",
+            "lao": "ຈະໄປເມື່ອໃດ?"
+          },
+          {
+            "pinyin": "ja ma mua dai?",
+            "chinese": "什么时候来？",
+            "lao": "ຈະມາເມື່ອໃດ?"
+          },
+          {
+            "pinyin": "ja kin mua dai?",
+            "chinese": "什么时候吃？",
+            "lao": "ຈະກິນເມື່ອໃດ?"
+          }
+        ],
+        "lao": "ເມື່ອໃດ..."
+      },
+      {
+        "pinyin": "an dai...",
+        "id": 19,
+        "chinese": "哪一个...？",
+        "examples": [
+          {
+            "pinyin": "ao an dai?",
+            "chinese": "要哪一个？",
+            "lao": "ເອົາອັນໃດ?"
+          },
+          {
+            "pinyin": "di an dai?",
+            "chinese": "哪一个好？",
+            "lao": "ດີອັນໃດ?"
+          },
+          {
+            "pinyin": "maen an dai?",
+            "chinese": "是哪一个？",
+            "lao": "ແມ່ນອັນໃດ?"
+          }
+        ],
+        "lao": "ອັນໃດ..."
+      },
+      {
+        "pinyin": "phai...",
+        "id": 20,
+        "chinese": "谁...？",
+        "examples": [
+          {
+            "pinyin": "phai ma?",
+            "chinese": "谁来了？",
+            "lao": "ໃຜມາ?"
+          },
+          {
+            "pinyin": "phai vaow?",
+            "chinese": "谁说的？",
+            "lao": "ໃຜເວົ້າ?"
+          },
+          {
+            "pinyin": "maen phai?",
+            "chinese": "是谁？",
+            "lao": "ແມ່ນໃຜ?"
+          }
+        ],
+        "lao": "ໃຜ..."
+      },
+      {
+        "pinyin": "...hu bo?",
+        "id": 21,
+        "chinese": "...还是不...？",
+        "examples": [
+          {
+            "pinyin": "pai hu bo?",
+            "chinese": "去还是不去？",
+            "lao": "ໄປຫຼືບໍ່?"
+          },
+          {
+            "pinyin": "kin hu bo?",
+            "chinese": "吃还是不吃？",
+            "lao": "ກິນຫຼືບໍ່?"
+          },
+          {
+            "pinyin": "sue hu bo?",
+            "chinese": "买还是不买？",
+            "lao": "ຊື້ຫຼືບໍ່?"
+          }
+        ],
+        "lao": "...ຫຼືບໍ່?"
+      },
+      {
+        "pinyin": "...maen bo?",
+        "id": 22,
+        "chinese": "...对吧？",
+        "examples": [
+          {
+            "pinyin": "di maen bo?",
+            "chinese": "很好，对吧？",
+            "lao": "ດີແມ່ນບໍ?"
+          },
+          {
+            "pinyin": "maen maen bo?",
+            "chinese": "是的，对吧？",
+            "lao": "ແມ່ນແມ່ນບໍ?"
+          },
+          {
+            "pinyin": "pai maen bo?",
+            "chinese": "要去，对吧？",
+            "lao": "ໄປແມ່ນບໍ?"
+          }
+        ],
+        "lao": "...ແມ່ນບໍ?"
+      }
+    ]
+  },
+  {
+    "title": "时态与动貌标记语块",
+    "items": [
+      {
+        "pinyin": "kam lang... yu",
+        "id": 23,
+        "chinese": "正在...中",
+        "examples": [
+          {
+            "pinyin": "kam lang kin khao yu",
+            "chinese": "正在吃饭",
+            "lao": "ກຳລັງກິນຂ້າວຢູ່"
+          },
+          {
+            "pinyin": "kam lang hian yu",
+            "chinese": "正在学习",
+            "lao": "ກຳລັງຮຽນຢູ່"
+          },
+          {
+            "pinyin": "kam lang het viak yu",
+            "chinese": "正在工作",
+            "lao": "ກຳລັງເຮັດວຽກຢູ່"
+          }
+        ],
+        "lao": "ກຳລັງ...ຢູ່"
+      },
+      {
+        "pinyin": "...laew",
+        "id": 24,
+        "chinese": "已经...了",
+        "examples": [
+          {
+            "pinyin": "kin laew",
+            "chinese": "吃过了",
+            "lao": "ກິນແລ້ວ"
+          },
+          {
+            "pinyin": "pai laew",
+            "chinese": "已经去了",
+            "lao": "ໄປແລ້ວ"
+          },
+          {
+            "pinyin": "ma laew",
+            "chinese": "已经来了",
+            "lao": "ມາແລ້ວ"
+          }
+        ],
+        "lao": "...ແລ້ວ"
+      },
+      {
+        "pinyin": "kam lang ja... laew",
+        "id": 25,
+        "chinese": "快要...了",
+        "examples": [
+          {
+            "pinyin": "kam lang ja pai laew",
+            "chinese": "快要出发了",
+            "lao": "ກຳລັງຈະໄປແລ້ວ"
+          },
+          {
+            "pinyin": "kam lang ja loem laew",
+            "chinese": "快要开始了",
+            "lao": "ກຳລັງຈະເລີ່ມແລ້ວ"
+          },
+          {
+            "pinyin": "kam lang ja non laew",
+            "chinese": "快要睡觉了",
+            "lao": "ກຳລັງຈະນອນແລ້ວ"
+          }
+        ],
+        "lao": "ກຳລັງຈະ...ແລ້ວ"
+      },
+      {
+        "pinyin": "...hiap hoy laew",
+        "id": 26,
+        "chinese": "...已经办妥了",
+        "examples": [
+          {
+            "pinyin": "het hiap hoy laew",
+            "chinese": "已经做好了",
+            "lao": "ເຮັດຮຽບຮ້ອຍແລ້ວ"
+          },
+          {
+            "pinyin": "sue hiap hoy laew",
+            "chinese": "已经买好了",
+            "lao": "ຊື້ຮຽບຮ້ອຍແລ້ວ"
+          },
+          {
+            "pinyin": "chai hiap hoy laew",
+            "chinese": "已经付过钱了",
+            "lao": "ຈ່າຍຮຽບຮ້ອຍແລ້ວ"
+          }
+        ],
+        "lao": "...ຮຽບຮ້ອຍແລ້ວ"
+      },
+      {
+        "pinyin": "khoey...",
+        "id": 27,
+        "chinese": "曾经/做过...",
+        "examples": [
+          {
+            "pinyin": "khoey pai",
+            "chinese": "去过",
+            "lao": "ເຄີຍໄປ"
+          },
+          {
+            "pinyin": "khoey kin",
+            "chinese": "吃过",
+            "lao": "ເຄີຍກິນ"
+          },
+          {
+            "pinyin": "khoey hian",
+            "chinese": "学过",
+            "lao": "ເຄີຍຮຽນ"
+          }
+        ],
+        "lao": "ເຄີຍ..."
+      },
+      {
+        "pinyin": "bo khoey...",
+        "id": 28,
+        "chinese": "从未/不曾...",
+        "examples": [
+          {
+            "pinyin": "bo khoey pai",
+            "chinese": "没去过",
+            "lao": "ບໍ່ເຄີຍໄປ"
+          },
+          {
+            "pinyin": "bo khoey kin",
+            "chinese": "没吃过",
+            "lao": "ບໍ່ເຄີຍກິນ"
+          },
+          {
+            "pinyin": "bo khoey hen",
+            "chinese": "没见过",
+            "lao": "ບໍ່ເຄີຍເຫັນ"
+          }
+        ],
+        "lao": "ບໍ່ເຄີຍ..."
+      },
+      {
+        "pinyin": "pheung ja...",
+        "id": 29,
+        "chinese": "刚刚才...",
+        "examples": [
+          {
+            "pinyin": "pheung ja ma",
+            "chinese": "刚刚才来",
+            "lao": "ເພິ່ງຈະມາ"
+          },
+          {
+            "pinyin": "pheung ja kin",
+            "chinese": "刚刚才吃",
+            "lao": "ເພິ່ງຈະກິນ"
+          },
+          {
+            "pinyin": "pheung ja tuen",
+            "chinese": "刚刚才醒",
+            "lao": "ເພິ່ງຈະຕື່ນ"
+          }
+        ],
+        "lao": "ເພິ່ງຈະ..."
+      },
+      {
+        "pinyin": "...chon theung...",
+        "id": 30,
+        "chinese": "一直到...",
+        "examples": [
+          {
+            "pinyin": "het viak chon theung kham",
+            "chinese": "工作直到晚上",
+            "lao": "ເຮັດວຽກຈົນເຖິງຄ່ຳ"
+          },
+          {
+            "pinyin": "hian chon theung laeng",
+            "chinese": "学习直到下午",
+            "lao": "ຮຽນຈົນເຖິງແລງ"
+          },
+          {
+            "pinyin": "tha chon theung ton ni",
+            "chinese": "一直等到现在",
+            "lao": "ຖ້າຈົນເຖິງຕອນນີ້"
+          }
+        ],
+        "lao": "...ຈົນເຖິງ..."
+      },
+      {
+        "pinyin": "...yu ta lot",
+        "id": 31,
+        "chinese": "一直在...",
+        "examples": [
+          {
+            "pinyin": "yim yu ta lot",
+            "chinese": "一直在笑",
+            "lao": "ຍິ້ມຢູ່ຕະຫຼອດ"
+          },
+          {
+            "pinyin": "hian yu ta lot",
+            "chinese": "一直在学习",
+            "lao": "ຮຽນຢູ່ຕະຫຼອດ"
+          },
+          {
+            "pinyin": "tha yu ta lot",
+            "chinese": "一直在等",
+            "lao": "ຖ້າຢູ່ຕະຫຼອດ"
+          }
+        ],
+        "lao": "...ຢູ່ຕະຫຼອດ"
+      },
+      {
+        "pinyin": "...kon",
+        "id": 32,
+        "chinese": "先...",
+        "examples": [
+          {
+            "pinyin": "kin kon",
+            "chinese": "先吃",
+            "lao": "ກິນກ່ອນ"
+          },
+          {
+            "pinyin": "pai kon",
+            "chinese": "先走了",
+            "lao": "ໄປກ່ອນ"
+          },
+          {
+            "pinyin": "non kon",
+            "chinese": "先睡了",
+            "lao": "ນອນກ່ອນ"
+          }
+        ],
+        "lao": "...ກ່ອນ"
+      }
+    ]
+  },
+  {
+    "title": "情绪、认知与态度语块",
+    "items": [
+      {
+        "pinyin": "khoy hu sik va...",
+        "id": 33,
+        "chinese": "我感觉/觉得...",
+        "examples": [
+          {
+            "pinyin": "khoy hu sik va hon",
+            "chinese": "我感觉很热",
+            "lao": "ຂ້ອຍຮູ້ສຶກວ່າຮ້ອນ"
+          },
+          {
+            "pinyin": "khoy hu sik va di",
+            "chinese": "我感觉很好",
+            "lao": "ຂ້ອຍຮູ້ສຶກວ່າດີ"
+          },
+          {
+            "pinyin": "khoy hu sik va mueay",
+            "chinese": "我感觉很累",
+            "lao": "ຂ້ອຍຮູ້ສຶກວ່າເມື່ອຍ"
+          }
+        ],
+        "lao": "ຂ້ອຍຮູ້ສຶກວ່າ..."
+      },
+      {
+        "pinyin": "khoy khit va...",
+        "id": 34,
+        "chinese": "我认为/以为...",
+        "examples": [
+          {
+            "pinyin": "khoy khit va di",
+            "chinese": "我认为很好",
+            "lao": "ຂ້ອຍຄິດວ່າດີ"
+          },
+          {
+            "pinyin": "khoy khit va maen",
+            "chinese": "我认为是对的",
+            "lao": "ຂ້ອຍຄິດວ່າແມ່ນ"
+          },
+          {
+            "pinyin": "khoy khit va tha dai",
+            "chinese": "我认为可以等",
+            "lao": "ຂ້ອຍຄິດວ່າຖ້າໄດ້"
+          }
+        ],
+        "lao": "ຂ້ອຍຄິດວ່າ..."
+      },
+      {
+        "pinyin": "khoy bo khoy...",
+        "id": 35,
+        "chinese": "我不太/不怎么...",
+        "examples": [
+          {
+            "pinyin": "khoy bo khoy kin",
+            "chinese": "我不太吃",
+            "lao": "ຂ້ອຍບໍ່ຄ່ອຍກິນ"
+          },
+          {
+            "pinyin": "khoy bo khoy pai",
+            "chinese": "我不太去",
+            "lao": "ຂ້ອຍບໍ່ຄ່ອຍໄປ"
+          },
+          {
+            "pinyin": "khoy bo khoy hu",
+            "chinese": "我不太清楚",
+            "lao": "ຂ້ອຍບໍ່ຄ່ອຍຮູ້"
+          }
+        ],
+        "lao": "ຂ້ອຍບໍ່ຄ່ອຍ..."
+      },
+      {
+        "pinyin": "khoy mak...",
+        "id": 36,
+        "chinese": "我喜欢/习惯...",
+        "examples": [
+          {
+            "pinyin": "khoy mak kin",
+            "chinese": "我喜欢吃",
+            "lao": "ຂ້ອຍມັກກິນ"
+          },
+          {
+            "pinyin": "khoy mak hian",
+            "chinese": "我喜欢学习",
+            "lao": "ຂ້ອຍມັກຮຽນ"
+          },
+          {
+            "pinyin": "khoy mak nam cha",
+            "chinese": "我喜欢喝茶",
+            "lao": "ຂ້ອຍມັກນ້ຳຊາ"
+          }
+        ],
+        "lao": "ຂ້ອຍມັກ..."
+      },
+      {
+        "pinyin": "khoy bo mak...",
+        "id": 37,
+        "chinese": "我不喜欢...",
+        "examples": [
+          {
+            "pinyin": "khoy bo mak hon",
+            "chinese": "我不喜欢热",
+            "lao": "ຂ້ອຍບໍ່ມັກຮ້ອນ"
+          },
+          {
+            "pinyin": "khoy bo mak pai",
+            "chinese": "我不喜欢去",
+            "lao": "ຂ້ອຍບໍ່ມັກໄປ"
+          },
+          {
+            "pinyin": "khoy bo mak phet",
+            "chinese": "我不喜欢辣",
+            "lao": "ຂ້ອຍບໍ່ມັກເຜັດ"
+          }
+        ],
+        "lao": "ຂ້ອຍບໍ່ມັກ..."
+      },
+      {
+        "pinyin": "khoy yan va...",
+        "id": 38,
+        "chinese": "我担心/害怕...",
+        "examples": [
+          {
+            "pinyin": "khoy yan va phon si tok",
+            "chinese": "我担心会下雨",
+            "lao": "ຂ້ອຍຢ້ານວ່າຝົນຊິຕົກ"
+          },
+          {
+            "pinyin": "khoy yan va sa",
+            "chinese": "我担心会迟到",
+            "lao": "ຂ້ອຍຢ້ານວ່າຊ້າ"
+          },
+          {
+            "pinyin": "khoy yan va bo mi",
+            "chinese": "我担心会没有",
+            "lao": "ຂ້ອຍຢ້ານວ່າບໍ່ມີ"
+          }
+        ],
+        "lao": "ຂ້ອຍຢ້ານວ່າ..."
+      },
+      {
+        "pinyin": "khoy suea va...",
+        "id": 39,
+        "chinese": "我相信...",
+        "examples": [
+          {
+            "pinyin": "khoy suea va chao het dai",
+            "chinese": "我相信你能做到",
+            "lao": "ຂ້ອຍເຊື່ອວ່າເຈົ້າເຮັດໄດ້"
+          },
+          {
+            "pinyin": "khoy suea va di",
+            "chinese": "我相信是好的",
+            "lao": "ຂ້ອຍເຊື່ອວ່າດີ"
+          },
+          {
+            "pinyin": "khoy suea va maen",
+            "chinese": "我相信是真的",
+            "lao": "ຂ້ອຍເຊື່ອວ່າແມ່ນ"
+          }
+        ],
+        "lao": "ຂ້ອຍເຊື່ອວ່າ..."
+      },
+      {
+        "pinyin": "khoy bo nae chai va...",
+        "id": 40,
+        "chinese": "我不太确定...",
+        "examples": [
+          {
+            "pinyin": "khoy bo nae chai va pai bo",
+            "chinese": "我不确定去不去",
+            "lao": "ຂ້ອຍບໍ່ແນ່ໃຈວ່າໄປບໍ່"
+          },
+          {
+            "pinyin": "khoy bo nae chai va maen bo",
+            "chinese": "我不确定是不是",
+            "lao": "ຂ້ອຍບໍ່ແນ່ໃຈວ່າແມ່ນບໍ່"
+          },
+          {
+            "pinyin": "khoy bo nae chai va phai",
+            "chinese": "我不确定是谁",
+            "lao": "ຂ້ອຍບໍ່ແນ່ໃຈວ່າໃຜ"
+          }
+        ],
+        "lao": "ຂ້ອຍບໍ່ແນ່ໃຈວ່າ..."
+      },
+      {
+        "pinyin": "khoy khao chai va...",
+        "id": 41,
+        "chinese": "我理解为...",
+        "examples": [
+          {
+            "pinyin": "khoy khao chai va thuek",
+            "chinese": "我理解为是对的",
+            "lao": "ຂ້ອຍເຂົ້າໃຈວ່າຖືກ"
+          },
+          {
+            "pinyin": "khoy khao chai va pai laew",
+            "chinese": "我理解为已经去了",
+            "lao": "ຂ້ອຍເຂົ້າໃຈວ່າໄປແລ້ວ"
+          },
+          {
+            "pinyin": "khoy khao chai va bo mi",
+            "chinese": "我理解为是没有",
+            "lao": "ຂ້ອຍເຂົ້າໃຈວ່າບໍ່ມີ"
+          }
+        ],
+        "lao": "ຂ້ອຍເຂົ້າໃຈວ່າ..."
+      },
+      {
+        "pinyin": "khoy wang va...",
+        "id": 42,
+        "chinese": "我希望...",
+        "examples": [
+          {
+            "pinyin": "khoy wang va di",
+            "chinese": "我希望是好的",
+            "lao": "ຂ້ອຍຫວັງວ່າດີ"
+          },
+          {
+            "pinyin": "khoy wang va chao sa bai di",
+            "chinese": "我希望你一切都好",
+            "lao": "ຂ້ອຍຫວັງວ່າເຈົ້າສະບາຍດີ"
+          },
+          {
+            "pinyin": "khoy wang va dai pai",
+            "chinese": "我希望能够去",
+            "lao": "ຂ້ອຍຫວັງວ່າໄດ້ໄປ"
+          }
+        ],
+        "lao": "ຂ້ອຍຫວັງວ່າ..."
+      }
+    ]
+  },
+  {
+    "title": "逻辑关系与复句引导语块",
+    "items": [
+      {
+        "pinyin": "yon va... ko loey...",
+        "id": 43,
+        "chinese": "因为...所以...",
+        "examples": [
+          {
+            "pinyin": "yon va phon tok, ko loey bo pai",
+            "chinese": "因为下雨，所以没去",
+            "lao": "ຍ້ອນວ່າຝົນຕົກ ກໍເລີຍບໍ່ໄປ"
+          },
+          {
+            "pinyin": "yon va mueay, ko loey non",
+            "chinese": "因为累了，所以睡觉",
+            "lao": "ຍ້ອນວ່າເມື່ອຍ ກໍເລີຍນອນ"
+          },
+          {
+            "pinyin": "yon va saep, ko loey kin",
+            "chinese": "因为好吃，所以吃了",
+            "lao": "ຍ້ອນວ່າແຊບ ກໍເລີຍກິນ"
+          }
+        ],
+        "lao": "ຍ້ອນວ່າ... ກໍເລີຍ..."
+      },
+      {
+        "pinyin": "tae...",
+        "id": 44,
+        "chinese": "但是...",
+        "examples": [
+          {
+            "pinyin": "yak pai, tae bo mi ve la",
+            "chinese": "想去，但是没时间",
+            "lao": "ຢາກໄປ ແຕ່ບໍ່ມີເວລາ"
+          },
+          {
+            "pinyin": "di, tae phaeng",
+            "chinese": "好，但是贵",
+            "lao": "ດີ ແຕ່ແພງ"
+          },
+          {
+            "pinyin": "kin, tae bo lai",
+            "chinese": "吃了，但是不多",
+            "lao": "ກິນ ແຕ່ບໍ່ຫຼາຍ"
+          }
+        ],
+        "lao": "ແຕ່..."
+      },
+      {
+        "pinyin": "tha... ja...",
+        "id": 45,
+        "chinese": "如果...就...",
+        "examples": [
+          {
+            "pinyin": "tha pai, ja bok",
+            "chinese": "如果去，会告诉你",
+            "lao": "ຖ້າໄປ ຈະບອກ"
+          },
+          {
+            "pinyin": "tha phon tok, ja bo pai",
+            "chinese": "如果下雨，就不去",
+            "lao": "ຖ້າຝົນຕົກ ຈະບໍ່ໄປ"
+          },
+          {
+            "pinyin": "tha saep, ja kin",
+            "chinese": "如果好吃，就吃",
+            "lao": "ຖ້າແຊບ ຈະກິນ"
+          }
+        ],
+        "lao": "ຖ້າ... ຈະ..."
+      },
+      {
+        "pinyin": "thing va... tae...",
+        "id": 46,
+        "chinese": "尽管...但是...",
+        "examples": [
+          {
+            "pinyin": "thing va mueay, tae ko pai",
+            "chinese": "尽管很累，但还是去了",
+            "lao": "ເຖິງວ່າເມື່ອຍ ແຕ່ກໍໄປ"
+          },
+          {
+            "pinyin": "thing va phaeng, tae ko sue",
+            "chinese": "尽管很贵，但还是买了",
+            "lao": "ເຖິງວ່າແພງ ແຕ່ກໍຊື້"
+          },
+          {
+            "pinyin": "thing va yak, tae bo kin",
+            "chinese": "尽管想吃，但没吃",
+            "lao": "ເຖິງວ່າຢາກ ແຕ່ບໍ່ກິນ"
+          }
+        ],
+        "lao": "ເຖິງວ່າ... ແຕ່..."
+      },
+      {
+        "pinyin": "nak chak... laew yang...",
+        "id": 47,
+        "chinese": "除了...之外，还...",
+        "examples": [
+          {
+            "pinyin": "nak chak kin, laew yang non",
+            "chinese": "除了吃，还睡",
+            "lao": "ນອກຈາກກິນ ແລ້ວຍັງນອນ"
+          },
+          {
+            "pinyin": "nak chak hian, laew yang het viak",
+            "chinese": "除了学习，还工作",
+            "lao": "ນອກຈາກຮຽນ ແລ້ວຍັງເຮັດວຽກ"
+          },
+          {
+            "pinyin": "nak chak nam, laew yang mi cha",
+            "chinese": "除了水，还有茶",
+            "lao": "ນອກຈາກນ້ຳ ແລ້ວຍັງມີຊາ"
+          }
+        ],
+        "lao": "ນອກຈາກ... ແລ້ວຍັງ..."
+      },
+      {
+        "pinyin": "dang nan...",
+        "id": 48,
+        "chinese": "因此/所以...",
+        "examples": [
+          {
+            "pinyin": "phon tok, dang nan bo pai",
+            "chinese": "下雨了，因此不去",
+            "lao": "ຝົນຕົກ ດັ່ງນັ້ນບໍ່ໄປ"
+          },
+          {
+            "pinyin": "mueay, dang nan non",
+            "chinese": "累了，因此睡觉",
+            "lao": "ເມື່ອຍ ດັ່ງນັ້ນນອນ"
+          },
+          {
+            "pinyin": "di, dang nan sue",
+            "chinese": "很好，因此买了",
+            "lao": "ດີ ດັ່ງນັ້ນຊື້"
+          }
+        ],
+        "lao": "ດັ່ງນັ້ນ..."
+      },
+      {
+        "pinyin": "phaw va...",
+        "id": 49,
+        "chinese": "由于/因为...",
+        "examples": [
+          {
+            "pinyin": "bo pai, phaw va mueay",
+            "chinese": "没去，因为太累了",
+            "lao": "ບໍ່ໄປ ເພາະວ່າເມື່ອຍ"
+          },
+          {
+            "pinyin": "bo kin, phaw va im",
+            "chinese": "没吃，因为饱了",
+            "lao": "ບໍ່ກິນ ເພາະວ່າອີ່ມ"
+          },
+          {
+            "pinyin": "sue, phaw va thuek",
+            "chinese": "买了，因为便宜",
+            "lao": "ຊື້ ເພາະວ່າຖືກ"
+          }
+        ],
+        "lao": "ເພາະວ່າ..."
+      },
+      {
+        "pinyin": "khu va...",
+        "id": 50,
+        "chinese": "好像是/也就是...",
+        "examples": [
+          {
+            "pinyin": "khu va si phon tok",
+            "chinese": "好像要下雨了",
+            "lao": "ຄືວ່າຊິຝົນຕົກ"
+          },
+          {
+            "pinyin": "khu va si di",
+            "chinese": "好像蛮好的",
+            "lao": "ຄືວ່າຊິດີ"
+          },
+          {
+            "pinyin": "khu va bo mi",
+            "chinese": "好像是没有",
+            "lao": "ຄືວ່າບໍ່ມີ"
+          }
+        ],
+        "lao": "ຄືວ່າ..."
+      },
+      {
+        "pinyin": "tha bo dang nan...",
+        "id": 51,
+        "chinese": "否则的话...",
+        "examples": [
+          {
+            "pinyin": "tong pai, tha bo dang nan sa",
+            "chinese": "快点去，否则就迟到了",
+            "lao": "ຕ້ອງໄປ ຖ້າບໍ່ດັ່ງນັ້ນຊ້າ"
+          },
+          {
+            "pinyin": "tong kin, tha bo dang nan hiu",
+            "chinese": "得吃点，否则会饿",
+            "lao": "ຕ້ອງກິນ ຖ້າບໍ່ດັ່ງນັ້ນຫິວ"
+          },
+          {
+            "pinyin": "tong hian, tha bo dang nan bo hu",
+            "chinese": "得学习，否则就不懂",
+            "lao": "ຕ້ອງຮຽນ ຖ້າບໍ່ດັ່ງນັ້ນບໍ່ຮູ້"
+          }
+        ],
+        "lao": "ຖ້າບໍ່ດັ່ງນັ້ນ..."
+      },
+      {
+        "pinyin": "bo va ja... ko...",
+        "id": 52,
+        "chinese": "无论...都...",
+        "examples": [
+          {
+            "pinyin": "bo va ja pai sai, ko di",
+            "chinese": "无论去哪里都好",
+            "lao": "ບໍ່ວ່າຈະໄປໃສ ກໍດີ"
+          },
+          {
+            "pinyin": "bo va ja kin hyang, ko dai",
+            "chinese": "无论吃什么都可以",
+            "lao": "ບໍ່ວ່າຈະກິນຫຍັງ ກໍໄດ້"
+          },
+          {
+            "pinyin": "bo va ja phaeng, ko sue",
+            "chinese": "无论多贵都买",
+            "lao": "ບໍ່ວ່າຈະແພງ ກໍຊື້"
+          }
+        ],
+        "lao": "ບໍ່ວ່າຈະ... ກໍ..."
+      }
+    ]
+  },
+  {
+    "title": "时间、频率与特定时间框架语块",
+    "items": [
+      {
+        "pinyin": "bang thua...",
+        "id": 53,
+        "chinese": "有时候...",
+        "examples": [
+          {
+            "pinyin": "bang thua pai",
+            "chinese": "有时候去",
+            "lao": "ບາງເທື່ອໄປ"
+          },
+          {
+            "pinyin": "bang thua kin",
+            "chinese": "有时候吃",
+            "lao": "ບາງເທື່ອກິນ"
+          },
+          {
+            "pinyin": "bang thua bo mi",
+            "chinese": "有时候没有",
+            "lao": "ບາງເທື່ອບໍ່ມີ"
+          }
+        ],
+        "lao": "ບາງເທື່ອ..."
+      },
+      {
+        "pinyin": "thuk thuk khang thi...",
+        "id": 54,
+        "chinese": "每次/每当...",
+        "examples": [
+          {
+            "pinyin": "thuk thuk khang thi pai",
+            "chinese": "每次去的时候",
+            "lao": "ທຸກໆຄັ້ງທີ່ໄປ"
+          },
+          {
+            "pinyin": "thuk thuk khang thi kin",
+            "chinese": "每次吃的时候",
+            "lao": "ທຸກໆຄັ້ງທີ່ກິນ"
+          },
+          {
+            "pinyin": "thuk thuk khang thi phop",
+            "chinese": "每次见面的时候",
+            "lao": "ທຸກໆຄັ້ງທີ່ພົບ"
+          }
+        ],
+        "lao": "ທຸກໆຄັ້ງທີ່..."
+      },
+      {
+        "pinyin": "kon na ni...",
+        "id": 55,
+        "chinese": "在这之前...",
+        "examples": [
+          {
+            "pinyin": "kon na ni yu huean",
+            "chinese": "在这之前在家",
+            "lao": "ກ່ອນໜ້ານີ້ຢູ່ເຮືອນ"
+          },
+          {
+            "pinyin": "kon na ni kin laew",
+            "chinese": "在这之前吃过了",
+            "lao": "ກ່ອນໜ້ານີ້ກິນແລ້ວ"
+          },
+          {
+            "pinyin": "kon na ni bo hu",
+            "chinese": "在这之前不知道",
+            "lao": "ກ່ອນໜ້ານີ້ບໍ່ຮູ້"
+          }
+        ],
+        "lao": "ກ່ອນໜ້ານີ້..."
+      },
+      {
+        "pinyin": "lang chak...",
+        "id": 56,
+        "chinese": "在...之后",
+        "examples": [
+          {
+            "pinyin": "lang chak kin khao",
+            "chinese": "吃饭之后",
+            "lao": "ຫຼັງຈາກກິນຂ້າວ"
+          },
+          {
+            "pinyin": "lang chak het viak",
+            "chinese": "工作之后",
+            "lao": "ຫຼັງຈາກເຮັດວຽກ"
+          },
+          {
+            "pinyin": "lang chak hian",
+            "chinese": "学习之后",
+            "lao": "ຫຼັງຈາກຮຽນ"
+          }
+        ],
+        "lao": "ຫຼັງຈາກ..."
+      },
+      {
+        "pinyin": "nai ton thi...",
+        "id": 57,
+        "chinese": "在...的时候",
+        "examples": [
+          {
+            "pinyin": "nai ton thi phon tok",
+            "chinese": "在下雨的时候",
+            "lao": "ໃນຕອນທີ່ຝົນຕົກ"
+          },
+          {
+            "pinyin": "nai ton thi kin khao",
+            "chinese": "在吃饭的时候",
+            "lao": "ໃນຕອນທີ່ກິນຂ້າວ"
+          },
+          {
+            "pinyin": "nai ton thi hian",
+            "chinese": "在学习的时候",
+            "lao": "ໃນຕອນທີ່ຮຽນ"
+          }
+        ],
+        "lao": "ໃນຕອນທີ່..."
+      },
+      {
+        "pinyin": "nai la vang...",
+        "id": 58,
+        "chinese": "在...期间",
+        "examples": [
+          {
+            "pinyin": "nai la vang hian",
+            "chinese": "在学习期间",
+            "lao": "ໃນລະຫວ່າງຮຽນ"
+          },
+          {
+            "pinyin": "nai la vang thang",
+            "chinese": "在路上的时候",
+            "lao": "ໃນລະຫວ່າງທາງ"
+          },
+          {
+            "pinyin": "nai la vang het viak",
+            "chinese": "在工作期间",
+            "lao": "ໃນລະຫວ່າງເຮັດວຽກ"
+          }
+        ],
+        "lao": "ໃນລະຫວ່າງ..."
+      },
+      {
+        "pinyin": "tae don ma laew...",
+        "id": 59,
+        "chinese": "很久以前就...",
+        "examples": [
+          {
+            "pinyin": "tae don ma laew bo dai pai",
+            "chinese": "很久没去过了",
+            "lao": "ແຕ່ດົນມາແລ້ວບໍ່ໄດ້ໄປ"
+          },
+          {
+            "pinyin": "tae don ma laew hu chak",
+            "chinese": "很久以前就认识了",
+            "lao": "ແຕ່ດົນມາແລ້ວຮູ້ຈັກ"
+          },
+          {
+            "pinyin": "tae don ma laew mi",
+            "chinese": "很久以前就有了",
+            "lao": "ແຕ່ດົນມາແລ້ວມີ"
+          }
+        ],
+        "lao": "ແຕ່ດົນມາແລ້ວ..."
+      },
+      {
+        "pinyin": "don don thua neung...",
+        "id": 60,
+        "chinese": "偶尔/很久才一次...",
+        "examples": [
+          {
+            "pinyin": "don don thua neung pai",
+            "chinese": "很久才去一次",
+            "lao": "ດົນໆເທື່ອໜຶ່ງໄປ"
+          },
+          {
+            "pinyin": "don don thua neung kin",
+            "chinese": "很久才吃一次",
+            "lao": "ດົນໆເທື່ອໜຶ່ງກິນ"
+          },
+          {
+            "pinyin": "don don thua neung phop kan",
+            "chinese": "很久才聚一次",
+            "lao": "ດົນໆເທື່ອໜຶ່ງພົບກັນ"
+          }
+        ],
+        "lao": "ດົນໆເທື່ອໜຶ່ງ..."
+      },
+      {
+        "pinyin": "nai vai vai ni...",
+        "id": 61,
+        "chinese": "近期/不久后...",
+        "examples": [
+          {
+            "pinyin": "ja pai nai vai vai ni",
+            "chinese": "不久后就会去",
+            "lao": "ຈະໄປໃນໄວໆນີ້"
+          },
+          {
+            "pinyin": "ja loem nai vai vai ni",
+            "chinese": "近期就会开始",
+            "lao": "ຈະເລີ່ມໃນໄວໆນີ້"
+          },
+          {
+            "pinyin": "ja ma nai vai vai ni",
+            "chinese": "不久后就会来",
+            "lao": "ຈະມາໃນໄວໆນີ້"
+          }
+        ],
+        "lao": "ໃນໄວໆນີ້..."
+      },
+      {
+        "pinyin": "nai thi sut...",
+        "id": 62,
+        "chinese": "最终/终于...",
+        "examples": [
+          {
+            "pinyin": "nai thi sut ko dai pai",
+            "chinese": "终于能去了",
+            "lao": "ໃນທີ່ສຸດກໍໄດ້ໄປ"
+          },
+          {
+            "pinyin": "nai thi sut ko laew",
+            "chinese": "终于完成了",
+            "lao": "ໃນທີ່ສຸດກໍແລ້ວ"
+          },
+          {
+            "pinyin": "nai thi sut ko ma",
+            "chinese": "终于来了",
+            "lao": "ໃນທີ່ສຸດກໍມາ"
+          }
+        ],
+        "lao": "ໃນທີ່ສຸດ..."
+      }
+    ]
+  },
+  {
+    "title": "社交礼貌、客套与回应语块",
+    "items": [
+      {
+        "pinyin": "hop kuan...",
+        "id": 63,
+        "chinese": "麻烦/打扰...",
+        "examples": [
+          {
+            "pinyin": "hop kuan dae",
+            "chinese": "麻烦一下",
+            "lao": "ຮົບກວນແນ່"
+          },
+          {
+            "pinyin": "hop kuan beung dae",
+            "chinese": "麻烦帮我看看",
+            "lao": "ຮົບກວນເບິ່ງແນ່"
+          },
+          {
+            "pinyin": "hop kuan tham dae",
+            "chinese": "麻烦打听一下",
+            "lao": "ຮົບກວນຖາມແນ່"
+          }
+        ],
+        "lao": "ຮົບກວນ..."
+      },
+      {
+        "pinyin": "kho thot thi...",
+        "id": 64,
+        "chinese": "抱歉（因为）...",
+        "examples": [
+          {
+            "pinyin": "kho thot thi sa",
+            "chinese": "抱歉迟到了",
+            "lao": "ຂໍໂທດທີ່ຊ້າ"
+          },
+          {
+            "pinyin": "kho thot thi bo dai pai",
+            "chinese": "抱歉没能去",
+            "lao": "ຂໍໂທດທີ່ບໍ່ໄດ້ໄປ"
+          },
+          {
+            "pinyin": "kho thot thi lop kuan",
+            "chinese": "抱歉打扰了",
+            "lao": "ຂໍໂທດທີ່ລົບກວນ"
+          }
+        ],
+        "lao": "ຂໍໂທດທີ່..."
+      },
+      {
+        "pinyin": "khop chai sam lap...",
+        "id": 65,
+        "chinese": "谢谢你的...",
+        "examples": [
+          {
+            "pinyin": "khop chai sam lap nam",
+            "chinese": "谢谢你的水",
+            "lao": "ຂອບໃຈສໍາລັບນ້ຳ"
+          },
+          {
+            "pinyin": "khop chai sam lap a han",
+            "chinese": "谢谢你的美食",
+            "lao": "ຂອບໃຈສໍາລັບອາຫານ"
+          },
+          {
+            "pinyin": "khop chai sam lap khwam chuay luea",
+            "chinese": "谢谢你的帮助",
+            "lao": "ຂອບໃຈສໍາລັບຄວາມຊ່ວຍເຫຼືອ"
+          }
+        ],
+        "lao": "ຂອບໃຈສໍາລັບ..."
+      },
+      {
+        "pinyin": "yin di thi dai...",
+        "id": 66,
+        "chinese": "很高兴能...",
+        "examples": [
+          {
+            "pinyin": "yin di thi dai phop",
+            "chinese": "很高兴见到你",
+            "lao": "ຍິນດີທີ່ໄດ້ພົບ"
+          },
+          {
+            "pinyin": "yin di thi dai hu chak",
+            "chinese": "很高兴认识你",
+            "lao": "ຍິນດີທີ່ໄດ້ຮູ້ຈັກ"
+          },
+          {
+            "pinyin": "yin di thi dai chuay",
+            "chinese": "很高兴能帮忙",
+            "lao": "ຍິນດີທີ່ໄດ້ຊ່ວຍ"
+          }
+        ],
+        "lao": "ຍິນດີທີ່ໄດ້..."
+      },
+      {
+        "pinyin": "bo pen hyang...",
+        "id": 67,
+        "chinese": "没关系/不用客气...",
+        "examples": [
+          {
+            "pinyin": "bo pen hyang, pai dai",
+            "chinese": "没关系，可以去",
+            "lao": "ບໍ່ເປັນຫຍັງ ໄປໄດ້"
+          },
+          {
+            "pinyin": "bo pen hyang, bo phaeng",
+            "chinese": "没关系，不贵",
+            "lao": "ບໍ່ເປັນຫຍັງ ບໍ່ແພງ"
+          },
+          {
+            "pinyin": "bo pen hyang, ao loey",
+            "chinese": "没关系，用吧/拿吧",
+            "lao": "ບໍ່ເປັນຫຍັງ ເອົາເລີຍ"
+          }
+        ],
+        "lao": "ບໍ່ເປັນຫຍັງ..."
+      },
+      {
+        "pinyin": "kho a phai...",
+        "id": 68,
+        "chinese": "请原谅/包涵...",
+        "examples": [
+          {
+            "pinyin": "kho a phai lai lai",
+            "chinese": "非常抱歉/包涵",
+            "lao": "ຂໍອະໄພຫຼາຍໆ"
+          },
+          {
+            "pinyin": "kho a phai thi sa",
+            "chinese": "请原谅迟到了",
+            "lao": "ຂໍອະໄພທີ່ຊ້າ"
+          },
+          {
+            "pinyin": "kho a phai thi bo hu",
+            "chinese": "请原谅我不知道",
+            "lao": "ຂໍອະໄພທີ່ບໍ່ຮູ້"
+          }
+        ],
+        "lao": "ຂໍອະໄພ..."
+      },
+      {
+        "pinyin": "keng chai...",
+        "id": 69,
+        "chinese": "不好意思/见外...",
+        "examples": [
+          {
+            "pinyin": "keng chai lai",
+            "chinese": "非常不好意思",
+            "lao": "ເກັງໃຈຫຼາຍ"
+          },
+          {
+            "pinyin": "keng chai phoen",
+            "chinese": "不好意思麻烦人家",
+            "lao": "ເກັງໃຈ ເພິ່ນ"
+          },
+          {
+            "pinyin": "bo tong keng chai",
+            "chinese": "不用见外/别客气",
+            "lao": "ບໍ່ຕ້ອງເກັງໃຈ"
+          }
+        ],
+        "lao": "ເກັງໃຈ..."
+      },
+      {
+        "pinyin": "shok di...",
+        "id": 70,
+        "chinese": "祝你好运/顺利...",
+        "examples": [
+          {
+            "pinyin": "shok di doe",
+            "chinese": "祝你好运啊",
+            "lao": "ໂຊກດີເດີ"
+          },
+          {
+            "pinyin": "shok di nai kan doen thang",
+            "chinese": "祝一路顺风",
+            "lao": "ໂຊກດີໃນການເດີນທາງ"
+          },
+          {
+            "pinyin": "shok di nai kan het viak",
+            "chinese": "祝工作顺利",
+            "lao": "ໂຊກດີໃນການເຮັດວຽກ"
+          }
+        ],
+        "lao": "ໂຊກດີ..."
+      },
+      {
+        "pinyin": "fak... dae",
+        "id": 71,
+        "chinese": "顺便帮忙... / 委托...",
+        "examples": [
+          {
+            "pinyin": "fak sue khao dae",
+            "chinese": "顺便帮我买个饭",
+            "lao": "ຝາກຊື້ຂ້າວແດ່"
+          },
+          {
+            "pinyin": "fak khong dae",
+            "chinese": "顺便帮忙寄个东西",
+            "lao": "ຝາກຂອງແດ່"
+          },
+          {
+            "pinyin": "fak beung dae",
+            "chinese": "顺便帮忙照看下",
+            "lao": "ຝາກເບິ່ງແດ່"
+          }
+        ],
+        "lao": "ຝາກ...ແດ່"
+      },
+      {
+        "pinyin": "kho hai...",
+        "id": 72,
+        "chinese": "祝愿...",
+        "examples": [
+          {
+            "pinyin": "kho hai mi khwam suk",
+            "chinese": "祝你幸福快乐",
+            "lao": "ຂໍໃຫ້ມີຄວາມສຸກ"
+          },
+          {
+            "pinyin": "kho hai khaeng haeng",
+            "chinese": "祝你身体健康",
+            "lao": "ຂໍໃຫ້ແຂງແຮງ"
+          },
+          {
+            "pinyin": "kho hai shok di",
+            "chinese": "祝你好运",
+            "lao": "ຂໍໃຫ້ໂຊກດີ"
+          }
+        ],
+        "lao": "ຂໍໃຫ້..."
+      }
+    ]
+  },
+  {
+    "title": "程度、评价与比较语块",
+    "items": [
+      {
+        "pinyin": "di thi sut maen...",
+        "id": 73,
+        "chinese": "最好是...",
+        "examples": [
+          {
+            "pinyin": "di thi sut maen pai",
+            "chinese": "最好是过去",
+            "lao": "ດີທີ່ສຸດແມ່ນໄປ"
+          },
+          {
+            "pinyin": "di thi sut maen kin",
+            "chinese": "最好是吃掉",
+            "lao": "ດີທີ່ສຸດແມ່ນກິນ"
+          },
+          {
+            "pinyin": "di thi sut maen non",
+            "chinese": "最好是睡觉",
+            "lao": "ດີທີ່ສຸດແມ່ນນອນ"
+          }
+        ],
+        "lao": "ດີທີ່ສຸດແມ່ນ..."
+      },
+      {
+        "pinyin": "khuan ja...",
+        "id": 74,
+        "chinese": "应该要...",
+        "examples": [
+          {
+            "pinyin": "khuan ja pai",
+            "chinese": "应该要去",
+            "lao": "ຄວນຈະໄປ"
+          },
+          {
+            "pinyin": "khuan ja kin",
+            "chinese": "应该要吃",
+            "lao": "ຄວນຈະກິນ"
+          },
+          {
+            "pinyin": "khuan ja hian",
+            "chinese": "应该要学",
+            "lao": "ຄວນຈະຮຽນ"
+          }
+        ],
+        "lao": "ຄວນຈະ..."
+      },
+      {
+        "pinyin": "...lai / koen pai",
+        "id": 75,
+        "chinese": "非常.../太...了",
+        "examples": [
+          {
+            "pinyin": "hon lai",
+            "chinese": "非常热",
+            "lao": "ຮ້ອນຫຼາຍ"
+          },
+          {
+            "pinyin": "phaeng koen pai",
+            "chinese": "太贵了",
+            "lao": "ແພງເກີນໄປ"
+          },
+          {
+            "pinyin": "di lai",
+            "chinese": "非常好",
+            "lao": "ດີຫຼາຍ"
+          }
+        ],
+        "lao": "...ຫຼາຍ/ເກີນໄປ"
+      },
+      {
+        "pinyin": "khu kan kap...",
+        "id": 76,
+        "chinese": "和...一样",
+        "examples": [
+          {
+            "pinyin": "di khu kan kap an ni",
+            "chinese": "和这个一样好",
+            "lao": "ດີຄືກັນກັບອັນນີ້"
+          },
+          {
+            "pinyin": "yai khu kan kap huean",
+            "chinese": "和房子一样大",
+            "lao": "ໃຫຍ່ຄືກັນກັບເຮືອນ"
+          },
+          {
+            "pinyin": "khu kan kap chao",
+            "chinese": "和你一样",
+            "lao": "ຄືກັນກັບເຈົ້າ"
+          }
+        ],
+        "lao": "ຄືກັນກັບ..."
+      },
+      {
+        "pinyin": "bo khoy di pan dai...",
+        "id": 77,
+        "chinese": "不太好/不怎么高明...",
+        "examples": [
+          {
+            "pinyin": "an ni bo khoy di pan dai",
+            "chinese": "这个不太好",
+            "lao": "ອັນນີ້ບໍ່ຄ່ອຍດີປານໃດ"
+          },
+          {
+            "pinyin": "a han bo khoy di pan dai",
+            "chinese": "这菜不太行",
+            "lao": "ອາຫານບໍ່ຄ່ອຍດີປານໃດ"
+          },
+          {
+            "pinyin": "pai ton ni bo khoy di pan dai",
+            "chinese": "现在去不太好",
+            "lao": "ໄປຕອນນີ້ບໍ່ຄ່ອຍດີປານໃດ"
+          }
+        ],
+        "lao": "ບໍ່ຄ່ອຍດີປານໃດ..."
+      },
+      {
+        "pinyin": "...kwa...",
+        "id": 78,
+        "chinese": "比...更...",
+        "examples": [
+          {
+            "pinyin": "di kwa",
+            "chinese": "更好",
+            "lao": "ດີກວ່າ"
+          },
+          {
+            "pinyin": "yai kwa",
+            "chinese": "更大",
+            "lao": "ໃຫຍ່ກວ່າ"
+          },
+          {
+            "pinyin": "phaeng kwa",
+            "chinese": "更贵",
+            "lao": "ແພງກວ່າ"
+          }
+        ],
+        "lao": "...ກວ່າ..."
+      },
+      {
+        "pinyin": "...thaow kap...",
+        "id": 79,
+        "chinese": "...相当于/等于...",
+        "examples": [
+          {
+            "pinyin": "an ni thaow kap an nan",
+            "chinese": "这个等于那个",
+            "lao": "ອັນນີ້ເທົ່າກັບອັນນັ້ນ"
+          },
+          {
+            "pinyin": "neung thaow kap neung",
+            "chinese": "1等于1",
+            "lao": "ໜຶ່ງເທົ່າກັບໜຶ່ງ"
+          },
+          {
+            "pinyin": "la kha thaow kap khao",
+            "chinese": "价格和以前一样",
+            "lao": "ລາຄາເທົ່າກັບເກົ່າ"
+          }
+        ],
+        "lao": "...ເທົ່າກັບ..."
+      },
+      {
+        "pinyin": "...thi sut",
+        "id": 80,
+        "chinese": "最...",
+        "examples": [
+          {
+            "pinyin": "di thi sut",
+            "chinese": "最好",
+            "lao": "ດີທີ່ສຸດ"
+          },
+          {
+            "pinyin": "yai thi sut",
+            "chinese": "最大",
+            "lao": "ໃຫຍ່ທີ່ສຸດ"
+          },
+          {
+            "pinyin": "saep thi sut",
+            "chinese": "最好吃",
+            "lao": "ແຊບທີ່ສຸດ"
+          }
+        ],
+        "lao": "...ທີ່ສຸດ"
+      },
+      {
+        "pinyin": "...pho som khuan",
+        "id": 81,
+        "chinese": "相当/适度...",
+        "examples": [
+          {
+            "pinyin": "di pho som khuan",
+            "chinese": "相当好",
+            "lao": "ດີພໍສົມຄວນ"
+          },
+          {
+            "pinyin": "phaeng pho som khuan",
+            "chinese": "相当贵",
+            "lao": "ແພງພໍສົມຄວນ"
+          },
+          {
+            "pinyin": "yai pho som khuan",
+            "chinese": "相当大",
+            "lao": "ໃຫຍ່ພໍສົມຄວນ"
+          }
+        ],
+        "lao": "...ພໍສົມຄວນ"
+      },
+      {
+        "pinyin": "...kueap ja...",
+        "id": 82,
+        "chinese": "几乎/差点...",
+        "examples": [
+          {
+            "pinyin": "kueap ja pai",
+            "chinese": "差点就去了",
+            "lao": "ເກືອບຈະໄປ"
+          },
+          {
+            "pinyin": "kueap ja laew",
+            "chinese": "几乎完成了",
+            "lao": "ເກືອບຈະແລ້ວ"
+          },
+          {
+            "pinyin": "kueap ja luem",
+            "chinese": "差点忘了",
+            "lao": "ເກືອບຈະລືມ"
+          }
+        ],
+        "lao": "...ເກືອບຈະ..."
+      }
+    ]
+  },
+  {
+    "title": "条件、范围与限制语块",
+    "items": [
+      {
+        "pinyin": "phiang tae...",
+        "id": 83,
+        "chinese": "仅仅/只是...",
+        "examples": [
+          {
+            "pinyin": "phiang tae kin",
+            "chinese": "仅仅是吃",
+            "lao": "ພຽງແຕ່ກິນ"
+          },
+          {
+            "pinyin": "phiang tae pai",
+            "chinese": "只是去一下",
+            "lao": "ພຽງແຕ່ໄປ"
+          },
+          {
+            "pinyin": "phiang tae neung an",
+            "chinese": "仅需一个",
+            "lao": "ພຽງແຕ່ຫນຶ່ງອັນ"
+          }
+        ],
+        "lao": "ພຽງແຕ່..."
+      },
+      {
+        "pinyin": "thaow thi hu...",
+        "id": 84,
+        "chinese": "据我所知...",
+        "examples": [
+          {
+            "pinyin": "thaow thi hu maen di",
+            "chinese": "据我所知蛮好的",
+            "lao": "ເທົ່າທີ່ຮູ້ແມ່ນດີ"
+          },
+          {
+            "pinyin": "thaow thi hu bo mi",
+            "chinese": "据我所知没有",
+            "lao": "ເທົ່າທີ່ຮູ້ບໍ່ມີ"
+          },
+          {
+            "pinyin": "thaow thi hu lao pai laew",
+            "chinese": "据我所知他已经走了",
+            "lao": "ເທົ່າທີ່ຮູ້ລາວໄປແລ້ວ"
+          }
+        ],
+        "lao": "ເທົ່າທີ່ຮູ້..."
+      },
+      {
+        "pinyin": "khuen yu kap...",
+        "id": 85,
+        "chinese": "取决于/看...",
+        "examples": [
+          {
+            "pinyin": "khuen yu kap ve la",
+            "chinese": "取决于时间",
+            "lao": "ຂຶ້ນຢູ່ກັບເວລາ"
+          },
+          {
+            "pinyin": "khuen yu kap la kha",
+            "chinese": "取决于价格",
+            "lao": "ຂຶ້ນຢູ່ກັບລາຄາ"
+          },
+          {
+            "pinyin": "khuen yu kap chao",
+            "chinese": "取决于你",
+            "lao": "ຂຶ້ນຢູ່ກັບເຈົ້າ"
+          }
+        ],
+        "lao": "ຂຶ້ນຢູ່ກັບ..."
+      },
+      {
+        "pinyin": "tam thi...",
+        "id": 86,
+        "chinese": "按照/依据...",
+        "examples": [
+          {
+            "pinyin": "tam thi vaow",
+            "chinese": "按照所说的",
+            "lao": "ຕາມທີ່ເວົ້າ"
+          },
+          {
+            "pinyin": "tam thi hen",
+            "chinese": "依据所看到的",
+            "lao": "ຕາມທີ່ເຫັນ"
+          },
+          {
+            "pinyin": "tam thi hu",
+            "chinese": "依据所了解的",
+            "lao": "ຕາມທີ່ຮູ້"
+          }
+        ],
+        "lao": "ຕາມທີ່..."
+      },
+      {
+        "pinyin": "yang noy...",
+        "id": 87,
+        "chinese": "至少...",
+        "examples": [
+          {
+            "pinyin": "yang noy neung an",
+            "chinese": "至少一个",
+            "lao": "ຢ່າງນ້ອຍໜຶ່ງອັນ"
+          },
+          {
+            "pinyin": "yang noy pai",
+            "chinese": "至少去一次",
+            "lao": "ຢ່າງນ້ອຍໄປ"
+          },
+          {
+            "pinyin": "yang noy kin",
+            "chinese": "至少吃一点",
+            "lao": "ຢ່າງນ້ອຍກິນ"
+          }
+        ],
+        "lao": "ຢ່າງນ້ອຍ..."
+      },
+      {
+        "pinyin": "yang lai...",
+        "id": 88,
+        "chinese": "最多...",
+        "examples": [
+          {
+            "pinyin": "yang lai song an",
+            "chinese": "最多两个",
+            "lao": "ຢ່າງຫຼາຍສອງອັນ"
+          },
+          {
+            "pinyin": "yang lai neung shua mong",
+            "chinese": "最多一小时",
+            "lao": "ຢ່າງຫຼາຍໜຶ່ງຊົ່ວໂມງ"
+          },
+          {
+            "pinyin": "yang lai sip kip",
+            "chinese": "最多10基普",
+            "lao": "ຢ່າງຫຼາຍສິບກີບ"
+          }
+        ],
+        "lao": "ຢ່າງຫຼາຍ..."
+      },
+      {
+        "pinyin": "bo koen...",
+        "id": 89,
+        "chinese": "不超过...",
+        "examples": [
+          {
+            "pinyin": "bo koen neung an",
+            "chinese": "不超过一个",
+            "lao": "ບໍ່ເກີນໜຶ່ງອັນ"
+          },
+          {
+            "pinyin": "bo koen sip phan",
+            "chinese": "不超过一万",
+            "lao": "ບໍ່ເກີນສິບພັນ"
+          },
+          {
+            "pinyin": "bo koen song mue",
+            "chinese": "不超过两天",
+            "lao": "ບໍ່ເກີນສອງມື້"
+          }
+        ],
+        "lao": "ບໍ່ເກີນ..."
+      },
+      {
+        "pinyin": "ven sia tae...",
+        "id": 90,
+        "chinese": "除非...",
+        "examples": [
+          {
+            "pinyin": "pai, ven sia tae phon tok",
+            "chinese": "去，除非下雨",
+            "lao": "ໄປ ເວັ້ນເສຍແຕ່ຝົນຕົກ"
+          },
+          {
+            "pinyin": "kin, ven sia tae phet",
+            "chinese": "吃，除非太辣",
+            "lao": "ກິນ ເວັ້ນເສຍແຕ່ເຜັດ"
+          },
+          {
+            "pinyin": "sue, ven sia tae phaeng",
+            "chinese": "买，除非太贵",
+            "lao": "ຊື້ ເວັ້ນເສຍແຕ່ແພງ"
+          }
+        ],
+        "lao": "ເວັ້ນເສຍແຕ່..."
+      },
+      {
+        "pinyin": "neuang chak...",
+        "id": 91,
+        "chinese": "基于/由于...",
+        "examples": [
+          {
+            "pinyin": "neuang chak phon tok",
+            "chinese": "由于下雨",
+            "lao": "ເນື່ອງຈາກຝົນຕົກ"
+          },
+          {
+            "pinyin": "neuang chak bo mi ve la",
+            "chinese": "由于没时间",
+            "lao": "ເນື່ອງຈາກບໍ່ມີເວລາ"
+          },
+          {
+            "pinyin": "neuang chak sa",
+            "chinese": "基于迟到",
+            "lao": "ເນື່ອງຈາກຊ້າ"
+          }
+        ],
+        "lao": "ເນື່ອງຈາກ..."
+      },
+      {
+        "pinyin": "nai khop khet...",
+        "id": 92,
+        "chinese": "在...范围内",
+        "examples": [
+          {
+            "pinyin": "nai khop khet hong hian",
+            "chinese": "在学校范围内",
+            "lao": "ໃນຂອບເຂດໂຮງຮຽນ"
+          },
+          {
+            "pinyin": "nai khop khet huean",
+            "chinese": "在房子范围内",
+            "lao": "ໃນຂອບເຂດເຮືອນ"
+          },
+          {
+            "pinyin": "nai khop khet ni",
+            "chinese": "在这个范围内",
+            "lao": "ໃນຂອບເຂດນີ້"
+          }
+        ],
+        "lao": "ໃນຂອບເຂດ..."
+      }
+    ]
+  },
+  {
+    "title": "方位、路径与空间引导语块",
+    "items": [
+      {
+        "pinyin": "yu kai kap...",
+        "id": 93,
+        "chinese": "在...附近",
+        "examples": [
+          {
+            "pinyin": "yu kai kap hong hian",
+            "chinese": "在学校附近",
+            "lao": "ຢູ່ໃກ້ກັບໂຮງຮຽນ"
+          },
+          {
+            "pinyin": "yu kai kap han kha",
+            "chinese": "在商店附近",
+            "lao": "ຢູ່ໃກ້ກັບຮ້ານຄ້າ"
+          },
+          {
+            "pinyin": "yu kai kap huean",
+            "chinese": "在家附近",
+            "lao": "ຢູ່ໃກ້ກັບເຮືອນ"
+          }
+        ],
+        "lao": "ຢູ່ໃກ້ກັບ..."
+      },
+      {
+        "pinyin": "yu kai chak...",
+        "id": 94,
+        "chinese": "距离...很远",
+        "examples": [
+          {
+            "pinyin": "yu kai chak ni",
+            "chinese": "离这里很远",
+            "lao": "ຢູ່ໄກຈາກນີ້"
+          },
+          {
+            "pinyin": "yu kai chak hong hian",
+            "chinese": "离学校很远",
+            "lao": "ຢູ່ໄກຈາກໂຮງຮຽນ"
+          },
+          {
+            "pinyin": "yu kai chak ta lat",
+            "chinese": "离菜市场很远",
+            "lao": "ຢູ່ໄກຈາກຕະຫຼາດ"
+          }
+        ],
+        "lao": "ຢູ່ໄກຈາກ..."
+      },
+      {
+        "pinyin": "yu thang na / thang lang...",
+        "id": 95,
+        "chinese": "在...前面/后面",
+        "examples": [
+          {
+            "pinyin": "yu thang na hong hian",
+            "chinese": "在学校前面",
+            "lao": "ຢູ່ທາງໜ້າໂຮງຮຽນ"
+          },
+          {
+            "pinyin": "yu thang lang huean",
+            "chinese": "在房子后面",
+            "lao": "ຢູ່ທາງຫຼັງເຮືອນ"
+          },
+          {
+            "pinyin": "yu thang na han",
+            "chinese": "在店门口/前面",
+            "lao": "ຢູ່ທາງໜ້າຮ້ານ"
+          }
+        ],
+        "lao": "ຢູ່ທາງໜ້າ / ທາງຫຼັງ..."
+      },
+      {
+        "pinyin": "yu la vang... kan",
+        "id": 96,
+        "chinese": "在...之间",
+        "examples": [
+          {
+            "pinyin": "yu la vang song an ni kan",
+            "chinese": "在这两个之间",
+            "lao": "ຢູ່ລະຫວ່າງສອງອັນນີ້"
+          },
+          {
+            "pinyin": "yu la vang han kap huean kan",
+            "chinese": "在商店和家之间",
+            "lao": "ຢູ່ລະຫວ່າງຮ້ານກັບເຮືອນ"
+          },
+          {
+            "pinyin": "yu la vang hong hian kap ta lat kan",
+            "chinese": "在学校和市场之间",
+            "lao": "ຢູ່ລະຫວ່າງໂຮງຮຽນກັບຕະຫຼາດ"
+          }
+        ],
+        "lao": "ຢູ່ລະຫວ່າງ...ກັນ"
+      },
+      {
+        "pinyin": "kong kan kham kap...",
+        "id": 97,
+        "chinese": "在...对面",
+        "examples": [
+          {
+            "pinyin": "kong kan kham kap hong hian",
+            "chinese": "在学校对面",
+            "lao": "ກົງກັນຂ້າມກັບໂຮງຮຽນ"
+          },
+          {
+            "pinyin": "kong kan kham kap han kha",
+            "chinese": "在商店对面",
+            "lao": "ກົງກັນຂ້າມກັບຮ້ານຄ້າ"
+          },
+          {
+            "pinyin": "kong kan kham kap huean",
+            "chinese": "在房子对面",
+            "lao": "ກົງກັນຂ້າມກັບເຮືອນ"
+          }
+        ],
+        "lao": "ກົງກັນຂ້າມກັບ..."
+      },
+      {
+        "pinyin": "luean pai thang...",
+        "id": 98,
+        "chinese": "向...移动/偏向...",
+        "examples": [
+          {
+            "pinyin": "luean pai thang sai",
+            "chinese": "向左边靠/移动",
+            "lao": "ເລື້ອນໄປທາງຊ້າຍ"
+          },
+          {
+            "pinyin": "luean pai thang khwa",
+            "chinese": "向右边靠/移动",
+            "lao": "ເລື້ອນໄປທາງຂວາ"
+          },
+          {
+            "pinyin": "luean pai thang na",
+            "chinese": "向前移动",
+            "lao": "ເລື້ອນໄປທາງໜ້າ"
+          }
+        ],
+        "lao": "ເລື້ອນໄປທາງ..."
+      },
+      {
+        "pinyin": "pai tam...",
+        "id": 99,
+        "chinese": "沿着...走",
+        "examples": [
+          {
+            "pinyin": "pai tam thang",
+            "chinese": "沿着马路走",
+            "lao": "ໄປຕາມທາງ"
+          },
+          {
+            "pinyin": "pai tam ni",
+            "chinese": "沿着这条路/这么走",
+            "lao": "ໄປຕາມນີ້"
+          },
+          {
+            "pinyin": "pai tam phnaen thi",
+            "chinese": "沿着地图走",
+            "lao": "ໄປຕາມແຜນທີ່"
+          }
+        ],
+        "lao": "ໄປຕາມ..."
+      },
+      {
+        "pinyin": "tit kap...",
+        "id": 100,
+        "chinese": "紧挨着...",
+        "examples": [
+          {
+            "pinyin": "tit kap han kha",
+            "chinese": "紧挨着商店",
+            "lao": "ຕິດກັບຮ້ານຄ້າ"
+          },
+          {
+            "pinyin": "tit kap hong hian",
+            "chinese": "紧挨着学校",
+            "lao": "ຕິດກັບໂຮງຮຽນ"
+          },
+          {
+            "pinyin": "tit kap huean",
+            "chinese": "紧挨着房子",
+            "lao": "ຕິດກັບເຮືອນ"
+          }
+        ],
+        "lao": "ຕິດກັບ..."
+      },
+      {
+        "pinyin": "yu thang nai / thang nok...",
+        "id": 101,
+        "chinese": "在...里面/外面",
+        "examples": [
+          {
+            "pinyin": "yu thang nai huean",
+            "chinese": "在房子里面",
+            "lao": "ຢູ່ທາງໃນເຮືອນ"
+          },
+          {
+            "pinyin": "yu thang nok han",
+            "chinese": "在商店外面",
+            "lao": "ຢູ່ທາງນອກຮ້ານ"
+          },
+          {
+            "pinyin": "yu thang nai hong hian",
+            "chinese": "在学校里面",
+            "lao": "ຢູ່ທາງໃນໂຮງຮຽນ"
+          }
+        ],
+        "lao": "ຢູ່ທາງໃນ / ທາງນອກ..."
+      },
+      {
+        "pinyin": "yu theung / yu lum...",
+        "id": 102,
+        "chinese": "在...上面/下面",
+        "examples": [
+          {
+            "pinyin": "yu theung to",
+            "chinese": "在桌子上",
+            "lao": "ຢູ່ເທິງໂຕະ"
+          },
+          {
+            "pinyin": "yu lum huean",
+            "chinese": "在房子下面/楼下",
+            "lao": "ຢູ່ລຸ່ມເຮືອນ"
+          },
+          {
+            "pinyin": "yu theung tiang",
+            "chinese": "在床上",
+            "lao": "ຢູ່ເທິງເຕຽງ"
+          }
+        ],
+        "lao": "ຢູ່ເທິງ / ຢູ່ລຸ່ມ..."
+      }
+    ]
+  },
+  {
+    "title": "祈使、指令与建议语块",
+    "items": [
+      {
+        "pinyin": "ka lu na...",
+        "id": 103,
+        "chinese": "请...（正式）",
+        "examples": [
+          {
+            "pinyin": "ka lu na vaow",
+            "chinese": "请讲",
+            "lao": "ກະລຸນາເວົ້າ"
+          },
+          {
+            "pinyin": "ka lu na kin",
+            "chinese": "请吃",
+            "lao": "ກະລຸນາກິນ"
+          },
+          {
+            "pinyin": "ka lu na tha",
+            "chinese": "请稍等",
+            "lao": "ກະລຸນາຖ້າ"
+          }
+        ],
+        "lao": "ກະລຸນາ..."
+      },
+      {
+        "pinyin": "ya faow...",
+        "id": 104,
+        "chinese": "先别/不要急着...",
+        "examples": [
+          {
+            "pinyin": "ya faow pai",
+            "chinese": "先别急着走",
+            "lao": "ຢ່າຟ້າວໄປ"
+          },
+          {
+            "pinyin": "ya faow kin",
+            "chinese": "先别急着吃",
+            "lao": "ຢ່າຟ້າວກິນ"
+          },
+          {
+            "pinyin": "ya faow het",
+            "chinese": "先别急着做",
+            "lao": "ຢ່າຟ້າວເຮັດ"
+          }
+        ],
+        "lao": "ຢ່າຟ້າວ..."
+      },
+      {
+        "pinyin": "ham...",
+        "id": 105,
+        "chinese": "禁止...",
+        "examples": [
+          {
+            "pinyin": "ham pai",
+            "chinese": "禁止前往",
+            "lao": "ຫ້າມໄປ"
+          },
+          {
+            "pinyin": "ham kin",
+            "chinese": "禁止食用",
+            "lao": "ຫ້າມກິນ"
+          },
+          {
+            "pinyin": "ham vaow",
+            "chinese": "禁止说话",
+            "lao": "ຫ້າມເວົ້າ"
+          }
+        ],
+        "lao": "ຫ້າມ..."
+      },
+      {
+        "pinyin": "long... beung",
+        "id": 106,
+        "chinese": "试着...看看",
+        "examples": [
+          {
+            "pinyin": "long kin beung",
+            "chinese": "尝尝看",
+            "lao": "ລອງກິນເບິ່ງ"
+          },
+          {
+            "pinyin": "long het beung",
+            "chinese": "做做看",
+            "lao": "ລອງເຮັດເບິ່ງ"
+          },
+          {
+            "pinyin": "long pai beung",
+            "chinese": "去看看",
+            "lao": "ລອງໄປເບິ່ງ"
+          }
+        ],
+        "lao": "ລອງ...ເບິ່ງ"
+      },
+      {
+        "pinyin": "chuay... dae",
+        "id": 107,
+        "chinese": "帮我...一下",
+        "examples": [
+          {
+            "pinyin": "chuay beung dae",
+            "chinese": "帮我看一眼",
+            "lao": "ຊ່ວຍເບິ່ງແດ່"
+          },
+          {
+            "pinyin": "chuay sue dae",
+            "chinese": "帮我买一下",
+            "lao": "ຊ່ວຍຊື້ແດ່"
+          },
+          {
+            "pinyin": "chuay het dae",
+            "chinese": "帮我做一下",
+            "lao": "ຊ່ວຍເຮັດແດ່"
+          }
+        ],
+        "lao": "ຊ່ວຍ...ແດ່"
+      },
+      {
+        "pinyin": "faow...",
+        "id": 108,
+        "chinese": "赶紧/快点...",
+        "examples": [
+          {
+            "pinyin": "faow pai",
+            "chinese": "快点去",
+            "lao": "ຟ້າວໄປ"
+          },
+          {
+            "pinyin": "faow kin",
+            "chinese": "快点吃",
+            "lao": "ຟ້າວກິນ"
+          },
+          {
+            "pinyin": "faow ma",
+            "chinese": "快点来",
+            "lao": "ຟ້າວມາ"
+          }
+        ],
+        "lao": "ຟ້າວ..."
+      },
+      {
+        "pinyin": "khoy khoy...",
+        "id": 109,
+        "chinese": "慢慢地...",
+        "examples": [
+          {
+            "pinyin": "khoy khoy vaow",
+            "chinese": "慢慢说",
+            "lao": "ຄ່ອຍໆເວົ້າ"
+          },
+          {
+            "pinyin": "khoy khoy kin",
+            "chinese": "慢慢吃",
+            "lao": "ຄ່ອຍໆກິນ"
+          },
+          {
+            "pinyin": "khoy khoy pai",
+            "chinese": "慢慢走",
+            "lao": "ຄ່ອຍໆໄປ"
+          }
+        ],
+        "lao": "ຄ່ອຍໆ..."
+      },
+      {
+        "pinyin": "pha ya yam...",
+        "id": 110,
+        "chinese": "尽量/争取...",
+        "examples": [
+          {
+            "pinyin": "pha ya yam ma",
+            "chinese": "尽量赶过来",
+            "lao": "ພະຍາຍາມມາ"
+          },
+          {
+            "pinyin": "pha ya yam het",
+            "chinese": "尽量去做",
+            "lao": "ພະຍາຍາມເຮັດ"
+          },
+          {
+            "pinyin": "pha ya yam hian",
+            "chinese": "争取多学",
+            "lao": "ພະຍາຍາມຮຽນ"
+          }
+        ],
+        "lao": "ພະຍາຍາມ..."
+      },
+      {
+        "pinyin": "tong... hai dai",
+        "id": 111,
+        "chinese": "一定要做到...",
+        "examples": [
+          {
+            "pinyin": "tong pai hai dai",
+            "chinese": "一定要去成",
+            "lao": "ຕ້ອງໄປໃຫ້ໄດ້"
+          },
+          {
+            "pinyin": "tong het hai dai",
+            "chinese": "一定要做到",
+            "lao": "ຕ້ອງເຮັດໃຫ້ໄດ້"
+          },
+          {
+            "pinyin": "tong hian hai dai",
+            "chinese": "一定要学会",
+            "lao": "ຕ້ອງຮຽນໃຫ້ໄດ້"
+          }
+        ],
+        "lao": "ຕ້ອງ...ໃຫ້ໄດ້"
+      },
+      {
+        "pinyin": "poet / pit... hai dae",
+        "id": 112,
+        "chinese": "帮忙开/关一下...",
+        "examples": [
+          {
+            "pinyin": "poet pa tu hai dae",
+            "chinese": "帮忙开一下门",
+            "lao": "ເປີດປະຕູໃຫ້ແດ່"
+          },
+          {
+            "pinyin": "pit tho la that hai dae",
+            "chinese": "帮忙关一下电视",
+            "lao": "ປິດໂທລະທັດໃຫ້ແດ່"
+          },
+          {
+            "pinyin": "poet nam hai dae",
+            "chinese": "帮忙开一下水",
+            "lao": "ເປີດນ້ຳໃຫ້ແດ່"
+          }
+        ],
+        "lao": "ເປີດ/ປິດ...ໃຫ້ແດ່"
+      }
+    ]
+  },
+  {
+    "title": "口语填充、过渡与语气修饰语块",
+    "items": [
+      {
+        "pinyin": "i li / thae thae",
+        "id": 113,
+        "chinese": "真的/确实",
+        "examples": [
+          {
+            "pinyin": "di i li",
+            "chinese": "真的很好",
+            "lao": "ດີອີ່ຫຼີ"
+          },
+          {
+            "pinyin": "saep thae thae",
+            "chinese": "确实好吃",
+            "lao": "ແຊບແທ້ໆ"
+          },
+          {
+            "pinyin": "phaeng i li",
+            "chinese": "真的很贵",
+            "lao": "ແພງອີ່ຫຼີ"
+          }
+        ],
+        "lao": "ອີ່ຫຼີ/ແທ້ໆ"
+      },
+      {
+        "pinyin": "vaow thae thae dai...",
+        "id": 114,
+        "chinese": "说实话/老实讲...",
+        "examples": [
+          {
+            "pinyin": "vaow thae thae dai, bo mak",
+            "chinese": "老实讲，我不喜欢",
+            "lao": "ເວົ້າແທ້ໆໃດ ບໍ່ມັກ"
+          },
+          {
+            "pinyin": "vaow thae thae dai, bo hu",
+            "chinese": "说实话，我真不知道",
+            "lao": "ເວົ້າແທ້ໆໃດ ບໍ່ຮູ້"
+          },
+          {
+            "pinyin": "vaow thae thae dai, phaeng lai",
+            "chinese": "老实说，真的很贵",
+            "lao": "ເວົ້າແທ້ໆໃດ ແພງຫຼາຍ"
+          }
+        ],
+        "lao": "ເວົ້າແທ້ໆໃດ..."
+      },
+      {
+        "pinyin": "va naew dai ko...",
+        "id": 115,
+        "chinese": "无论怎么说...",
+        "examples": [
+          {
+            "pinyin": "va naew dai ko tong pai",
+            "chinese": "无论怎么说都要去",
+            "lao": "ວ່າແນວໃດກໍຕ້ອງໄປ"
+          },
+          {
+            "pinyin": "va naew dai ko di",
+            "chinese": "无论怎么说都是好的",
+            "lao": "ວ່າແນວໃດກໍດີ"
+          },
+          {
+            "pinyin": "va naew dai ko kin",
+            "chinese": "无论怎么说都吃一点",
+            "lao": "ວ່າແນວໃດກໍກິນ"
+          }
+        ],
+        "lao": "ວ່າແນວໃດກໍ..."
+      },
+      {
+        "pinyin": "bo maen bo?",
+        "id": 116,
+        "chinese": "难道不是吗？",
+        "examples": [
+          {
+            "pinyin": "di bo maen bo?",
+            "chinese": "难道不好吗？",
+            "lao": "ດີບໍ່ແມ່ນບໍ?"
+          },
+          {
+            "pinyin": "pai bo maen bo?",
+            "chinese": "难道不去吗？",
+            "lao": "ໄປບໍ່ແມ່ນບໍ?"
+          },
+          {
+            "pinyin": "maen bo maen bo?",
+            "chinese": "难道不对吗？",
+            "lao": "ແມ່ນບໍ່ແມ່ນບໍ?"
+          }
+        ],
+        "lao": "ບໍ່ແມ່ນບໍ?"
+      },
+      {
+        "pinyin": "khu chang va...",
+        "id": 117,
+        "chinese": "听说是/好像是...",
+        "examples": [
+          {
+            "pinyin": "khu chang va lao si pai",
+            "chinese": "听说是他要去",
+            "lao": "ຄືຈັ່ງວ່າລາວຊິໄປ"
+          },
+          {
+            "pinyin": "khu chang va di",
+            "chinese": "好像蛮好的",
+            "lao": "ຄືຈັ່ງວ່າດີ"
+          },
+          {
+            "pinyin": "khu chang va bo mi",
+            "chinese": "听说是没有",
+            "lao": "ຄືຈັ່ງວ່າບໍ່ມີ"
+          }
+        ],
+        "lao": "ຄືຈັ່ງວ່າ..."
+      },
+      {
+        "pinyin": "maen yu, tae...",
+        "id": 118,
+        "chinese": "确实是，但是...",
+        "examples": [
+          {
+            "pinyin": "maen yu, tae phaeng",
+            "chinese": "确实是这样，但是太贵了",
+            "lao": "ແມ່ນຢູ່ ແຕ່ແພງ"
+          },
+          {
+            "pinyin": "maen yu, tae bo mi ve la",
+            "chinese": "确实如此，但是没时间",
+            "lao": "ແມ່ນຢູ່ ແຕ່ບໍ່ມີເວລາ"
+          },
+          {
+            "pinyin": "maen yu, tae bo mak",
+            "chinese": "确实是，但我不喜欢",
+            "lao": "ແມ່ນຢູ່ ແຕ່ບໍ່ມັກ"
+          }
+        ],
+        "lao": "ແມ່ນຢູ່ ແຕ່..."
+      },
+      {
+        "pinyin": "khao chai bo?",
+        "id": 119,
+        "chinese": "明白了吗？",
+        "examples": [
+          {
+            "pinyin": "vaow baep ni, khao chai bo?",
+            "chinese": "这么说能听懂吗？",
+            "lao": "ເວົ້າແບບນີ້ ເຂົ້າໃຈບໍ່?"
+          },
+          {
+            "pinyin": "het baep ni, khao chai bo?",
+            "chinese": "这么做明白了吗？",
+            "lao": "ເຮັດແບບນີ້ ເຂົ້າໃຈບໍ່?"
+          },
+          {
+            "pinyin": "khao chai bo? pai dai laew",
+            "chinese": "听懂了吗？可以走了",
+            "lao": "ເຂົ້າໃຈບໍ່? ໄປໄດ້ແລ້ວ"
+          }
+        ],
+        "lao": "ເຂົ້າໃຈບໍ່?"
+      },
+      {
+        "pinyin": "ao pen va...",
+        "id": 120,
+        "chinese": "总而言之/那就...",
+        "examples": [
+          {
+            "pinyin": "ao pen va pai",
+            "chinese": "总而言之就是去",
+            "lao": "ເອົາເປັນວ່າໄປ"
+          },
+          {
+            "pinyin": "ao pen va bo sue",
+            "chinese": "那就决定不买了",
+            "lao": "ເອົາເປັນວ່າບໍ່ຊື້"
+          },
+          {
+            "pinyin": "ao pen va di",
+            "chinese": "总的来说还是好的",
+            "lao": "ເອົາເປັນວ່າດີ"
+          }
+        ],
+        "lao": "ເອົາເປັນວ່າ..."
+      }
+    ]
+  }
+]

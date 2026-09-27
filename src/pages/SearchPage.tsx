@@ -273,7 +273,7 @@ export default function SearchPage({ goBack, initialText = '', initialCategory =
                   AI 解析库
                 </span>
                 <span className="rounded-full bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-blue-600 dark:text-blue-300">
-                  Google · Gemini 3.5 Flash
+                  Google · {analysisResult.model.replace('gemini-', 'Gemini ').replaceAll('-', ' ')}
                 </span>
                 <span className="rounded-full bg-amber-50 dark:bg-amber-900/30 px-2 py-1 text-amber-700 dark:text-amber-300">
                   已保存到解析库

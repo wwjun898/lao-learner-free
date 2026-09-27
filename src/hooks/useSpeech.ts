@@ -5,13 +5,6 @@ import { SpeechRecognition as NativeSpeechRecognition } from '@capgo/capacitor-s
 import { hasNativeGeminiConfig, synthesizeLaoAudio, transcribeLaoAudio } from '../lib/ai';
 import { OfflineWhisper } from '../lib/offlineWhisper';
 import { laoTextSimilarity, normalizeRecognizedLao } from '../lib/laoSpeechNormalization';
-import audioMap from '../audio-map.json';
-
-// Pre-generated audio paths for Lao text
-const laoAudioMap: Record<string, { normal: string; slow: string }> = audioMap as any;
-
-// GitHub Pages 子路径：运行时拼接 base
-const base = import.meta.env.BASE_URL || '/';
 
 export type MicrophoneStatus = 'idle' | 'testing' | 'ready' | 'error';
 
@@ -130,30 +123,6 @@ export function useSpeech() {
     return v || voices[0] || null;
   }, []);
 
-  // 播放预生成的音频文件
-  const playAudioFile = useCallback((src: string, rate: number = 1) => {
-    const audio = audioRef.current;
-    if (!audio) return false;
-    
-    // 停止之前的播放
-    audio.pause();
-    audio.currentTime = 0;
-    synthRef.current?.cancel();
-    
-    // 拼接 Vite base 路径（兼容 GitHub Pages 子路径部署）
-    const fullSrc = base + src.replace(/^\//, '');
-    audio.src = fullSrc;
-    audio.playbackRate = rate;
-    audio.onended = () => setIsSpeaking(false);
-    audio.onerror = () => setIsSpeaking(false);
-    audio.play().then(() => {
-      setIsSpeaking(true);
-    }).catch((e) => {
-      console.error('音频播放失败:', fullSrc, e);
-      setIsSpeaking(false);
-    });
-    return true;
-  }, []);
 
 
   // 停止播放
@@ -250,32 +219,20 @@ export function useSpeech() {
   }, []);
   useEffect(() => () => { playbackRequest.current++; audioRef.current?.pause(); }, []);
 
-  // 老挝语（使用预生成音频）
+  // Use the selected Microsoft voice for both existing and newly added words.
   const speakLao = useCallback((text: string, rate: number = 1) => {
-    playbackRequest.current++;
-    const entry = laoAudioMap[text];
-    if (entry?.normal) {
-      playAudioFile(entry.normal, rate);
-    } else {
-      playDynamicLao(text, rate);
-    }
-  }, [playAudioFile, playDynamicLao]);
+    playDynamicLao(text, rate);
+  }, [playDynamicLao]);
 
   // 中文（Web Speech API）
   const speakChinese = useCallback((text: string) => {
     speakText(text, 'zh');
   }, [speakText]);
 
-  // 慢速老挝语（使用预生成音频）
+  // Slow speech has a separate voice-specific cache entry.
   const speakSlow = useCallback((text: string, rate: number = 1) => {
-    playbackRequest.current++;
-    const entry = laoAudioMap[text];
-    if (entry?.slow) {
-      playAudioFile(entry.slow, rate);
-    } else {
-      playDynamicLao(text, rate, true);
-    }
-  }, [playAudioFile, playDynamicLao]);
+    playDynamicLao(text, rate, true);
+  }, [playDynamicLao]);
 
   // 通用
   const speak = useCallback((text: string, lang: string) => {

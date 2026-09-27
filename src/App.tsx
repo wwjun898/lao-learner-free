@@ -12,6 +12,7 @@ import ScenarioPage from './pages/ScenarioPage';
 import AnalysisLibraryPage from './pages/AnalysisLibraryPage';
 import WordFormationPage from './pages/WordFormationPage';
 import GenerateScenePage from './pages/GenerateScenePage';
+import PhraseBlocksPage from './pages/PhraseBlocksPage';
 
 function App() {
   const { page, navigate, goBack } = useNavigation();
@@ -21,6 +22,8 @@ function App() {
   }, [page]);
 
   switch (page) {
+    case 'phrase-blocks':
+      return <PhraseBlocksPage goBack={goBack} />;
     case 'vocabulary':
       return <VocabularyPage goBack={goBack} />;
     case 'dialogue':

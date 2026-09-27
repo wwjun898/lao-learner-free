@@ -78,7 +78,7 @@ public class MicrosoftSpeechPlugin extends Plugin {
         writer.setOutput(xml);
         writer.startTag(null, "speak").attribute(null, "version", "1.0")
             .attribute(null, "xmlns", "http://www.w3.org/2001/10/synthesis").attribute(null, "xml:lang", "lo-LA");
-        writer.startTag(null, "voice").attribute(null, "name", "Microsoft Server Speech Text to Speech Voice (lo-LA, ChanthavongNeural)");
+        writer.startTag(null, "voice").attribute(null, "name", "Microsoft Server Speech Text to Speech Voice (lo-LA, KeomanyNeural)");
         writer.startTag(null, "prosody").attribute(null, "rate", slow ? "-35%" : "+0%")
             .attribute(null, "pitch", "+0Hz").attribute(null, "volume", "+0%");
         writer.text(text.replaceAll("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]", " "));

@@ -16,7 +16,7 @@ interface AiConfig {
 }
 
 const defaultGeminiApiBase = 'https://generativelanguage.googleapis.com'
-const googleGeminiModel = 'gemini-3.5-flash'
+const googleGeminiModels = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'] as const
 
 const categories = [
   '数字', '货币', '时间', '日期', '大小', '重量', '长度', '形状', '颜色', '状态',
@@ -151,7 +151,7 @@ async function synthesizeLaoSpeech(text: string, slow: boolean) {
     // The bundled pnpm workspace can omit the root symlink; use the installed package directly.
     ({ EdgeTTS } = await import(/* @vite-ignore */ pathToFileURL(resolve(process.cwd(), 'node_modules/.pnpm/edge-tts-universal@1.4.0_debug@4.4.3/node_modules/edge-tts-universal/dist/index.js')).href))
   }
-  const cacheKey = createHash('sha256').update(`microsoft-v1:Chanthavong:${slow ? 'slow' : 'normal'}:${text}`).digest('hex')
+  const cacheKey = createHash('sha256').update(`microsoft-v1:Keomany:${slow ? 'slow' : 'normal'}:${text}`).digest('hex')
   const cachePath = resolve(ttsCacheDir, `${cacheKey}.mp3`)
   if (existsSync(cachePath)) return readFileSync(cachePath)
 
@@ -159,7 +159,7 @@ async function synthesizeLaoSpeech(text: string, slow: boolean) {
   if (existingTask) return existingTask
 
   const task = (async () => {
-    const voice = 'lo-LA-ChanthavongNeural'
+    const voice = 'lo-LA-KeomanyNeural'
     const tts = new EdgeTTS(text, voice, {
       rate: slow ? '-35%' : '+0%',
       volume: '+0%',
@@ -266,8 +266,24 @@ function analysisQualityIssues(analysis: ReturnType<typeof normalizeAnalysis>) {
   return issues
 }
 
-async function providerFetch(url: string, init: RequestInit, providerName: string, timeoutMs = 15_000) {
-  for (let attempt = 0; attempt < 3; attempt++) {
+class ProviderRequestError extends Error {
+  readonly status: number
+  constructor(message: string, status: number) { super(message); this.status = status }
+}
+
+const waitForRetry = (attempt: number) => new Promise(resolve =>
+  setTimeout(resolve, 700 * (2 ** attempt) + Math.floor(Math.random() * 350)))
+
+function canRetryStatus(status: number) {
+  return status === 429 || status === 500 || status === 502 || status === 503 || status === 504
+}
+
+function canFallbackStatus(status: number) {
+  return status === 0 || status === 403 || status === 404 || canRetryStatus(status)
+}
+
+async function providerFetch(url: string, init: RequestInit, providerName: string, timeoutMs = 45_000) {
+  for (let attempt = 0; attempt < 2; attempt++) {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), timeoutMs)
     try {
@@ -279,47 +295,66 @@ async function providerFetch(url: string, init: RequestInit, providerName: strin
         : undefined
       if (response.status === 401 || response.status === 402 || response.status === 403) {
         const detail = typeof nestedError === 'string' ? `：${nestedError}` : ''
-        throw new Error(`${providerName} API Key 无效、无模型权限或当前额度不足${detail}`)
+        throw new ProviderRequestError(`${providerName} API Key 无效、无模型权限或当前额度不足${detail}`, response.status)
       }
-      if (response.status === 429) {
-        if (attempt < 2) {
-          await new Promise(resolve => setTimeout(resolve, 1200 * (attempt + 1)))
-          continue
-        }
-        throw new Error(`${providerName}请求过于频繁或当前额度已用完，请稍后再试`)
+      if (canRetryStatus(response.status)) {
+        if (attempt < 1) { await waitForRetry(attempt); continue }
+        const message = response.status === 429 ? '请求过于频繁或当前额度已用完' : '当前服务繁忙'
+        throw new ProviderRequestError(`${providerName}${message}`, response.status)
       }
-      throw new Error(`${providerName}请求失败（${response.status}）${typeof nestedError === 'string' ? `：${nestedError}` : ''}`)
+      throw new ProviderRequestError(`${providerName}请求失败（${response.status}）${typeof nestedError === 'string' ? `：${nestedError}` : ''}`, response.status)
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        throw new Error(`${providerName}连接超时`, { cause: error })
+        if (attempt < 1) { await waitForRetry(attempt); continue }
+        throw new ProviderRequestError(`${providerName}连接超时`, 0)
       }
+      if (!(error instanceof ProviderRequestError) && attempt < 1) { await waitForRetry(attempt); continue }
       throw error
     } finally {
       clearTimeout(timeout)
     }
   }
-  throw new Error(`${providerName}请求失败，请稍后再试`)
+  throw new ProviderRequestError(`${providerName}请求失败，请稍后再试`, 0)
+}
+
+async function geminiWithFallback(
+  buildRequest: () => { init: RequestInit; timeoutMs?: number },
+  apiKey: string,
+  providerName = 'Google Gemini',
+) {
+  let lastError: unknown
+  for (const model of googleGeminiModels) {
+    const request = buildRequest()
+    try {
+      const payload = await providerFetch(
+        geminiGenerateContentUrl(model),
+        { ...request.init, headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey, ...request.init.headers } },
+        `${providerName}（${model}）`,
+        request.timeoutMs,
+      )
+      return { payload, model }
+    } catch (error) {
+      lastError = error
+      const status = error instanceof ProviderRequestError ? error.status : -1
+      if (!canFallbackStatus(status)) throw error
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error(`${providerName}所有可用模型均连接失败，请稍后再试`)
 }
 
 async function analyzeWithGemini(text: string, config: AiConfig) {
   const apiKey = config.googleApiKey
   if (!apiKey) throw new Error('尚未配置当前模式的 API Key')
-  const model = googleGeminiModel
   const providerName = 'Google Gemini'
   let issues: string[] = []
   for (let attempt = 0; attempt < 2; attempt++) {
-    const payload = await providerFetch(
-      geminiGenerateContentUrl(model),
-      {
+    const { payload, model } = await geminiWithFallback(() => ({ init: {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify({
           contents: [{ parts: [{ text: createPrompt(text, issues) }] }],
-          generationConfig: { responseMimeType: 'application/json', responseSchema: geminiAnalysisSchema },
+          generationConfig: { responseMimeType: 'application/json', responseSchema: geminiAnalysisSchema, temperature: 0.2, maxOutputTokens: 4096 },
         }),
-      },
-      providerName,
-    )
+      } }), apiKey, providerName)
     const candidates = Array.isArray(payload.candidates) ? payload.candidates : []
     const candidate = candidates[0] as Record<string, unknown> | undefined
     const content = candidate?.content as Record<string, unknown> | undefined
@@ -408,10 +443,10 @@ function localApiPlugin(mode: string): Plugin {
             try { input = validateSceneInput(body.words, body.categories) }
             catch (error) { return sendJson(response, 400, { error: error instanceof Error ? error.message : '输入格式错误' }) }
             if (!activeApiKey(config)) return sendJson(response, 400, { error: '请先配置 Google Gemini API Key' })
-            const payload = await providerFetch(geminiGenerateContentUrl(googleGeminiModel), {
-              method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': config.googleApiKey },
-              body: JSON.stringify(sceneRequest(input.words, input.categories)),
-            }, 'Google Gemini', 60_000)
+            const { payload } = await geminiWithFallback(() => ({
+              init: { method: 'POST', body: JSON.stringify(sceneRequest(input.words, input.categories)) },
+              timeoutMs: 60_000,
+            }), config.googleApiKey)
             return sendJson(response, 200, sceneFromGemini(payload, input.categories))
           }
 

@@ -14,7 +14,8 @@ interface StoredAiConfig {
 
 const STORAGE_KEY = 'lao-learner-ai-config';
 const DEFAULT_GEMINI_API_BASE = 'https://generativelanguage.googleapis.com';
-const GOOGLE_GEMINI_MODEL = 'gemini-3.5-flash';
+const GOOGLE_GEMINI_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'] as const;
+const GOOGLE_GEMINI_MODEL = GOOGLE_GEMINI_MODELS[0];
 const categories = [
   '数字', '货币', '时间', '日期', '大小', '重量', '长度', '形状', '颜色', '状态',
   '方位', '风景', '家庭', '职业', '身体部位', '看病健康', '人际关系', '社交礼貌',
@@ -197,47 +198,83 @@ function analysisQualityIssues(analysis: LaoAnalysis): string[] {
   return issues;
 }
 
+class ProviderRequestError extends Error {
+  readonly status: number;
+  constructor(message: string, status: number) { super(message); this.status = status; }
+}
+
+const waitForRetry = (attempt: number) => new Promise(resolve =>
+  setTimeout(resolve, 700 * (2 ** attempt) + Math.floor(Math.random() * 350)));
+
+function canRetryStatus(status: number) {
+  return status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+}
+
+function canFallbackStatus(status: number) {
+  return status === 0 || status === 403 || status === 404 || canRetryStatus(status);
+}
+
 async function nativeHttp(options: HttpOptions, providerName: string) {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const response = await CapacitorHttp.request({ connectTimeout: 15000, readTimeout: 30000, ...options });
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let response;
+    try {
+      response = await CapacitorHttp.request({ connectTimeout: 15000, readTimeout: 45000, ...options });
+    } catch (error) {
+      if (attempt < 1) { await waitForRetry(attempt); continue; }
+      throw new ProviderRequestError(`${providerName}网络连接失败，请检查网络后重试`, 0);
+    }
     if (response.status >= 200 && response.status < 300) {
       return response.data as Record<string, unknown>;
     }
     const nested = response.data?.error?.message;
     const detail = typeof nested === 'string' ? nested : '';
     if ((response.status === 402 || response.status === 403) && /balance|insufficient|recharge|quota/i.test(detail)) {
-      throw new Error(`${providerName}账户余额或体验额度不足，请在服务商控制台检查余额和计费状态`);
+      throw new ProviderRequestError(`${providerName}账户余额或体验额度不足，请在服务商控制台检查余额和计费状态`, response.status);
     }
     if (response.status === 401) {
-      throw new Error(`${providerName} API Key 无效或已失效，请重新填写`);
+      throw new ProviderRequestError(`${providerName} API Key 无效或已失效，请重新填写`, response.status);
     }
-    if (response.status === 429) {
-      if (attempt < 2) {
-        await new Promise(resolve => setTimeout(resolve, 1200 * (attempt + 1)));
-        continue;
-      }
-      throw new Error(`${providerName}请求过于频繁或当前额度已用完，请稍后再试`);
+    if (canRetryStatus(response.status)) {
+      if (attempt < 1) { await waitForRetry(attempt); continue; }
+      const message = response.status === 429 ? '请求过于频繁或当前额度已用完' : '当前服务繁忙';
+      throw new ProviderRequestError(`${providerName}${message}`, response.status);
     }
-    throw new Error(`${providerName}请求失败（${response.status}）${detail ? `：${detail}` : ''}`);
+    throw new ProviderRequestError(`${providerName}请求失败（${response.status}）${detail ? `：${detail}` : ''}`, response.status);
   }
-  throw new Error(`${providerName}请求失败，请稍后再试`);
+  throw new ProviderRequestError(`${providerName}请求失败，请稍后再试`, 0);
+}
+
+async function nativeGeminiWithFallback(
+  buildOptions: (model: string) => HttpOptions,
+  providerName = 'Google Gemini',
+) {
+  let lastError: unknown;
+  for (const model of GOOGLE_GEMINI_MODELS) {
+    try {
+      return { payload: await nativeHttp(buildOptions(model), `${providerName}（${model}）`), model };
+    } catch (error) {
+      lastError = error;
+      const status = error instanceof ProviderRequestError ? error.status : -1;
+      if (!canFallbackStatus(status)) throw error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error(`${providerName}所有可用模型均连接失败，请稍后再试`);
 }
 
 async function analyzeWithGemini(text: string, config: StoredAiConfig): Promise<AnalysisResponse> {
-  const model = GOOGLE_GEMINI_MODEL;
   const apiKey = config.googleApiKey;
   const providerName = 'Google Gemini';
   let issues: string[] = [];
   for (let attempt = 0; attempt < 2; attempt++) {
-    const payload = await nativeHttp({
+    const { payload, model } = await nativeGeminiWithFallback(model => ({
       url: geminiGenerateContentUrl(model),
       method: 'POST',
       headers: geminiHeaders(apiKey),
       data: {
         contents: [{ parts: [{ text: createPrompt(text, issues) }] }],
-        generationConfig: { responseMimeType: 'application/json', responseSchema },
+        generationConfig: { responseMimeType: 'application/json', responseSchema, temperature: 0.2, maxOutputTokens: 4096 },
       },
-    }, providerName);
+    }), providerName);
     const candidates = Array.isArray(payload.candidates) ? payload.candidates : [];
     const content = (candidates[0] as { content?: { parts?: Array<{ text?: string }> } } | undefined)?.content;
     const output = content?.parts?.map(part => part.text || '').join('') || '';
@@ -298,10 +335,10 @@ export async function generateScene(words: string[], categories: string[]): Prom
   }
   const config = readNativeConfig();
   if (!config.googleApiKey) throw new Error('请先配置 Google Gemini API Key');
-  const payload = await nativeHttp({
-    url: geminiGenerateContentUrl(GOOGLE_GEMINI_MODEL), method: 'POST',
+  const { payload } = await nativeGeminiWithFallback(model => ({
+    url: geminiGenerateContentUrl(model), method: 'POST',
     headers: geminiHeaders(config.googleApiKey), data: sceneRequest(input.words, input.categories), readTimeout: 60000,
-  }, 'Google Gemini');
+  }), 'Google Gemini');
   return sceneFromGemini(payload, input.categories);
 }
 
@@ -357,7 +394,7 @@ const pendingSpeech = new Map<string, Promise<Blob>>();
 export async function synthesizeLaoAudio(text: string, slow = false): Promise<Blob> {
   const normalizedText = text.normalize('NFC').trim();
   if (!normalizedText) throw new Error('没有可朗读的文字');
-  const cacheKey = `microsoft-mp3-v1:Chanthavong:${slow ? 'slow' : 'normal'}:${normalizedText}`;
+  const cacheKey = `microsoft-mp3-v1:Keomany:${slow ? 'slow' : 'normal'}:${normalizedText}`;
   const cached = await readSpeechCache(cacheKey).catch(() => null);
   if (cached) return new Blob([cached], { type: 'audio/mpeg' });
   const pending = pendingSpeech.get(cacheKey);

@@ -15,3 +15,12 @@
 - License: MIT
 
 The full whisper.cpp MIT license is included in the Android application assets.
+
+## Calculator module
+
+- Project: https://github.com/guocheng1378/lao-learner
+- Author: guocheng1378
+- Used component: calculator module, modified for this application
+- License: MIT License, as stated in the upstream README
+
+The upstream project attribution and license notice are retained for the calculator module.
