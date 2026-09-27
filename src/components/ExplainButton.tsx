@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
-import SearchPage from '../pages/SearchPage';
 
 export default function ExplainButton({ text, category }: { text: string; category: string }) {
   const [open, setOpen] = useState(false);
@@ -9,7 +8,7 @@ export default function ExplainButton({ text, category }: { text: string; catego
       <Sparkles size={16} />AI解释
     </button>
     {open && <div role="dialog" aria-modal="true" aria-label="AI解释" className="fixed inset-0 z-40 overflow-y-auto bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white">
-      <SearchPage initialText={text} initialCategory={category} goBack={() => setOpen(false)} />
+      <div className="mx-auto max-w-sm rounded-xl bg-white p-5 text-center text-gray-800 shadow-xl"><p className="text-sm">AI 解析将在后续版本开放</p><button className="mt-4 text-sm text-blue-600" onClick={() => setOpen(false)}>关闭</button></div>
     </div>}
   </>;
 }

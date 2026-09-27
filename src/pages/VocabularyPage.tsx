@@ -4,9 +4,9 @@ import { useCategories } from '../hooks/useCategories';
 import { useSpeech } from '../hooks/useSpeech';
 import { useVocabulary } from '../hooks/useVocabulary';
 import { useStats } from '../hooks/useStats';
-import ExplainButton from '../components/ExplainButton';
 import { useReview } from '../hooks/useReview';
 import SpeechPractice from '../components/SpeechPractice';
+import ExplainButton from '../components/ExplainButton';
 
 interface Props {
   goBack: () => void;

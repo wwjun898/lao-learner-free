@@ -4,14 +4,11 @@ import HomePage from './pages/HomePage';
 import VocabularyPage from './pages/VocabularyPage';
 import DialoguePage from './pages/DialoguePage';
 import FlashcardPage from './pages/FlashcardPage';
-import SearchPage from './pages/SearchPage';
 import FavoritesPage from './pages/FavoritesPage';
 import StatsPage from './pages/StatsPage';
 import NumberCalculatorPage from './pages/NumberCalculatorPage';
 import ScenarioPage from './pages/ScenarioPage';
-import AnalysisLibraryPage from './pages/AnalysisLibraryPage';
 import WordFormationPage from './pages/WordFormationPage';
-import GenerateScenePage from './pages/GenerateScenePage';
 import PhraseBlocksPage from './pages/PhraseBlocksPage';
 
 function App() {
@@ -30,10 +27,6 @@ function App() {
       return <DialoguePage goBack={goBack} />;
     case 'flashcard':
       return <FlashcardPage goBack={goBack} />;
-    case 'search':
-      return <SearchPage goBack={goBack} />;
-    case 'analysis-library':
-      return <AnalysisLibraryPage goBack={goBack} />;
     case 'favorites':
       return <FavoritesPage goBack={goBack} />;
     case 'stats':
@@ -42,8 +35,6 @@ function App() {
       return <NumberCalculatorPage goBack={goBack} />;
     case 'scenario':
       return <ScenarioPage goBack={goBack} />;
-    case 'generate-scene':
-      return <GenerateScenePage goBack={goBack} openScenarios={() => navigate('scenario')} />;
     case 'word-formation':
       return <WordFormationPage goBack={goBack} />;
     default:

@@ -12,10 +12,7 @@ const mainFeatures = [
 ];
 
 const tools = [
-  { page: 'search' as Page, icon: '✨', title: 'AI解析', subtitle: '后续开放', accent: 'bg-cyan-50 dark:bg-cyan-900/20', locked: true },
-  { page: 'analysis-library' as Page, icon: '📚', title: '解析库', subtitle: '后续开放', accent: 'bg-emerald-50 dark:bg-emerald-900/20', locked: true },
   { page: 'word-formation' as Page, icon: '🔤', title: '构词法', subtitle: '常用构词法', accent: 'bg-violet-50 dark:bg-violet-900/20' },
-  { page: 'generate-scene' as Page, icon: '📌', title: 'AI 造场景练习句', subtitle: '后续开放', accent: 'bg-pink-50 dark:bg-pink-900/20', locked: true },
   { page: 'phrase-blocks' as Page, icon: '🧩', title: '常用语块', subtitle: '十二类语块', accent: 'bg-amber-50 dark:bg-amber-900/20' },
   { page: 'calculator' as Page, icon: '🧮', title: '计算器', subtitle: '报价工具', accent: 'bg-orange-50 dark:bg-orange-900/20' },
 ];

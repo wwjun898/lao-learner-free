@@ -1,11 +1,9 @@
-import { useGeneratedScenes } from '../hooks/useGeneratedScenes';
 import { useState } from 'react';
 import { useCategories } from '../hooks/useCategories';
 import { Heart, Mic, Volume2 } from '../components/IconGlyphs';
 import SpeechPractice from '../components/SpeechPractice';
 import { topicPractices } from '../data/topicPractice';
 import { useFavorites } from '../hooks/useFavorites';
-import { useScenarioPhrases } from '../hooks/useScenarioPhrases';
 import { useSpeech } from '../hooks/useSpeech';
 import { useStats } from '../hooks/useStats';
 
@@ -20,15 +18,12 @@ export default function ScenarioPage({ goBack }: Props) {
   const [speakingPhrase, setSpeakingPhrase] = useState<string | null>(null);
   const { speakLao, isSpeaking } = useSpeech();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const { customPhrases } = useScenarioPhrases();
-  const { scenes } = useGeneratedScenes();
   const { recordPractice } = useStats();
   const { practiceCategories } = useCategories();
-  const scenarios: Scenario[] = [...new Set([...practiceCategories, ...customPhrases.map(item => item.category), ...scenes.map(item => item.category)])].map(category => {
+  const scenarios: Scenario[] = practiceCategories.map(category => {
     const topic = topicPractices.find(item => item.category === category);
     return { category, icon: topic?.icon ?? '🧰', title: topic?.title ?? category,
-      phrases: scenes.filter(item => item.category === category).flatMap(scene =>
-        scene.sentences.map((sentence, index) => ({ ...sentence, sceneTitle: index === 0 ? scene.title : undefined })) ) };
+      phrases: [] };
   });
   const filtered = categoryFilter === 'all' ? scenarios : scenarios.filter(item => item.category === categoryFilter);
   const selected = scenarios.find(item => item.category === selectedCategory);
